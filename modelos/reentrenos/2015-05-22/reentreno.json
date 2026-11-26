@@ -1,0 +1,164 @@
+{
+  "script": "produccion/reentrenar.py",
+  "fecha_ejecucion": "2026-11-25T16:42:39",
+  "fecha_datos": "2015-05-22",
+  "modo": "reentreno",
+  "tabla": {
+    "ruta": "data/processed/prueba_final/tabla_reentreno_hasta_2015-05-22.parquet",
+    "sha256": "f36923b51c27963ebdcc45590544b21c53a22818d53b31d061eb995461540384",
+    "filas": 110250,
+    "fecha_corte": "2015-05-22",
+    "es_la_de_la_particion": false
+  },
+  "filas_entrada": 110250,
+  "filas_quitadas": [
+    {
+      "motivo": "objetivo sin conocer",
+      "ficha": "R-010",
+      "fecha": "2015-05-22",
+      "filas": 0,
+      "casos_del_evento": null
+    },
+    {
+      "motivo": "sin la historia que piden las variables",
+      "ficha": "R-017",
+      "filas": 2450
+    }
+  ],
+  "filas_ajuste": 107800,
+  "ruta": "modelos/reentrenos/2015-05-22",
+  "modelos": {
+    "unidades": {
+      "receta": "unidades_receta.joblib",
+      "modelo": "unidades.joblib",
+      "ficha": "unidades_versiones.json",
+      "huella": "a9f1689c436e217c9991f50c7e247de5c0508d1f0a81a8fc4ef5b42f86da28e9",
+      "columnas": 82
+    },
+    "dolares": {
+      "receta": "dolares_receta.joblib",
+      "modelo": "dolares.joblib",
+      "ficha": "dolares_versiones.json",
+      "huella": "cc94fe31f31f5d805a91393754ceaf18f35e9ce2f7c3cf1f986af3aa6ac1c17d",
+      "columnas": 82
+    }
+  },
+  "pasos_que_quitan_filas": [
+    "quitar_sin_objetivo",
+    "quitar_sin_historia"
+  ],
+  "versiones": {
+    "python": "3.13.15",
+    "scikit-learn": "1.9.1",
+    "pandas": "3.0.6",
+    "numpy": "2.5.3",
+    "joblib": "1.6.0"
+  },
+  "comparacion_con_el_en_uso": {
+    "periodo": "2015-05-23 a 2016-05-22: los 13 orígenes de la prueba final y las 3 vísperas de festivo, que ninguno de los dos modelos vio",
+    "filas": {
+      "unidades": 9100,
+      "dolares": 25410
+    },
+    "medida": "error de reglas, apartado 6 por cada 100 vendidos y veredicto de reglas, apartado 7, como la validación",
+    "en_uso": {
+      "carpeta": "modelos/reentrenos/2026-11-25",
+      "nota": "no hay modelo en uso: es el candidato que reproduce la validación",
+      "unidades": {
+        "veredicto": "no gana",
+        "origenes_que_gana": 9,
+        "de": 13,
+        "minimo": 10,
+        "ventaja": 1.608132581208178,
+        "intervalo_bajo": 0.6330655390747884,
+        "intervalo_alto": 2.742204622838715,
+        "error_modelo": 15.29433006330326,
+        "error_regla_que_menos_falla": 16.902462644511438,
+        "sesgo_modelo": 2.7645523633399174,
+        "sesgo_reglas": {
+          "repetir_semana_anterior": -0.28122623392113627,
+          "media_28_dias": -3.344622505758572,
+          "media_mismo_dia_4_semanas": 0.2624048672929513
+        }
+      },
+      "dolares": {
+        "veredicto": "gana",
+        "origenes_que_gana": 12,
+        "de": 13,
+        "minimo": 10,
+        "ventaja": 1.1545009664531598,
+        "intervalo_bajo": 0.019561308498107624,
+        "intervalo_alto": 2.4636696339218207,
+        "error_modelo": 17.456091827893204,
+        "error_regla_que_menos_falla": 18.610592794346363,
+        "sesgo_modelo": 0.23828874655165755,
+        "sesgo_reglas": {
+          "repetir_semana_anterior": -1.7568915846113122,
+          "media_28_dias": -1.4549840322039578,
+          "media_mismo_dia_4_semanas": -1.4406976516794299
+        }
+      }
+    },
+    "reentrenado": {
+      "unidades": {
+        "veredicto": "gana",
+        "origenes_que_gana": 12,
+        "de": 13,
+        "minimo": 10,
+        "ventaja": 2.403007041598503,
+        "intervalo_bajo": 1.4144037434294572,
+        "intervalo_alto": 3.5427675406282972,
+        "error_modelo": 14.499455602912935,
+        "error_regla_que_menos_falla": 16.902462644511438,
+        "sesgo_modelo": 0.2663442230988505,
+        "sesgo_reglas": {
+          "repetir_semana_anterior": -0.28122623392113627,
+          "media_28_dias": -3.344622505758572,
+          "media_mismo_dia_4_semanas": 0.2624048672929513
+        }
+      },
+      "dolares": {
+        "veredicto": "gana",
+        "origenes_que_gana": 13,
+        "de": 13,
+        "minimo": 10,
+        "ventaja": 2.4051176813532216,
+        "intervalo_bajo": 1.4605943710169176,
+        "intervalo_alto": 3.5533418771098684,
+        "error_modelo": 16.205475112993142,
+        "error_regla_que_menos_falla": 18.610592794346363,
+        "sesgo_modelo": -0.49949781089146456,
+        "sesgo_reglas": {
+          "repetir_semana_anterior": -1.7568915846113122,
+          "media_28_dias": -1.4549840322039578,
+          "media_mismo_dia_4_semanas": -1.4406976516794299
+        }
+      }
+    },
+    "fuente": "informes/prueba_final.json",
+    "escrito_por": "scripts/20_prueba_final.py"
+  },
+  "modelo_en_uso": {
+    "existia": false,
+    "de_donde": "ninguno: el responsable del caso aún no ha aprobado un modelo en uso; el primer reentreno se compara con la validación"
+  },
+  "cambia_con_datos_nuevos": {
+    "tabla": "la misma sin sus últimos 28 días (105840 filas)",
+    "por_objetivo": {
+      "unidades": {
+        "diferencia_maxima": 43.39875957019302,
+        "cambia": true
+      },
+      "dolares": {
+        "diferencia_maxima": 127.71851840951706,
+        "cambia": true
+      }
+    }
+  },
+  "validaciones": {
+    "columnas_del_contrato": true,
+    "bit_a_bit": null,
+    "cambia_con_datos_nuevos": true
+  },
+  "estado": "AVISO"
+}

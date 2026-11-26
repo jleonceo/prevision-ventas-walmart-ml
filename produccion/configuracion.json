@@ -1,0 +1,48 @@
+{
+  "que_es": "La configuración de producción del caso 69: rutas, horizontes, semilla, tolerancia, modelo en uso y el lote diario. La leen produccion/reentrenar.py, produccion/ejecutar.py, produccion/lote_diario.py, su envoltorio lote_diario.ps1, produccion/lote_prueba_final.py, produccion/ensayo_despliegue.py y tests/comprobar_produccion_por_otro_camino.py. Solo escribe aquí produccion/vuelta_atras.py, al cambiar el modelo en uso, que decide el responsable del caso. Las rutas van desde la carpeta del caso.",
+  "rutas": {
+    "contrato": "informes/preproduccion.json",
+    "modulo": "scripts",
+    "tabla_de_la_particion": "data/processed/hechos_modelo_entrenamiento.parquet",
+    "reentrenos": "modelos/reentrenos",
+    "predicciones": "data/predicciones"
+  },
+  "horizontes": {
+    "unidades": 10,
+    "dolares": 28
+  },
+  "historia_minima_dias": 28,
+  "semilla": 42,
+  "tolerancia": 1e-12,
+  "dias_menos_para_comprobar_que_cambia": 28,
+  "modelo_en_uso": "modelos/reentrenos/2015-05-22",
+  "modelo_en_uso_lo_decide": "el responsable del caso",
+  "modelo_en_uso_aprobado_por": "el responsable del caso, 25/11/2026: «Sí, apruebo el reentrenado», con la prueba final delante (informes/prueba_final.json)",
+  "candidato": null,
+  "descartado": "modelos/reentrenos/2026-11-25: el modelo de la validación tal como estaba; en unidades no se confirmó en la prueba final (9 de 13)",
+  "lote_diario": {
+    "que_es": "Lo que leen produccion/lote_diario.py y su envoltorio produccion/lote_diario.ps1: el intérprete del entorno del caso, las entradas, el registro de ejecuciones, la carpeta de los registros del envoltorio y la de trabajo. La carpeta de salida es rutas.predicciones.",
+    "python": "%CONDA_PREFIX%\\python.exe",
+    "entradas": {
+      "venta": "data/raw/sales_train_evaluation.csv",
+      "precios": [
+        "data/raw/sell_prices.csv",
+        "data/raw/reserva/sell_prices.csv"
+      ],
+      "calendario": "data/raw/calendar.csv"
+    },
+    "registro": "data/predicciones/registro_lote_diario.jsonl",
+    "registros_del_envoltorio": "data/predicciones/_registros",
+    "trabajo": "data/predicciones/_trabajo"
+  },
+  "fuentes": {
+    "horizontes": "reglas-negocio.md §5, «El horizonte»",
+    "historia_minima_dias": "contrato, «Historia mínima»: el retardo y la media más largos miran 28 días atrás",
+    "semilla": "informes/busqueda.json, ganador (random_state 42)",
+    "tolerancia": "los parámetros del método preproduccion",
+    "dias_menos_para_comprobar_que_cambia": "método preproduccion, apartado 3, validación 8: con una tabla distinta el reentrenado no sale igual; la distinta es la misma sin sus últimos 28 días",
+    "lote_diario.python": "método despliegue, programacion.md: el intérprete del entorno del caso, sin el nombre de la persona escrito (va como %CONDA_PREFIX%)",
+    "lote_diario.entradas": "el servidor de producción es una carpeta del caso (método despliegue, apartado 2): la venta hasta ayer es la de data/raw/; los precios de los días a prever se dan por conocidos (reglas, apartado 5, D9; supuesto) y por eso llegan también los de data/raw/reserva/, que solo se leen",
+    "lote_diario.registro": "método despliegue, apartado 2: un registro de cada ejecución con estado, duración y resultado, sin datos de personas"
+  }
+}

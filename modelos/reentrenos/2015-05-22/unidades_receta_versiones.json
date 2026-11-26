@@ -1,0 +1,15 @@
+{
+  "fecha": "2026-11-25T16:42:30",
+  "fichero": "unidades_receta.joblib",
+  "huella": "48f0d6adfc7ccf8516e7588c1be759c37c4cfa59a7a39095381fa82ee88c32d0",
+  "versiones": {
+    "python": "3.13.15",
+    "scikit-learn": "1.9.1",
+    "pandas": "3.0.6",
+    "numpy": "2.5.3",
+    "joblib": "1.6.0"
+  },
+  "objetivo": "unidades",
+  "ajustado": false,
+  "que_es": "la receta: el Pipeline sin ajustar, guardado antes del fit"
+}
