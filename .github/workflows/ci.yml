@@ -1,0 +1,42 @@
+name: ci
+
+# Pasa las pruebas que no necesitan los datos del concurso M5: leen los informes y el modelo que trae el repositorio, o
+# tablas pequeñas escritas en la propia prueba. Corre en Windows porque es donde se comprobaron (la prueba del lote
+# diario da por iguales dos rutas que solo cambian en mayúsculas, como hace Windows).
+# Fuera quedan las dos del cuadro de mando en el navegador, que abren Edge y se pasan en local.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pruebas:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: bash -el {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          environment-file: environment.yml
+          activate-environment: 69_prevision_ventas_walmart
+      - name: Pruebas sin datos
+        env:
+          PYTHONUTF8: "1"
+        run: |
+          for t in tests/probar_01_diccionario_datos.py tests/probar_02_calidad_datos.py \
+                   tests/probar_03_correccion_datos.py tests/probar_04_modelado_datos.py \
+                   tests/probar_05_transformacion_datos.py tests/probar_06_analisis_exploratorio.py \
+                   tests/probar_07_consultas_informe_ejecutivo.py tests/probar_08_informe_ejecutivo.py \
+                   tests/probar_09_business_case.py tests/probar_10_particion.py tests/probar_11_variables_modelo.py \
+                   tests/probar_12_preparacion.py tests/probar_13_preseleccion.py tests/probar_14_modelo_minimo.py \
+                   tests/probar_15_busqueda.py tests/probar_16_validacion.py tests/probar_17_informe_modelado.py tests/probar_18_informe_final.py \
+                   tests/probar_19_contrato_produccion.py tests/probar_20_prueba_final.py \
+                   tests/probar_21_cuadro_mando.py tests/probar_comprobar_produccion_por_otro_camino.py \
+                   tests/probar_ejecutar.py tests/probar_ensayo_despliegue.py tests/probar_lote_diario.py \
+                   tests/probar_lote_prueba_final.py tests/probar_produccion_prevision.py tests/probar_reentrenar.py \
+                   tests/probar_vuelta_atras.py tests/probar_limpieza.py; do
+            echo "== $t"; python -W error "$t"
+          done
