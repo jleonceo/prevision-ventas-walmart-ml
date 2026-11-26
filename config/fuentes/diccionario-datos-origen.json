@@ -1,0 +1,1724 @@
+{
+  "metodo": "diccionario-datos",
+  "version_metodo": "20/11/2026",
+  "script": "scripts/01_diccionario_datos.py",
+  "fecha_datos": "2015-05-22",
+  "fecha_ejecucion": "2026-11-21T09:55:14",
+  "entorno": {
+    "python": "3.13.15",
+    "pandas": "3.0.6",
+    "ejecutable": "python"
+  },
+  "entradas": [
+    {
+      "ruta": "data/raw/sales_train_evaluation.csv",
+      "sha256": "fcbeed85b09a49d3b1b0625a721053388f26e19490bf42e480e97ad6e177b7b2",
+      "bytes": 16286352,
+      "filas": 5000,
+      "columnas": 1581
+    },
+    {
+      "ruta": "data/raw/sell_prices.csv",
+      "sha256": "3a3124852028006f94b6eb2c6b0a313df689ca2c75a6b8aaac0e67447f593a7f",
+      "bytes": 26245223,
+      "filas": 854573,
+      "columnas": 4
+    },
+    {
+      "ruta": "data/raw/calendar.csv",
+      "sha256": "d12b5914ef03e66649adf5dd9e996e6602251c22b7a6af8f1f7e3aa12f8860f5",
+      "bytes": 103469,
+      "filas": 1969,
+      "columnas": 14
+    }
+  ],
+  "huellas_despues": {
+    "venta": "fcbeed85b09a49d3b1b0625a721053388f26e19490bf42e480e97ad6e177b7b2",
+    "precios": "3a3124852028006f94b6eb2c6b0a313df689ca2c75a6b8aaac0e67447f593a7f",
+    "calendario": "d12b5914ef03e66649adf5dd9e996e6602251c22b7a6af8f1f7e3aa12f8860f5"
+  },
+  "resultado": {
+    "estado": "AVISO",
+    "riesgo": "bajo",
+    "resumen": "Tres fuentes descritas: venta 5.000 filas, precios 854.573 filas y calendario 1.969 filas; las 1.575 columnas de días revisadas una a una, con 0 fuera del bloque. 3 contradicciones con la guía del concurso y 4 decisiones de negocio pendientes. No hubo paso de protección de datos: proteccion-datos.json no existe y las reglas, apartado 9 dicen que no hay datos personales.",
+    "artefactos": [
+      "config/fuentes/diccionario-datos-origen.json",
+      "config/fuentes/diccionario-datos-origen.md"
+    ],
+    "siguiente": "calidad-datos, con su plan aprobado por la persona responsable"
+  },
+  "pendientes": [
+    {
+      "id": "P-01",
+      "tabla": "calendario",
+      "columna": "event_name_1",
+      "pregunta": "30 de sus 30 categorías son raras (menos del 2,5 % de las filas o menos de 5 apariciones, contando los días sin evento). ¿Cómo se leen?",
+      "opciones": [
+        "cada evento se lee por su nombre, aunque aparezca una vez al año",
+        "los eventos se leen por su tipo (event_type_1), juntando los nombres"
+      ]
+    },
+    {
+      "id": "P-02",
+      "tabla": "calendario",
+      "columna": "event_type_1",
+      "pregunta": "2 de sus 4 categorías son raras (menos del 2,5 % de las filas o menos de 5 apariciones, contando los días sin evento). ¿Cómo se leen?",
+      "opciones": [
+        "cada tipo de evento se lee por sí solo, aunque alguno tenga pocos días",
+        "los tipos con pocos días se leen juntos, o todos los tipos como un solo «día con evento»"
+      ]
+    },
+    {
+      "id": "P-03",
+      "tabla": "calendario",
+      "columna": "event_name_2",
+      "pregunta": "4 de sus 4 categorías son raras (menos del 2,5 % de las filas o menos de 5 apariciones, contando los días sin evento). ¿Cómo se leen?",
+      "opciones": [
+        "cada segundo evento se lee por su nombre",
+        "los segundos eventos se leen por su tipo (event_type_2), juntando los nombres"
+      ]
+    },
+    {
+      "id": "P-04",
+      "tabla": "calendario",
+      "columna": "event_type_2",
+      "pregunta": "2 de sus 2 categorías son raras (menos del 2,5 % de las filas o menos de 5 apariciones, contando los días sin evento). ¿Cómo se leen?",
+      "opciones": [
+        "cada tipo del segundo evento se lee por sí solo",
+        "el segundo evento se lee junto con el primero, como un día con evento"
+      ]
+    }
+  ],
+  "parametros": [
+    {
+      "nombre": "orden de codificaciones",
+      "valor": "utf-8, utf-8-sig, cp1252, latin-1",
+      "origen": "por defecto"
+    },
+    {
+      "nombre": "filas donde buscar la cabecera de un Excel",
+      "valor": null,
+      "origen": "no aplica: no hay Excel"
+    },
+    {
+      "nombre": "lista completa de valores de un texto",
+      "valor": 15,
+      "origen": "por defecto"
+    },
+    {
+      "nombre": "categoría rara",
+      "valor": "menos del 2,5 % de las filas o menos de 5 apariciones",
+      "origen": "por defecto"
+    },
+    {
+      "nombre": "apertura de bases de datos",
+      "valor": null,
+      "origen": "no aplica: no hay bases de datos"
+    },
+    {
+      "nombre": "ficheros de un ZIP que no se abren",
+      "valor": null,
+      "origen": "no aplica: no hay ZIP"
+    }
+  ],
+  "periodos": {
+    "construccion": {
+      "desde": "2011-01-29",
+      "hasta": "2014-05-22"
+    },
+    "validacion": {
+      "desde": "2014-05-23",
+      "hasta": "2015-05-22"
+    }
+  },
+  "diccionario_organizacion": "config/fuentes/M5_guia_de_participantes_2020.docx",
+  "contexto_usado": [
+    "EQUIPO.md",
+    "config/negocio/reglas-negocio.md",
+    "config/negocio/01_ficha_del_caso.md",
+    "config/metodo/04_planteamientos.md",
+    "config/fuentes/M5_guia_de_participantes_2020.docx"
+  ],
+  "tablas": [
+    {
+      "tabla": "venta",
+      "fichero": "data/raw/sales_train_evaluation.csv",
+      "que_es_una_fila": "un producto en una tienda, con una columna por día",
+      "filas": 5000,
+      "columnas": 1581,
+      "clave": [
+        "id"
+      ],
+      "clave_unica": true,
+      "clave_alternativa": [
+        "item_id",
+        "store_id"
+      ],
+      "clave_alternativa_unica": true,
+      "claves_hacia_otras_tablas": [
+        {
+          "columnas": [
+            "item_id",
+            "store_id"
+          ],
+          "tabla": "precios",
+          "supuesta": true
+        },
+        {
+          "columnas": [
+            "nombre de cada columna de días"
+          ],
+          "tabla": "calendario (columna d)",
+          "supuesta": true
+        }
+      ],
+      "campos": [
+        {
+          "columna": "id",
+          "tipo_leido": "str",
+          "tipo_declarado": null,
+          "rol": "identificador",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 5000,
+          "minimo": null,
+          "maximo": null,
+          "valores": null,
+          "categorias_raras": [],
+          "filas": 5000,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "identificador de la fila: el producto, la tienda y un sufijo fijo, unidos por guion bajo. La guía no lo documenta; el significado del sufijo se deduce del nombre del fichero y no se usa",
+          "procedencia": "medido; el sufijo, sin_confirmar",
+          "proteccion": null
+        },
+        {
+          "columna": "item_id",
+          "tipo_leido": "str",
+          "tipo_declarado": null,
+          "rol": "clave",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 500,
+          "minimo": null,
+          "maximo": null,
+          "valores": null,
+          "categorias_raras": [],
+          "filas": 5000,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "código del producto. Junto con store_id apunta a los precios (relación supuesta: la guía no la declara)",
+          "procedencia": "declarado (guía del concurso, «The dataset»)",
+          "proteccion": null
+        },
+        {
+          "columna": "dept_id",
+          "tipo_leido": "str",
+          "tipo_declarado": null,
+          "rol": "categorica",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 7,
+          "minimo": null,
+          "maximo": null,
+          "valores": [
+            {
+              "valor": "FOODS_3",
+              "frecuencia": 1290
+            },
+            {
+              "valor": "HOUSEHOLD_1",
+              "frecuencia": 930
+            },
+            {
+              "valor": "HOUSEHOLD_2",
+              "frecuencia": 740
+            },
+            {
+              "valor": "HOBBIES_1",
+              "frecuencia": 730
+            },
+            {
+              "valor": "FOODS_2",
+              "frecuencia": 610
+            },
+            {
+              "valor": "FOODS_1",
+              "frecuencia": 430
+            },
+            {
+              "valor": "HOBBIES_2",
+              "frecuencia": 270
+            }
+          ],
+          "categorias_raras": [],
+          "filas": 5000,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "departamento al que pertenece el producto",
+          "procedencia": "declarado (guía del concurso, «The dataset»); reglas de negocio §4",
+          "proteccion": null
+        },
+        {
+          "columna": "cat_id",
+          "tipo_leido": "str",
+          "tipo_declarado": null,
+          "rol": "categorica",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 3,
+          "minimo": null,
+          "maximo": null,
+          "valores": [
+            {
+              "valor": "FOODS",
+              "frecuencia": 2330
+            },
+            {
+              "valor": "HOUSEHOLD",
+              "frecuencia": 1670
+            },
+            {
+              "valor": "HOBBIES",
+              "frecuencia": 1000
+            }
+          ],
+          "categorias_raras": [],
+          "filas": 5000,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "categoría a la que pertenece el producto: alimentación, ocio u hogar",
+          "procedencia": "declarado (guía del concurso, «The dataset»); reglas de negocio §4",
+          "proteccion": null
+        },
+        {
+          "columna": "store_id",
+          "tipo_leido": "str",
+          "tipo_declarado": null,
+          "rol": "clave",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 10,
+          "minimo": null,
+          "maximo": null,
+          "valores": [
+            {
+              "valor": "CA_1",
+              "frecuencia": 500
+            },
+            {
+              "valor": "CA_2",
+              "frecuencia": 500
+            },
+            {
+              "valor": "CA_3",
+              "frecuencia": 500
+            },
+            {
+              "valor": "CA_4",
+              "frecuencia": 500
+            },
+            {
+              "valor": "TX_1",
+              "frecuencia": 500
+            },
+            {
+              "valor": "TX_2",
+              "frecuencia": 500
+            },
+            {
+              "valor": "TX_3",
+              "frecuencia": 500
+            },
+            {
+              "valor": "WI_1",
+              "frecuencia": 500
+            },
+            {
+              "valor": "WI_2",
+              "frecuencia": 500
+            },
+            {
+              "valor": "WI_3",
+              "frecuencia": 500
+            }
+          ],
+          "categorias_raras": [],
+          "filas": 5000,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "código de la tienda donde se vende el producto. Junto con item_id apunta a los precios (relación supuesta)",
+          "procedencia": "declarado (guía del concurso, «The dataset»); reglas de negocio §4",
+          "proteccion": null
+        },
+        {
+          "columna": "state_id",
+          "tipo_leido": "str",
+          "tipo_declarado": null,
+          "rol": "categorica",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 3,
+          "minimo": null,
+          "maximo": null,
+          "valores": [
+            {
+              "valor": "CA",
+              "frecuencia": 2000
+            },
+            {
+              "valor": "TX",
+              "frecuencia": 1500
+            },
+            {
+              "valor": "WI",
+              "frecuencia": 1500
+            }
+          ],
+          "categorias_raras": [],
+          "filas": 5000,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "estado donde está la tienda",
+          "procedencia": "declarado (guía del concurso, «The dataset»); reglas de negocio §4",
+          "proteccion": null
+        }
+      ],
+      "bloque_dias": {
+        "rol": "magnitud",
+        "procedencia": "declarado (guía del concurso, «The dataset»); reglas de negocio §5",
+        "significado": "unidades vendidas del producto en la tienda el día i, contado desde el 29/01/2011",
+        "significado_cero": "un día con cero unidades es un dato válido, no un vacío; no distingue falta de demanda de falta de producto (reglas de negocio §5)",
+        "significado_sin_fila": "no falta ninguna fila: cada producto está en cada tienda (medido). Antes de su primera venta un producto suma cero a su departamento (reglas de negocio §3)",
+        "columnas": 1575,
+        "columnas_revisadas": 1575,
+        "primera": "d_1",
+        "ultima": "d_1575",
+        "nombres_seguidos": true,
+        "tipos": {
+          "int64": 1575
+        },
+        "nulos": 0,
+        "negativos": 0,
+        "minimo": 0,
+        "maximo": 648,
+        "columnas_con_minimo_cero": 1575,
+        "maximo_mas_bajo_de_una_columna": 1,
+        "fuera_del_bloque": [],
+        "clase": "resuelto",
+        "dias_en_los_dos_periodos": 1575
+      },
+      "relaciones_medidas": {
+        "filas_donde_id_es_producto_tienda_y_sufijo": 5000,
+        "sufijos_distintos_de_id": 1,
+        "sufijo_de_id": "evaluation",
+        "productos_cuyo_codigo_no_empieza_por_su_departamento": 0,
+        "departamentos_cuyo_codigo_no_empieza_por_su_categoria": 0,
+        "tiendas_cuyo_codigo_no_empieza_por_su_estado": 0,
+        "productos_con_mas_de_un_departamento": 0,
+        "departamentos_con_mas_de_una_categoria": 0,
+        "tiendas_con_mas_de_un_estado": 0,
+        "productos_que_no_estan_en_todas_las_tiendas": 0,
+        "pares_producto_tienda_repetidos": 0,
+        "productos_distintos": 500,
+        "filas_por_departamento": {
+          "FOODS_1": 430,
+          "FOODS_2": 610,
+          "FOODS_3": 1290,
+          "HOBBIES_1": 730,
+          "HOBBIES_2": 270,
+          "HOUSEHOLD_1": 930,
+          "HOUSEHOLD_2": 740
+        },
+        "productos_por_departamento": {
+          "FOODS_1": 43,
+          "FOODS_2": 61,
+          "FOODS_3": 129,
+          "HOBBIES_1": 73,
+          "HOBBIES_2": 27,
+          "HOUSEHOLD_1": 93,
+          "HOUSEHOLD_2": 74
+        },
+        "filas_por_tienda": {
+          "CA_1": 500,
+          "CA_2": 500,
+          "CA_3": 500,
+          "CA_4": 500,
+          "TX_1": 500,
+          "TX_2": 500,
+          "TX_3": 500,
+          "WI_1": 500,
+          "WI_2": 500,
+          "WI_3": 500
+        }
+      },
+      "por_periodo": {
+        "construccion": {
+          "desde": "2011-01-29",
+          "hasta": "2014-05-22",
+          "primera_columna": "d_1",
+          "ultima_columna": "d_1210",
+          "dias": 1210,
+          "celdas": 6050000,
+          "celdas_a_cero": 4278752,
+          "celdas_a_cero_pct": 70.72,
+          "unidades": 7003244,
+          "maximo_de_una_celda": 648,
+          "productos_tienda_sin_ninguna_venta": 306
+        },
+        "validacion": {
+          "desde": "2014-05-23",
+          "hasta": "2015-05-22",
+          "primera_columna": "d_1211",
+          "ultima_columna": "d_1575",
+          "dias": 365,
+          "celdas": 1825000,
+          "celdas_a_cero": 1135227,
+          "celdas_a_cero_pct": 62.2,
+          "unidades": 2323947,
+          "maximo_de_una_celda": 300,
+          "productos_tienda_sin_ninguna_venta": 87
+        }
+      },
+      "lectura": {
+        "codificacion": "utf-8",
+        "separador": ",",
+        "decimal": ".",
+        "hoja": null,
+        "fila_cabecera": 0,
+        "solo_vacio_es_nulo": true,
+        "avisos": []
+      }
+    },
+    {
+      "tabla": "precios",
+      "fichero": "data/raw/sell_prices.csv",
+      "que_es_una_fila": "un producto en una tienda en una semana de Walmart, con su precio",
+      "filas": 854573,
+      "columnas": 4,
+      "clave": [
+        "store_id",
+        "item_id",
+        "wm_yr_wk"
+      ],
+      "clave_unica": true,
+      "claves_hacia_otras_tablas": [
+        {
+          "columnas": [
+            "item_id",
+            "store_id"
+          ],
+          "tabla": "venta",
+          "supuesta": true
+        },
+        {
+          "columnas": [
+            "wm_yr_wk"
+          ],
+          "tabla": "calendario",
+          "supuesta": true
+        }
+      ],
+      "campos": [
+        {
+          "columna": "store_id",
+          "tipo_leido": "str",
+          "tipo_declarado": null,
+          "rol": "clave",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 10,
+          "minimo": null,
+          "maximo": null,
+          "valores": [
+            {
+              "valor": "TX_2",
+              "frecuencia": 88368
+            },
+            {
+              "valor": "TX_1",
+              "frecuencia": 87676
+            },
+            {
+              "valor": "CA_1",
+              "frecuencia": 87510
+            },
+            {
+              "valor": "WI_3",
+              "frecuencia": 87358
+            },
+            {
+              "valor": "CA_3",
+              "frecuencia": 86670
+            },
+            {
+              "valor": "TX_3",
+              "frecuencia": 86504
+            },
+            {
+              "valor": "WI_2",
+              "frecuencia": 84927
+            },
+            {
+              "valor": "CA_4",
+              "frecuencia": 84126
+            },
+            {
+              "valor": "WI_1",
+              "frecuencia": 82211
+            },
+            {
+              "valor": "CA_2",
+              "frecuencia": 79223
+            }
+          ],
+          "categorias_raras": [],
+          "filas": 854573,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "código de la tienda",
+          "procedencia": "declarado (guía del concurso, «The dataset»)",
+          "proteccion": null
+        },
+        {
+          "columna": "item_id",
+          "tipo_leido": "str",
+          "tipo_declarado": null,
+          "rol": "clave",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 500,
+          "minimo": null,
+          "maximo": null,
+          "valores": null,
+          "categorias_raras": [],
+          "filas": 854573,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "código del producto",
+          "procedencia": "declarado (guía del concurso, «The dataset»)",
+          "proteccion": null
+        },
+        {
+          "columna": "wm_yr_wk",
+          "tipo_leido": "int64",
+          "tipo_declarado": null,
+          "rol": "codigo",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 225,
+          "minimo": 11101,
+          "maximo": 11516,
+          "valores": null,
+          "categorias_raras": [],
+          "filas": 854573,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "código de la semana de Walmart, de sábado a viernes. Apunta a la semana del calendario (relación supuesta)",
+          "procedencia": "declarado (guía del concurso, «The dataset»); reglas de negocio §5",
+          "proteccion": null
+        },
+        {
+          "columna": "sell_price",
+          "tipo_leido": "float64",
+          "tipo_declarado": null,
+          "rol": "magnitud",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 572,
+          "minimo": 0.01,
+          "maximo": 34.18,
+          "valores": null,
+          "categorias_raras": [],
+          "filas": 854573,
+          "clase_documental": "resuelto",
+          "significado_cero": "no hay ceros (medido); un precio cero hace sospechar (reglas de negocio §7, «Lo esperable»)",
+          "significado_sin_fila": "una semana sin fila es una semana en que el producto no se vendió en esa tienda (guía del concurso; reglas de negocio §5)",
+          "clase": "resuelto",
+          "significado": "precio de venta del producto en la tienda esa semana, en dólares: la media de los siete días, que vale para los siete",
+          "procedencia": "declarado (guía del concurso, «The dataset»); reglas de negocio §5 y §6",
+          "proteccion": null
+        }
+      ],
+      "relaciones_medidas": {
+        "productos_distintos": 500,
+        "tiendas_distintas": 10,
+        "semanas_distintas": 225,
+        "productos_tienda_con_algun_precio": 4947,
+        "precios_con_mas_de_dos_decimales": 0,
+        "precios_por_debajo_del_rango_esperable": 9438,
+        "precios_por_encima_del_rango_esperable": 0,
+        "rango_esperable": [
+          0.5,
+          50.0
+        ],
+        "precios_cero_o_negativos": 0
+      },
+      "ultima_semana_de_construccion": 11416,
+      "primera_semana_de_validacion": 11416,
+      "por_periodo": {
+        "hasta_la_ultima_semana_de_construccion": {
+          "filas": 603600,
+          "semana_minima": 11101,
+          "semana_maxima": 11416,
+          "productos_tienda_con_precio": 4700,
+          "precio_minimo": 0.05,
+          "precio_maximo": 29.97
+        },
+        "despues": {
+          "filas": 250973,
+          "semana_minima": 11417,
+          "semana_maxima": 11516,
+          "productos_tienda_con_precio": 4947,
+          "precio_minimo": 0.01,
+          "precio_maximo": 34.18
+        }
+      },
+      "lectura": {
+        "codificacion": "utf-8",
+        "separador": ",",
+        "decimal": ".",
+        "hoja": null,
+        "fila_cabecera": 0,
+        "solo_vacio_es_nulo": true,
+        "avisos": []
+      }
+    },
+    {
+      "tabla": "calendario",
+      "fichero": "data/raw/calendar.csv",
+      "que_es_una_fila": "un día",
+      "filas": 1969,
+      "columnas": 14,
+      "clave": [
+        "d"
+      ],
+      "clave_unica": true,
+      "clave_alternativa": [
+        "date"
+      ],
+      "clave_alternativa_unica": true,
+      "claves_hacia_otras_tablas": [
+        {
+          "columnas": [
+            "d"
+          ],
+          "tabla": "venta (nombre de cada columna de días)",
+          "supuesta": true
+        },
+        {
+          "columnas": [
+            "wm_yr_wk"
+          ],
+          "tabla": "precios",
+          "supuesta": true
+        }
+      ],
+      "campos": [
+        {
+          "columna": "date",
+          "tipo_leido": "str",
+          "tipo_declarado": "fecha y-m-d",
+          "rol": "fecha",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 1969,
+          "minimo": "2011-01-29",
+          "maximo": "2016-06-19",
+          "valores": null,
+          "categorias_raras": [],
+          "filas": 1969,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "fecha del día, en formato año-mes-día",
+          "procedencia": "declarado (guía del concurso, «The dataset»)",
+          "proteccion": null
+        },
+        {
+          "columna": "wm_yr_wk",
+          "tipo_leido": "int64",
+          "tipo_declarado": null,
+          "rol": "codigo",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 282,
+          "minimo": 11101,
+          "maximo": 11621,
+          "valores": null,
+          "categorias_raras": [],
+          "filas": 1969,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "código de la semana de Walmart a la que pertenece el día",
+          "procedencia": "declarado (guía del concurso, «The dataset»)",
+          "proteccion": null
+        },
+        {
+          "columna": "weekday",
+          "tipo_leido": "str",
+          "tipo_declarado": null,
+          "rol": "categorica",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 7,
+          "minimo": null,
+          "maximo": null,
+          "valores": [
+            {
+              "valor": "Saturday",
+              "frecuencia": 282
+            },
+            {
+              "valor": "Sunday",
+              "frecuencia": 282
+            },
+            {
+              "valor": "Monday",
+              "frecuencia": 281
+            },
+            {
+              "valor": "Tuesday",
+              "frecuencia": 281
+            },
+            {
+              "valor": "Wednesday",
+              "frecuencia": 281
+            },
+            {
+              "valor": "Thursday",
+              "frecuencia": 281
+            },
+            {
+              "valor": "Friday",
+              "frecuencia": 281
+            }
+          ],
+          "categorias_raras": [],
+          "filas": 1969,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "nombre del día de la semana, en inglés",
+          "procedencia": "declarado (guía del concurso, «The dataset»)",
+          "proteccion": null
+        },
+        {
+          "columna": "wday",
+          "tipo_leido": "int64",
+          "tipo_declarado": null,
+          "rol": "codigo",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 7,
+          "minimo": 1,
+          "maximo": 7,
+          "valores": null,
+          "categorias_raras": [],
+          "filas": 1969,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "número del día de la semana, empezando por el sábado",
+          "procedencia": "declarado (guía del concurso, «The dataset»)",
+          "proteccion": null
+        },
+        {
+          "columna": "month",
+          "tipo_leido": "int64",
+          "tipo_declarado": null,
+          "rol": "codigo",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 12,
+          "minimo": 1,
+          "maximo": 12,
+          "valores": null,
+          "categorias_raras": [],
+          "filas": 1969,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "mes de la fecha",
+          "procedencia": "declarado (guía del concurso, «The dataset»)",
+          "proteccion": null
+        },
+        {
+          "columna": "year",
+          "tipo_leido": "int64",
+          "tipo_declarado": null,
+          "rol": "codigo",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 6,
+          "minimo": 2011,
+          "maximo": 2016,
+          "valores": null,
+          "categorias_raras": [],
+          "filas": 1969,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "año de la fecha",
+          "procedencia": "declarado (guía del concurso, «The dataset»)",
+          "proteccion": null
+        },
+        {
+          "columna": "d",
+          "tipo_leido": "str",
+          "tipo_declarado": null,
+          "rol": "clave",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 1969,
+          "minimo": null,
+          "maximo": null,
+          "valores": null,
+          "categorias_raras": [],
+          "filas": 1969,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "código del día, de d_1 en adelante, que coincide con el nombre de las columnas de días de la venta (relación supuesta, medida)",
+          "procedencia": "medido; sin documentar en la guía",
+          "proteccion": null
+        },
+        {
+          "columna": "event_name_1",
+          "tipo_leido": "str",
+          "tipo_declarado": null,
+          "rol": "categorica",
+          "nulos": 1807,
+          "nulos_pct": 91.77,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 30,
+          "minimo": null,
+          "maximo": null,
+          "valores": null,
+          "categorias_raras": [
+            {
+              "categoria": "SuperBowl",
+              "filas": 6,
+              "pct": 0.3
+            },
+            {
+              "categoria": "ValentinesDay",
+              "filas": 6,
+              "pct": 0.3
+            },
+            {
+              "categoria": "PresidentsDay",
+              "filas": 6,
+              "pct": 0.3
+            },
+            {
+              "categoria": "LentStart",
+              "filas": 6,
+              "pct": 0.3
+            },
+            {
+              "categoria": "LentWeek2",
+              "filas": 6,
+              "pct": 0.3
+            },
+            {
+              "categoria": "StPatricksDay",
+              "filas": 6,
+              "pct": 0.3
+            },
+            {
+              "categoria": "Purim End",
+              "filas": 6,
+              "pct": 0.3
+            },
+            {
+              "categoria": "Pesach End",
+              "filas": 6,
+              "pct": 0.3
+            },
+            {
+              "categoria": "Mother's day",
+              "filas": 6,
+              "pct": 0.3
+            },
+            {
+              "categoria": "MemorialDay",
+              "filas": 6,
+              "pct": 0.3
+            },
+            {
+              "categoria": "NBAFinalsStart",
+              "filas": 6,
+              "pct": 0.3
+            },
+            {
+              "categoria": "NBAFinalsEnd",
+              "filas": 6,
+              "pct": 0.3
+            },
+            {
+              "categoria": "Ramadan starts",
+              "filas": 6,
+              "pct": 0.3
+            },
+            {
+              "categoria": "OrthodoxEaster",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "Cinco De Mayo",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "IndependenceDay",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "Eid al-Fitr",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "LaborDay",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "ColumbusDay",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "Halloween",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "EidAlAdha",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "VeteransDay",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "Thanksgiving",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "Christmas",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "Chanukah End",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "NewYear",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "OrthodoxChristmas",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "MartinLutherKingDay",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "Easter",
+              "filas": 5,
+              "pct": 0.25
+            },
+            {
+              "categoria": "Father's day",
+              "filas": 4,
+              "pct": 0.2
+            }
+          ],
+          "filas": 1969,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "decision_de_negocio",
+          "significado": "nombre del evento del día; vacío quiere decir «sin evento»",
+          "procedencia": "declarado (guía del concurso, «The dataset»); reglas de negocio §5",
+          "proteccion": null
+        },
+        {
+          "columna": "event_type_1",
+          "tipo_leido": "str",
+          "tipo_declarado": null,
+          "rol": "categorica",
+          "nulos": 1807,
+          "nulos_pct": 91.77,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 4,
+          "minimo": null,
+          "maximo": null,
+          "valores": [
+            {
+              "valor": "Religious",
+              "frecuencia": 55
+            },
+            {
+              "valor": "National",
+              "frecuencia": 52
+            },
+            {
+              "valor": "Cultural",
+              "frecuencia": 37
+            },
+            {
+              "valor": "Sporting",
+              "frecuencia": 18
+            }
+          ],
+          "categorias_raras": [
+            {
+              "categoria": "Cultural",
+              "filas": 37,
+              "pct": 1.88
+            },
+            {
+              "categoria": "Sporting",
+              "filas": 18,
+              "pct": 0.91
+            }
+          ],
+          "filas": 1969,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "decision_de_negocio",
+          "significado": "tipo del evento del día; vacío quiere decir «sin evento»",
+          "procedencia": "declarado (guía del concurso, «The dataset»); reglas de negocio §5",
+          "proteccion": null
+        },
+        {
+          "columna": "event_name_2",
+          "tipo_leido": "str",
+          "tipo_declarado": null,
+          "rol": "categorica",
+          "nulos": 1964,
+          "nulos_pct": 99.75,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 4,
+          "minimo": null,
+          "maximo": null,
+          "valores": [
+            {
+              "valor": "Father's day",
+              "frecuencia": 2
+            },
+            {
+              "valor": "Easter",
+              "frecuencia": 1
+            },
+            {
+              "valor": "Cinco De Mayo",
+              "frecuencia": 1
+            },
+            {
+              "valor": "OrthodoxEaster",
+              "frecuencia": 1
+            }
+          ],
+          "categorias_raras": [
+            {
+              "categoria": "Father's day",
+              "filas": 2,
+              "pct": 0.1
+            },
+            {
+              "categoria": "Easter",
+              "filas": 1,
+              "pct": 0.05
+            },
+            {
+              "categoria": "Cinco De Mayo",
+              "filas": 1,
+              "pct": 0.05
+            },
+            {
+              "categoria": "OrthodoxEaster",
+              "filas": 1,
+              "pct": 0.05
+            }
+          ],
+          "filas": 1969,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "decision_de_negocio",
+          "significado": "nombre del segundo evento del día; vacío quiere decir «sin segundo evento»",
+          "procedencia": "declarado (guía del concurso, «The dataset»); reglas de negocio §5",
+          "proteccion": null
+        },
+        {
+          "columna": "event_type_2",
+          "tipo_leido": "str",
+          "tipo_declarado": null,
+          "rol": "categorica",
+          "nulos": 1964,
+          "nulos_pct": 99.75,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 2,
+          "minimo": null,
+          "maximo": null,
+          "valores": [
+            {
+              "valor": "Cultural",
+              "frecuencia": 4
+            },
+            {
+              "valor": "Religious",
+              "frecuencia": 1
+            }
+          ],
+          "categorias_raras": [
+            {
+              "categoria": "Cultural",
+              "filas": 4,
+              "pct": 0.2
+            },
+            {
+              "categoria": "Religious",
+              "filas": 1,
+              "pct": 0.05
+            }
+          ],
+          "filas": 1969,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "decision_de_negocio",
+          "significado": "tipo del segundo evento del día; vacío quiere decir «sin segundo evento»",
+          "procedencia": "declarado (guía del concurso, «The dataset»); reglas de negocio §5",
+          "proteccion": null
+        },
+        {
+          "columna": "snap_CA",
+          "tipo_leido": "int64",
+          "tipo_declarado": "binaria 0 o 1",
+          "rol": "booleana",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 2,
+          "minimo": null,
+          "maximo": null,
+          "valores": null,
+          "categorias_raras": [],
+          "filas": 1969,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "1 si las tiendas de California aceptan compras con SNAP ese día; 0 si no",
+          "procedencia": "declarado (guía del concurso, «The dataset»)",
+          "proteccion": null
+        },
+        {
+          "columna": "snap_TX",
+          "tipo_leido": "int64",
+          "tipo_declarado": "binaria 0 o 1",
+          "rol": "booleana",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 2,
+          "minimo": null,
+          "maximo": null,
+          "valores": null,
+          "categorias_raras": [],
+          "filas": 1969,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "1 si las tiendas de Texas aceptan compras con SNAP ese día; 0 si no",
+          "procedencia": "declarado (guía del concurso, «The dataset»)",
+          "proteccion": null
+        },
+        {
+          "columna": "snap_WI",
+          "tipo_leido": "int64",
+          "tipo_declarado": "binaria 0 o 1",
+          "rol": "booleana",
+          "nulos": 0,
+          "nulos_pct": 0.0,
+          "vacios": 0,
+          "espacios": 0,
+          "distintos": 2,
+          "minimo": null,
+          "maximo": null,
+          "valores": null,
+          "categorias_raras": [],
+          "filas": 1969,
+          "clase_documental": "resuelto",
+          "significado_cero": null,
+          "significado_sin_fila": null,
+          "clase": "resuelto",
+          "significado": "1 si las tiendas de Wisconsin aceptan compras con SNAP ese día; 0 si no",
+          "procedencia": "declarado (guía del concurso, «The dataset»)",
+          "proteccion": null
+        }
+      ],
+      "relaciones_medidas": {
+        "fechas_que_no_se_leen_como_ano_mes_dia": 0,
+        "dias_seguidos_sin_hueco": true,
+        "d_numerado_de_1_en_adelante_sin_hueco": true,
+        "fecha_de_d1": "2011-01-29",
+        "filas_con_wday_distinto_del_que_toca_a_weekday": 0,
+        "filas_con_month_distinto_del_mes_de_date": 0,
+        "filas_con_year_distinto_del_ano_de_date": 0,
+        "semanas": 282,
+        "semanas_con_siete_dias": 281,
+        "semanas_incompletas": {
+          "11621": 2
+        },
+        "semanas_que_no_empiezan_en_sabado": 0,
+        "filas_con_nombre_y_tipo_del_evento_1_descuadrados": 0,
+        "filas_con_nombre_y_tipo_del_evento_2_descuadrados": 0,
+        "dias_con_segundo_evento_sin_primero": 0
+      },
+      "por_periodo": {
+        "construccion": {
+          "desde": "2011-01-29",
+          "hasta": "2014-05-22",
+          "filas": 1210,
+          "dias_con_evento": 99,
+          "dias_con_dos_eventos": 3,
+          "dias_snap": {
+            "snap_CA": 400,
+            "snap_TX": 400,
+            "snap_WI": 400
+          },
+          "semana_minima": 11101,
+          "semana_maxima": 11416
+        },
+        "validacion": {
+          "desde": "2014-05-23",
+          "hasta": "2015-05-22",
+          "filas": 365,
+          "dias_con_evento": 29,
+          "dias_con_dos_eventos": 1,
+          "dias_snap": {
+            "snap_CA": 120,
+            "snap_TX": 120,
+            "snap_WI": 120
+          },
+          "semana_minima": 11416,
+          "semana_maxima": 11516
+        },
+        "despues_de_la_fecha_de_referencia": {
+          "desde": "2015-05-23",
+          "hasta": "2016-06-19",
+          "filas": 394,
+          "dias_con_evento": 34,
+          "dias_con_dos_eventos": 1,
+          "dias_snap": {
+            "snap_CA": 130,
+            "snap_TX": 130,
+            "snap_WI": 130
+          },
+          "semana_minima": 11517,
+          "semana_maxima": 11621
+        }
+      },
+      "lectura": {
+        "codificacion": "utf-8",
+        "separador": ",",
+        "decimal": ".",
+        "hoja": null,
+        "fila_cabecera": 0,
+        "solo_vacio_es_nulo": true,
+        "avisos": []
+      }
+    }
+  ],
+  "contradicciones": [
+    {
+      "tabla": "venta",
+      "columna": "id",
+      "que_dice_el_documento": "no la documenta",
+      "que_dicen_los_datos": "la columna id está en el fichero"
+    },
+    {
+      "tabla": "calendario",
+      "columna": "d",
+      "que_dice_el_documento": "no la documenta",
+      "que_dicen_los_datos": "la columna d está en el fichero"
+    },
+    {
+      "tabla": "venta",
+      "columna": null,
+      "que_dice_el_documento": "el fichero se llama sales_train.csv",
+      "que_dicen_los_datos": "el fichero se llama sales_train_evaluation.csv"
+    }
+  ],
+  "comprobaciones_guia": [
+    {
+      "tabla": "venta",
+      "columna": "id",
+      "que_dice_el_documento": "no la documenta",
+      "que_dicen_los_datos": "la columna id está en el fichero",
+      "contradice": true
+    },
+    {
+      "tabla": "calendario",
+      "columna": "d",
+      "que_dice_el_documento": "no la documenta",
+      "que_dicen_los_datos": "la columna d está en el fichero",
+      "contradice": true
+    },
+    {
+      "tabla": "venta",
+      "columna": null,
+      "que_dice_el_documento": "el fichero se llama sales_train.csv",
+      "que_dicen_los_datos": "el fichero se llama sales_train_evaluation.csv",
+      "contradice": true
+    },
+    {
+      "tabla": "precios",
+      "columna": null,
+      "que_dice_el_documento": "el fichero se llama sell_prices.csv",
+      "que_dicen_los_datos": "el fichero se llama sell_prices.csv",
+      "contradice": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": null,
+      "que_dice_el_documento": "el fichero se llama calendar.csv",
+      "que_dicen_los_datos": "el fichero se llama calendar.csv",
+      "contradice": false
+    },
+    {
+      "tabla": "venta",
+      "columna": "d_1 … d_n",
+      "que_dice_el_documento": "las unidades vendidas el día i: un número entero de unidades",
+      "que_dicen_los_datos": "1575 columnas; int64 en 1575; 0 vacíos; 0 negativos",
+      "contradice": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "d",
+      "que_dice_el_documento": "el día d_1 es el 2011-01-29",
+      "que_dicen_los_datos": "d_1 es el 2011-01-29",
+      "contradice": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "date",
+      "que_dice_el_documento": "los datos van del 2011-01-29 al 2016-06-19",
+      "que_dicen_los_datos": "el calendario va del 2011-01-29 al 2016-06-19",
+      "contradice": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "date",
+      "que_dice_el_documento": "formato año-mes-día",
+      "que_dicen_los_datos": "0 fechas no se leen con ese formato",
+      "contradice": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "weekday",
+      "que_dice_el_documento": "el día de la semana, de sábado a viernes",
+      "que_dicen_los_datos": "valores fuera de los siete días: ninguno",
+      "contradice": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "wday",
+      "que_dice_el_documento": "número del día de la semana, empezando por el sábado",
+      "que_dicen_los_datos": "0 filas no casan con weekday",
+      "contradice": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "month",
+      "que_dice_el_documento": "el mes de la fecha",
+      "que_dicen_los_datos": "0 filas no casan con date",
+      "contradice": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "year",
+      "que_dice_el_documento": "el año de la fecha",
+      "que_dicen_los_datos": "0 filas no casan con date",
+      "contradice": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "event_name_1 y event_type_1",
+      "que_dice_el_documento": "si el día tiene evento, su nombre y su tipo",
+      "que_dicen_los_datos": "0 filas con nombre sin tipo o tipo sin nombre",
+      "contradice": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "event_name_2 y event_type_2",
+      "que_dice_el_documento": "si el día tiene evento, su nombre y su tipo",
+      "que_dicen_los_datos": "0 filas con nombre sin tipo o tipo sin nombre",
+      "contradice": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "snap_CA",
+      "que_dice_el_documento": "binaria, 0 o 1",
+      "que_dicen_los_datos": "valores 0, 1; 0 vacíos",
+      "contradice": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "snap_TX",
+      "que_dice_el_documento": "binaria, 0 o 1",
+      "que_dicen_los_datos": "valores 0, 1; 0 vacíos",
+      "contradice": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "snap_WI",
+      "que_dice_el_documento": "binaria, 0 o 1",
+      "que_dicen_los_datos": "valores 0, 1; 0 vacíos",
+      "contradice": false
+    },
+    {
+      "tabla": "venta",
+      "columna": "state_id",
+      "que_dice_el_documento": "el estado donde está la tienda",
+      "que_dicen_los_datos": "0 tiendas con más de un estado; 0 filas cuyo código de tienda no empieza por su estado",
+      "contradice": false
+    },
+    {
+      "tabla": "venta",
+      "columna": "dept_id",
+      "que_dice_el_documento": "los departamentos desagregan las categorías",
+      "que_dicen_los_datos": "0 departamentos en más de una categoría",
+      "contradice": false
+    },
+    {
+      "tabla": "venta",
+      "columna": "item_id",
+      "que_dice_el_documento": "cada producto pertenece a un departamento",
+      "que_dicen_los_datos": "0 productos en más de un departamento",
+      "contradice": false
+    },
+    {
+      "tabla": "venta",
+      "columna": "cat_id",
+      "que_dice_el_documento": "3 valores distintos",
+      "que_dicen_los_datos": "3 valores distintos",
+      "contradice": false
+    },
+    {
+      "tabla": "venta",
+      "columna": "dept_id",
+      "que_dice_el_documento": "7 valores distintos",
+      "que_dicen_los_datos": "7 valores distintos",
+      "contradice": false
+    },
+    {
+      "tabla": "venta",
+      "columna": "store_id",
+      "que_dice_el_documento": "10 valores distintos",
+      "que_dicen_los_datos": "10 valores distintos",
+      "contradice": false
+    },
+    {
+      "tabla": "venta",
+      "columna": "state_id",
+      "que_dice_el_documento": "3 valores distintos",
+      "que_dicen_los_datos": "3 valores distintos",
+      "contradice": false
+    },
+    {
+      "tabla": "precios",
+      "columna": "sell_price",
+      "que_dice_el_documento": "una semana sin precio es una semana en que el producto no se vendió",
+      "que_dicen_los_datos": "no se comprueba aquí: hace falta cruzar con la venta y el calendario (calidad-datos, bloque 3.11)",
+      "contradice": false
+    }
+  ],
+  "diferencias_por_recorte": [
+    {
+      "tabla": "venta",
+      "columna": "item_id",
+      "guia": "3049 productos",
+      "datos": "500 productos",
+      "motivo": "recorte de 500 productos (reglas de negocio §3)"
+    },
+    {
+      "tabla": "venta",
+      "columna": "d_1 … d_n",
+      "guia": "d_1 a d_1941",
+      "datos": "d_1 a d_1575",
+      "motivo": "la prueba final está apartada fuera del caso (reglas de negocio §5)"
+    },
+    {
+      "tabla": "precios",
+      "columna": "wm_yr_wk",
+      "guia": "precios hasta la última semana del concurso",
+      "datos": "semanas 11101 a 11516",
+      "motivo": "la prueba final está apartada fuera del caso (reglas de negocio §5)"
+    }
+  ],
+  "columnas_que_no_llegan": [],
+  "columnas_que_no_llegan_nota": "No hay código de carga todavía: scripts/ no tenía ningún script antes de este. Ninguna columna se descarta en la lectura.",
+  "filtros_de_negocio": [
+    {
+      "regla": "reglas de negocio §5: la prueba final (del 23/05/2015 al 22/05/2016) está fuera de data/raw/; la venta llega hasta el 22/05/2015",
+      "filas_afectadas": 0,
+      "unidad": "filas de data/raw/ afectadas"
+    },
+    {
+      "regla": "reglas de negocio §5: el calendario llega a propósito hasta el 19/06/2016; los días después de la fecha de referencia no tienen venta en el caso",
+      "filas_afectadas": 394,
+      "unidad": "filas del calendario"
+    },
+    {
+      "regla": "reglas de negocio §7, «Población del análisis»: el reconocimiento y la exploración usan solo la construcción; la validación se mira al medir el modelo",
+      "filas_afectadas": 365,
+      "unidad": "columnas de días de la venta en la validación"
+    },
+    {
+      "regla": "precios después de la última semana de la construcción, que entran en la validación",
+      "filas_afectadas": 250973,
+      "unidad": "filas de precios"
+    }
+  ],
+  "no_se_puede_saber": [
+    {
+      "que": "si el precio lleva impuestos de venta",
+      "procedencia": "reglas de negocio §6"
+    },
+    {
+      "que": "cuándo fija la tienda el precio dentro de la semana",
+      "procedencia": "reglas de negocio §5"
+    },
+    {
+      "que": "si un día con cero unidades tenía producto en el estante: no hay existencias",
+      "procedencia": "reglas de negocio §5"
+    },
+    {
+      "que": "qué quiere decir el sufijo fijo de id",
+      "procedencia": "la guía no documenta la columna id"
+    }
+  ],
+  "datos_personales": [],
+  "datos_personales_nota": "No existe config/fuentes/proteccion-datos.json: los datos no pasaron por la protección. Las reglas de negocio §9 dicen que no hay datos de personas y el paso 2a no se hizo. Esta ejecución buscó en cada columna de texto valores con forma de correo, teléfono, documento o cuenta y encontró 0 columnas con ellos. Este método no usa ni deja ninguna columna de datos personales.",
+  "texto_libre": "ninguna columna es texto libre; no se buscaron órdenes dentro de las celdas",
+  "limites": [
+    "el diccionario describe una tabla cada vez; las claves huérfanas o repetidas entre tablas se ven primero en el apartado «Cruces entre tablas» de calidad-datos y se controlan al cruzarlas con integracion-datos",
+    "la detección de datos personales mira columnas enteras; un nombre dentro de texto libre no lo caza",
+    "las descripciones «sin confirmar» son deducciones y no se usan como regla",
+    "el reparto de los vacíos por segmento no se mide aquí: lo mide calidad-datos en el bloque 3.4",
+    "la afirmación de la guía sobre la semana sin precio necesita cruzar tablas y se comprueba en calidad-datos"
+  ],
+  "validacion": [
+    {
+      "comprobacion": "todas las columnas de las tres fuentes tienen ficha o están en el bloque de días",
+      "resultado": true
+    },
+    {
+      "comprobacion": "cada significado tiene procedencia",
+      "resultado": true
+    },
+    {
+      "comprobacion": "ninguna columna con dato personal muestra valores",
+      "resultado": true
+    },
+    {
+      "comprobacion": "columnas con valores de forma de dato personal",
+      "resultado": 0
+    },
+    {
+      "comprobacion": "las huellas de data/raw/ son iguales antes y después",
+      "resultado": true
+    },
+    {
+      "comprobacion": "las 1.575 columnas de días revisadas una a una",
+      "resultado": 1575
+    }
+  ],
+  "duracion_segundos": 1.9
+}

@@ -1,0 +1,161 @@
+{
+  "origen": "petición 07, bloques «LO QUE YA ESTÁ DECIDIDO» (decisiones) y «LO QUE NO HACES» (sin_cambios), copiados literales",
+  "decidido_por": "el responsable del caso, con el sí a la petición 07 («Sí, lánzalo»)",
+  "fecha": "2026-11-23",
+  "decisiones": [
+    {
+      "pendiente": "PC-01",
+      "decision": "son precios reales de productos baratos y se usan como están",
+      "nota": null
+    },
+    {
+      "pendiente": "PC-02",
+      "decision": "son cambios reales de precio y se usan como están",
+      "nota": null
+    },
+    {
+      "pendiente": "PC-03",
+      "decision": "es un cierre real de la tienda y se trata como el 25 de diciembre",
+      "nota": "En la corrección no cambia ningún dato; ningún error se mide ese día"
+    },
+    {
+      "pendiente": "PC-04",
+      "decision": "se dejan como vendidas",
+      "nota": null
+    },
+    {
+      "pendiente": "PC-05",
+      "decision": "son cambios reales de la venta y la serie se usa entera",
+      "nota": "Cómo pesa en el modelo la historia anterior al salto lo fijan los planteamientos, no los datos"
+    },
+    {
+      "pendiente": "PC-06",
+      "decision": "son cambios reales de la venta y la serie se usa entera",
+      "nota": "Cómo pesa en el modelo la historia anterior al salto lo fijan los planteamientos, no los datos"
+    }
+  ],
+  "sin_cambios": [
+    {
+      "problemas": [
+        "C-01"
+      ],
+      "pendientes": [],
+      "motivo": "pasar la venta a una fila por día es reestructurar; lo hace la transformación."
+    },
+    {
+      "problemas": [
+        "C-02"
+      ],
+      "pendientes": [],
+      "motivo": "la clave es item_id con store_id; id no se usa como variable."
+    },
+    {
+      "problemas": [
+        "C-05",
+        "C-06",
+        "C-07",
+        "C-08"
+      ],
+      "pendientes": [],
+      "motivo": "D2, cerrada el 21/11/2026; el vacío es «sin evento» (reglas, apartado 5). Los cinco días con segundo evento traen dos fiestas distintas; ninguno repite ni contradice al primero."
+    },
+    {
+      "problemas": [
+        "C-09"
+      ],
+      "pendientes": [],
+      "motivo": "una semana sin precio es una semana sin venta (reglas, apartado 5)."
+    },
+    {
+      "problemas": [
+        "C-10",
+        "C-11"
+      ],
+      "pendientes": [],
+      "motivo": "un día con cero unidades es un dato válido (reglas, apartado 5)."
+    },
+    {
+      "problemas": [
+        "C-12"
+      ],
+      "pendientes": [
+        "PC-01"
+      ],
+      "motivo": "los 9.438 precios bajo 0,5 dólares pesan el 0,41 % de los dólares de la construcción y el 0,31 % de la validación; en una serie, como mucho el 3,3 %. Quitarlos dejaría semanas con venta y sin precio, que paran el trabajo (reglas, apartado 5)."
+    },
+    {
+      "problemas": [
+        "C-13"
+      ],
+      "pendientes": [
+        "PC-02"
+      ],
+      "motivo": "las 350 subidas de más del doble pesan el 0,03 % de los dólares de cada periodo."
+    },
+    {
+      "problemas": [
+        "C-14"
+      ],
+      "pendientes": [
+        "PC-03"
+      ],
+      "motivo": "WI_1 el 2011-02-02 es un cierre por la definición de las reglas, apartado 5, en el quinto día de los datos."
+    },
+    {
+      "problemas": [
+        "C-15"
+      ],
+      "pendientes": [
+        "PC-04"
+      ],
+      "motivo": "22 de 9.327.191 unidades; el 25 de diciembre queda fuera del error (reglas, apartado 6)."
+    },
+    {
+      "problemas": [
+        "C-16",
+        "C-17"
+      ],
+      "pendientes": [
+        "PC-05",
+        "PC-06"
+      ],
+      "motivo": "los saltos son cambios reales de la venta; cómo entra la historia anterior al salto lo fijan los planteamientos."
+    },
+    {
+      "problemas": [
+        "C-18"
+      ],
+      "pendientes": [],
+      "motivo": "los ceros son datos válidos; su clase está en clases_de_ceros."
+    },
+    {
+      "problemas": [
+        "C-19",
+        "C-20",
+        "C-29"
+      ],
+      "pendientes": [],
+      "motivo": "suman cero a su departamento (reglas, apartado 3) y no están mal."
+    },
+    {
+      "problemas": [
+        "C-21",
+        "C-22",
+        "C-23",
+        "C-24"
+      ],
+      "pendientes": [],
+      "motivo": "describen; no son errores."
+    },
+    {
+      "problemas": [
+        "C-25",
+        "C-26",
+        "C-27",
+        "C-28"
+      ],
+      "pendientes": [],
+      "motivo": "un atípico no es un error; son ventas y precios reales."
+    }
+  ]
+}
