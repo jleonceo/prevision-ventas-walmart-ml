@@ -9,21 +9,21 @@ fuentes: `../negocio/reglas-negocio.md` §7; Makridakis, Spiliotis y Assimakopou
 
 ## Planteamientos establecidos
 
-### 1 · El suavizado exponencial, como referencia del modelo
+### 1 · El suavizado exponencial como referencia del modelo
 
-- **Para qué:** saber si hace falta un modelo de aprendizaje automático o basta un método estadístico sencillo. Ganar a
+- Para qué: saber si hace falta un modelo de aprendizaje automático o basta un método estadístico sencillo. Ganar a
   las tres reglas de la empresa no lo demuestra.
-- **Qué es:** una media de la venta pasada en la que los días recientes pesan más que los antiguos, con el ritmo de la
+- Qué es: una media de la venta pasada en la que los días recientes pesan más que los antiguos, con el ritmo de la
   semana. Solo usa la historia de la propia serie: ni festivos, ni días SNAP, ni precio.
-- **Por qué:** en el concurso, en el nivel de tienda y departamento, el suavizado exponencial falló un 18,0 % menos que
+- Por qué: en el concurso, en el nivel de tienda y departamento, el suavizado exponencial falló un 18,0 % menos que
   repetir la semana anterior. El ganador falló un 21,3 % menos que el suavizado (apéndice B del artículo de resultados).
-- **Cómo se mide:** en cada una de las 70 series, en unidades y en dólares, con los mismos cortes, días y horizonte que
+- Cómo se mide: en cada una de las 70 series, en unidades y en dólares, con los mismos cortes, días y horizonte que
   el modelo y las tres reglas. Se dan su error y su sesgo al lado de los de las reglas.
-- **Qué decide:** no cambia la regla de ganar de las reglas de negocio, apartado 7, que se mide solo frente a las tres reglas. Si el modelo
+- Qué decide: no cambia la regla de ganar de las reglas de negocio, apartado 7, que se mide solo frente a las tres reglas. Si el modelo
   gana a las reglas pero no al suavizado, el informe lo dice: a la empresa le bastaría el método sencillo.
-- **Diferencia con el concurso:** allí se ajustó a cada producto en cada tienda y se sumó hacia arriba. Aquí se ajusta
+- Diferencia con el concurso: allí se ajustó a cada producto en cada tienda y se sumó hacia arriba. Aquí se ajusta
   directamente a cada departamento en cada tienda, que es lo que se prevé.
-- **Cómo se elige su forma:** en el apartado 2, decisión 8.
+- Cómo se elige su forma: en el apartado 2, decisión 8.
 
 ### 2 · Las decisiones de método del modelado
 
@@ -72,17 +72,17 @@ dólares, donde va la media del mismo día de las 4 semanas anteriores (por 0,02
 
 ### 3 · Lo fijado para la exploración y las variables
 
-- **SNAP** se compara solo dentro de los días 1 a 15 del mes: la venta de los días con SNAP del estado de la tienda
+- SNAP se compara solo dentro de los días 1 a 15 del mes: la venta de los días con SNAP del estado de la tienda
   frente a la de los días sin SNAP de esa misma quincena. Los días SNAP caen siempre en esa quincena (400 por estado en
   la construcción), así que compararlos con el resto del mes mezclaría SNAP con principio de mes.
-- **Los festivos y demás eventos** dan su efecto por departamento, sumando las 10 tiendas, con un mínimo de 30 días de
+- Los festivos y demás eventos dan su efecto por departamento, sumando las 10 tiendas, con un mínimo de 30 días de
   serie por evento. El día normal es la media del mismo día de la semana en las cuatro semanas anteriores sin evento.
-- **Las dos cifras** son cocientes de medias de unidades por día de serie, sin los días fuera del error (reglas de negocio, apartado 6).
-- **El día de la semana** se mide como la venta media del día más fuerte entre la del más flojo, por departamento.
-- **El mes** se mide como la venta media de cada mes completo entre la media de los meses completos, por categoría.
-- **El precio** solo se describe: la correlación de Spearman entre el precio medio de la semana anterior y las unidades
+- Las dos cifras son cocientes de medias de unidades por día de serie, sin los días fuera del error (reglas de negocio, apartado 6).
+- El día de la semana se mide como la venta media del día más fuerte entre la del más flojo, por departamento.
+- El mes se mide como la venta media de cada mes completo entre la media de los meses completos, por categoría.
+- El precio solo se describe: la correlación de Spearman entre el precio medio de la semana anterior y las unidades
   de la semana, por serie.
-- **El precio que entra al modelo** es el de la semana anterior, nunca el de la semana prevista. Una semana sin precio es
+- El precio que entra al modelo es el de la semana anterior, nunca el de la semana prevista. Una semana sin precio es
   una semana sin venta, así que el precio medio de la semana prevista diría qué productos se venden en ella.
-- **El precio medio de un departamento** es la media simple de los precios de sus productos con precio esa semana,
+- El precio medio de un departamento es la media simple de los precios de sus productos con precio esa semana,
   contando solo los que ya tenían precio cuatro semanas antes. Detalle en las reglas de transformación, apartado 1.

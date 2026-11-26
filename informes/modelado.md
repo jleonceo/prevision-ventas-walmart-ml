@@ -62,7 +62,7 @@ No aplica a esta previsión. El desequilibrio del método es el de un objetivo d
 
 El error es el de los cortes de la validación cruzada, previendo en recursivo; el de entrenamiento se mide a un día en las filas del ajuste. La distancia entre los dos es el sobreajuste.
 
-### Unidades, a 10 días
+### Unidades a 10 días
 
 | Algoritmo | Error medio | Desviación entre cortes | Sesgo | Error en entrenamiento | Cortes que gana, de 5 |
 |---|---:|---:|---:|---:|---:|
@@ -78,7 +78,7 @@ El error es el de los cortes de la validación cruzada, previendo en recursivo; 
 
 Pliegue a pliegue, HistGradientBoosting menos Ridge da -5,42 puntos de media, con una desviación de 1,26. Empate: no.
 
-### Dólares, a 28 días
+### Dólares a 28 días
 
 | Algoritmo | Error medio | Desviación entre cortes | Sesgo | Error en entrenamiento | Cortes que gana, de 5 |
 |---|---:|---:|---:|---:|---:|
@@ -96,7 +96,7 @@ Pliegue a pliegue, HistGradientBoosting menos Ridge da -5,85 puntos de media, co
 
 ## El ganador y por qué
 
-### Unidades, a 10 días
+### Unidades a 10 días
 
 Gana HistGradientBoosting, con 82 columnas y semilla 42. Se reajustó con 82.250 filas de la construcción. Por qué: gana pliegue a pliegue: la media de las diferencias pasa de su desviación. Su ficha está en `assets/fichas_de_algoritmos/histgradientboosting/01_ficha.md`.
 
@@ -104,7 +104,7 @@ Gana HistGradientBoosting, con 82 columnas y semilla 42. Se reajustó con 82.250
 - **Frente a la regla simple:** con solo las dos variables que más pesan (`unidades_media_7`, `unidades_lag_1`), una regresión lineal falla 21,83. El ganador la supera pliegue a pliegue: sí (diferencia media de -6,19, desviación de 1,48).
 - **Canario:** con el objetivo barajado falla 80,95; con la venta real puesta como variable, 0,90. Un error por debajo de 5 apuntaría a que la previsión usa el futuro: la comprobación ve una fuga cuando la hay.
 
-### Dólares, a 28 días
+### Dólares a 28 días
 
 Gana HistGradientBoosting, con 82 columnas y semilla 42. Se reajustó con 82.250 filas de la construcción. Por qué: gana pliegue a pliegue: la media de las diferencias pasa de su desviación. Su ficha está en `assets/fichas_de_algoritmos/histgradientboosting/01_ficha.md`.
 
@@ -116,7 +116,7 @@ Gana HistGradientBoosting, con 82 columnas y semilla 42. Se reajustó con 82.250
 
 La importancia es lo que empeora el error al barajar cada variable de origen. Dice que el modelo usa esa variable para acertar. No dice que cause la venta.
 
-### Unidades, a 10 días
+### Unidades a 10 días
 
 | Variable | Importancia | Desviación |
 |---|---:|---:|
@@ -128,7 +128,7 @@ La importancia es lo que empeora el error al barajar cada variable de origen. Di
 
 Son las primeras de 50 variables de origen. Las dos primeras llevan 0,66 de la importancia positiva, en tanto por uno. Método: permutacion por variable de origen; filas: fuera de pliegue: 3500 filas de prueba de los 5 cortes, a un día con los retardos reales; puntuación: menos el error de reglas, apartado 6, con la previsión acotada y redondeada.
 
-### Dólares, a 28 días
+### Dólares a 28 días
 
 | Variable | Importancia | Desviación |
 |---|---:|---:|
@@ -144,7 +144,7 @@ Son las primeras de 50 variables de origen. Las dos primeras llevan 0,56 de la i
 
 El ganador se midió una sola vez en la validación, en recursivo y con las 70 series enteras (muestra: no). Cómo van las previsiones: «acotados en cero y, en unidades, redondeados: como se miden».
 
-### Unidades, a 10 días: gana
+### Unidades a 10 días: gana
 
 Se midió desde 13 orígenes, del 23/05/2014 al 03/05/2015, con 9.100 filas. Cada serie tiene 130 días previstos.
 
@@ -264,7 +264,7 @@ Se midió desde 13 orígenes, del 23/05/2014 al 03/05/2015, con 9.100 filas. Cad
 
 **Lecturas del paso anterior.** Son umbrales para leer, sin poder de decisión (reglas, apartado 7, «Lo esperable»). Un error por debajo de 5 apuntaría a que la previsión usa el futuro: el del modelo queda por encima. Una ventaja de más de 15 puntos se revisaría: esta queda por debajo.
 
-### Dólares, a 28 días: gana
+### Dólares a 28 días: gana
 
 Se midió desde 13 orígenes, del 23/05/2014 al 21/05/2015, con 25.410 filas, sin 25/12/2014. Cada serie tiene 364 días previstos.
 
@@ -439,7 +439,7 @@ Son lecturas sobre las mismas previsiones y las mismas filas medidas que el vere
 | WI_2 | 1,46 | 1,29 |
 | WI_3 | 2,12 | 1,86 |
 
-### La previsión sumada por tienda, categoría, estado y cadena
+### La previsión sumada en cada nivel de la cadena
 
 La previsión de la cadena, la de cada estado, la de cada tienda y la de cada categoría salen de sumar las previsiones de sus series de departamento y tienda tal como se miden: acotadas en cero y, en unidades, redondeadas antes de sumar. El error y el sesgo de cada grupo salen de sus filas sumadas, con todos los orígenes juntos. Es una lectura sobre las mismas filas medidas que el veredicto, que no cambia.
 

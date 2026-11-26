@@ -69,7 +69,7 @@ Si el modelo falla de media más que la regla que menos falla en un departamento
 
 Son lecturas con las mismas previsiones y las mismas filas medidas que el veredicto. No lo cambian.
 
-### Unidades, a 10 días
+### Unidades a 10 días
 
 - **La ventaja se concentra.** Las 5 series que más aportan suman +1,37 de los +2,28 puntos: WI_2 FOODS_3 (+0,51); WI_2 FOODS_2 (+0,40); WI_3 FOODS_3 (+0,24); CA_3 FOODS_3 (+0,14); CA_1 FOODS_3 (+0,08).
 - **Sin algunas tiendas.** Sin WI_2 y WI_3 juntas, la ventaja es de +1,20 puntos. Sin cada tienda: sin CA_1, +2,44; sin CA_2, +2,42; sin CA_3, +2,39; sin CA_4, +2,38; sin TX_1, +2,36; sin TX_2, +2,39; sin TX_3, +2,41; sin WI_1, +2,41; sin WI_2, +1,46; sin WI_3, +2,12.
@@ -78,7 +78,7 @@ Son lecturas con las mismas previsiones y las mismas filas medidas que el veredi
 - **Eventos del calendario** del 23/05/2014 al 22/05/2015: 8 de 30 caen en días medidos. Sin cubrir: NBAFinalsStart (05/06/2014, fuera del horizonte); Father's day (15/06/2014, fuera del horizonte); NBAFinalsEnd (15/06/2014, fuera del horizonte); IndependenceDay (04/07/2014, fuera del horizonte); Eid al-Fitr (29/07/2014, fuera del horizonte); LaborDay (01/09/2014, fuera del horizonte); EidAlAdha (04/10/2014, fuera del horizonte); Halloween (31/10/2014, fuera del horizonte); Thanksgiving (27/11/2014, fuera del horizonte); Chanukah End (24/12/2014, fuera del horizonte); Christmas (25/12/2014, fuera del horizonte); NewYear (01/01/2015, fuera del horizonte); MartinLutherKingDay (19/01/2015, fuera del horizonte); ValentinesDay (14/02/2015, fuera del horizonte); PresidentsDay (16/02/2015, fuera del horizonte); LentStart (18/02/2015, fuera del horizonte); LentWeek2 (25/02/2015, fuera del horizonte); StPatricksDay (17/03/2015, fuera del horizonte); Pesach End (11/04/2015, fuera del horizonte); OrthodoxEaster (12/04/2015, fuera del horizonte); Cinco De Mayo (05/05/2015, fuera del horizonte); Mother's day (10/05/2015, fuera del horizonte).
 - **Filas medidas por día de la semana:** lunes, 910; martes, 910; miércoles, 910; jueves, 910; viernes, 1.820; sábado, 1.820; domingo, 1.820.
 
-### Dólares, a 28 días
+### Dólares a 28 días
 
 - **La ventaja se concentra.** Las 5 series que más aportan suman +1,15 de los +2,06 puntos: WI_2 FOODS_3 (+0,45); WI_2 FOODS_2 (+0,34); WI_3 FOODS_3 (+0,20); WI_3 FOODS_2 (+0,09); WI_2 HOUSEHOLD_1 (+0,08).
 - **Sin algunas tiendas.** Sin WI_2 y WI_3 juntas, la ventaja es de +0,99 puntos. Sin cada tienda: sin CA_1, +2,17; sin CA_2, +2,31; sin CA_3, +2,35; sin CA_4, +2,18; sin TX_1, +2,13; sin TX_2, +2,08; sin TX_3, +2,10; sin WI_1, +2,16; sin WI_2, +1,29; sin WI_3, +1,86.
@@ -92,7 +92,7 @@ Son lecturas con las mismas previsiones y las mismas filas medidas que el veredi
 
 La previsión de la cadena, de cada estado, de cada tienda y de cada categoría es la suma de las de sus series tal como se miden: acotadas en cero y, en unidades, redondeadas antes de sumar. El error y el sesgo salen de las filas sumadas de todos los orígenes juntos. Es una lectura: el veredicto no cambia.
 
-### Unidades, a 10 días
+### Unidades a 10 días
 
 En la cadena, el modelo falla menos que la regla que menos falla en cada origen en 9 de los 13 orígenes.
 
@@ -116,7 +116,7 @@ En la cadena, el modelo falla menos que la regla que menos falla en cada origen 
 | categoría | HOBBIES | 130 | 9,21 | +0,28 | la media del mismo día de las 4 semanas anteriores | 10,29 | sí |
 | categoría | HOUSEHOLD | 130 | 6,39 | +4,37 | la media del mismo día de las 4 semanas anteriores | 6,91 | sí |
 
-### Dólares, a 28 días
+### Dólares a 28 días
 
 En la cadena, el modelo falla menos que la regla que menos falla en cada origen en 12 de los 13 orígenes.
 
