@@ -37,6 +37,6 @@ jobs:
                    tests/probar_21_cuadro_mando.py tests/probar_comprobar_produccion_por_otro_camino.py \
                    tests/probar_ejecutar.py tests/probar_ensayo_despliegue.py tests/probar_lote_diario.py \
                    tests/probar_lote_prueba_final.py tests/probar_produccion_prevision.py tests/probar_reentrenar.py \
-                   tests/probar_vuelta_atras.py tests/probar_limpieza.py; do
+                   tests/probar_vuelta_atras.py tests/probar_limpieza.py datos_origen/probar_apartar_prueba_final.py; do
             echo "== $t"; python -W error "$t"
           done
