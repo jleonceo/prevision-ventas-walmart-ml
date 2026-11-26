@@ -1,0 +1,144 @@
+{
+  "metodo": "preparacion-modelo",
+  "version_metodo": "20/11/2026",
+  "script": "scripts/10_particion.py",
+  "fecha_datos": "2015-05-22",
+  "fecha_ejecucion": "2026-11-24T14:25:37",
+  "entorno": {
+    "python": "3.13.15",
+    "pandas": "3.0.6",
+    "numpy": "2.5.3",
+    "pyarrow": "24.0.0",
+    "scikit-learn": "1.9.1",
+    "ejecutable": "python"
+  },
+  "entradas": [
+    {
+      "ruta": "data/processed/hechos_series.parquet",
+      "sha256": "31a6a1fbac4f87437ebdd70ca6ab06f55c189fcc87e8150c5d5d319056abf165",
+      "filas": 110250,
+      "columnas": 26
+    }
+  ],
+  "resultado": {
+    "estado": "OK",
+    "riesgo": "bajo",
+    "resumen": "Entrenamiento con 84700 filas del 2011-01-29 al 2014-05-22 y validación con 25550 filas del 2014-05-23 al 2015-05-22, exactamente las de cada periodo del paso 2; 8 comprobaciones en verde.",
+    "artefactos": [
+      "informes/particion.json",
+      "data/processed/hechos_series_entrenamiento.parquet",
+      "data/processed/hechos_series_validacion.parquet"
+    ],
+    "siguiente": "preparacion-modelo §2 y §3: diagnóstico y matriz propuesta, que aprueba el responsable del caso"
+  },
+  "pendientes": [],
+  "estrategia": "fecha",
+  "por_que": "la partición la apartó el paso 2 por fecha, en la columna periodo (reglas-negocio §5, «Fechas»): el modelo se usa hacia adelante y la validación es el año más reciente; aquí no se vuelve a partir",
+  "semilla": 42,
+  "semilla_nota": "la partición no usa azar: sigue la columna periodo",
+  "columna_fecha": "date",
+  "columna_periodo": "periodo",
+  "columna_grupo": null,
+  "objetivo": {
+    "columnas": [
+      "unidades",
+      "dolares"
+    ],
+    "tipo": "cantidad",
+    "nota": "objetivo continuo: no hay tasa ni desequilibrio de clases"
+  },
+  "partes": [
+    {
+      "parte": "entrenamiento",
+      "periodo": "construccion",
+      "ruta": "data/processed/hechos_series_entrenamiento.parquet",
+      "sha256": "5f59c9aed638d2139630f4fc4e189a7c2aed98d646d8deaf7b94fff5feda95b9",
+      "filas": 84700,
+      "columnas": 26,
+      "tasa_objetivo": null,
+      "unidades": 7003244,
+      "dolares": 18167205.84,
+      "fecha_min": "2011-01-29",
+      "fecha_max": "2014-05-22",
+      "dias": 1210,
+      "combinaciones": 70
+    },
+    {
+      "parte": "validacion",
+      "periodo": "validacion",
+      "ruta": "data/processed/hechos_series_validacion.parquet",
+      "sha256": "08653136219d0ff3d1944c00e3ab742d1a6d64da9e189cbe693dd2389339a6b3",
+      "filas": 25550,
+      "columnas": 26,
+      "tasa_objetivo": null,
+      "unidades": 2323947,
+      "dolares": 6815522.7,
+      "fecha_min": "2014-05-23",
+      "fecha_max": "2015-05-22",
+      "dias": 365,
+      "combinaciones": 70
+    },
+    {
+      "parte": "lote_produccion",
+      "periodo": null,
+      "ruta": null,
+      "sha256": null,
+      "filas": null,
+      "tasa_objetivo": null,
+      "fecha_min": null,
+      "fecha_max": null,
+      "nota": "no hay lote de producción: la prueba final está fuera del caso (reglas-negocio §5)"
+    }
+  ],
+  "comprobaciones": {
+    "sin_filas_compartidas": true,
+    "sin_entidades_compartidas": null,
+    "suman_la_entrada": true,
+    "tasa_dentro_de_tolerancia": null,
+    "fechas_sin_solape": true,
+    "parte_igual_a_su_periodo": true,
+    "tramos_del_paso_2": true,
+    "mismas_columnas": true,
+    "todas_las_series_en_cada_parte": true,
+    "partes_releidas_iguales": true
+  },
+  "detalle_comprobaciones": {
+    "filas_compartidas": 0,
+    "filas_entrada": 110250,
+    "filas_partes": 110250,
+    "filas_repetidas": 0,
+    "filas_perdidas": 0,
+    "filas_sobrantes": 0,
+    "fecha_max_entrenamiento": "2014-05-22",
+    "fecha_min_validacion": "2014-05-23",
+    "partes_iguales_a_su_periodo": {
+      "entrenamiento": true,
+      "validacion": true
+    },
+    "columna_fecha_del_paso_2": "date"
+  },
+  "comprobaciones_nulas": {
+    "sin_entidades_compartidas": "no aplica: partición por fecha; las 70 series están en las dos partes a propósito",
+    "tasa_dentro_de_tolerancia": "no aplica: el objetivo es una cantidad"
+  },
+  "huella_entrada_despues": "31a6a1fbac4f87437ebdd70ca6ab06f55c189fcc87e8150c5d5d319056abf165",
+  "paradas": [],
+  "tramos_del_paso_2": {
+    "fuente": "informes/transformacion-datos.json, «particion»",
+    "tramos": {
+      "columna_fecha": "date",
+      "desarrollo": {
+        "desde": "2011-01-29",
+        "hasta": "2014-05-22"
+      },
+      "validacion": {
+        "desde": "2014-05-23",
+        "hasta": "2015-05-22"
+      },
+      "fuente": "reglas-negocio §5, «Fechas»",
+      "filas_sin_tramo": 0,
+      "fechas_sin_tramo": [],
+      "filas_con_periodo_distinto_del_tramo": 0
+    }
+  }
+}

@@ -1,0 +1,387 @@
+{
+  "metodo": "despliegue",
+  "version_metodo": "20/11/2026",
+  "script": "produccion/ensayo_despliegue.py",
+  "fecha_datos": "2015-05-22",
+  "fecha_ejecucion": "2026-11-25T17:45:11",
+  "entorno": {
+    "python": "3.13.15",
+    "pandas": "3.0.6",
+    "ejecutable": "python"
+  },
+  "entradas": [
+    {
+      "ruta": "data/raw/sales_train_evaluation.csv",
+      "sha256": "fcbeed85b09a49d3b1b0625a721053388f26e19490bf42e480e97ad6e177b7b2"
+    },
+    {
+      "ruta": "data/raw/sell_prices.csv",
+      "sha256": "3a3124852028006f94b6eb2c6b0a313df689ca2c75a6b8aaac0e67447f593a7f"
+    },
+    {
+      "ruta": "data/raw/calendar.csv",
+      "sha256": "d12b5914ef03e66649adf5dd9e996e6602251c22b7a6af8f1f7e3aa12f8860f5"
+    },
+    {
+      "ruta": "data/raw/reserva/sales_train_evaluation.csv",
+      "sha256": "07a8b4640c05d3ae3e6b1283ea175a5925e51a675a6f9eeec9c749dc588e688e"
+    },
+    {
+      "ruta": "data/raw/reserva/sell_prices.csv",
+      "sha256": "d043d3640c9af463456681f6f918f4009bca9ae472c7f45858759d8d26e27f81"
+    },
+    {
+      "ruta": "produccion/configuracion.json",
+      "sha256": "e68178923c7fc5f5c5803de72457c009bc8c5429a69d89004c42e1c490ad5a61"
+    }
+  ],
+  "resultado": {
+    "estado": "AVISO",
+    "riesgo": "medio",
+    "resumen": "el lote diario y su vuelta atrás salen bien de principio a fin en una copia de trabajo (16 comprobaciones en verde); la tarea programada y los avisos esperan al responsable del caso (puerta 6)",
+    "artefactos": [
+      "informes/despliegue.json",
+      "produccion/lote_diario.md"
+    ],
+    "siguiente": "El responsable del caso decide la programación y quién lee los avisos (puerta 6)"
+  },
+  "pendientes": [
+    {
+      "id": "P-01",
+      "tabla": "tarea programada",
+      "columna": "programación",
+      "pregunta": "¿Se crea la tarea diaria en el Programador de tareas y a qué hora (puerta 6)?",
+      "opciones": [
+        "crearla a la hora que diga el responsable del caso, con las dos opciones de programacion.md",
+        "no crearla todavía"
+      ]
+    },
+    {
+      "id": "P-02",
+      "tabla": "avisos",
+      "columna": "por error y por ausencia",
+      "pregunta": "¿Quién lee los avisos y cuántas ejecuciones se esperan por semana?",
+      "opciones": [
+        "el responsable del caso, con una ejecución por día",
+        "otra persona o cadencia"
+      ]
+    }
+  ],
+  "forma": {
+    "tipo": "lotes",
+    "por_que": "la previsión es diaria y la usa quien hace el pedido: un lote que deja cada día su salida (planteamientos del caso, paso 1)",
+    "servidor": "una carpeta del caso, con solo lo que el servidor necesitaría: es una simplificación, no lo ideal (método despliegue, apartado 2)"
+  },
+  "configuracion": {
+    "ruta": "produccion/configuracion.json",
+    "modelo_en_uso": "modelos/reentrenos/2015-05-22",
+    "modelo_en_uso_aprobado_por": "el responsable del caso, 25/11/2026: «Sí, apruebo el reentrenado», con la prueba final delante (informes/prueba_final.json)",
+    "lote_diario": {
+      "que_es": "Lo que leen produccion/lote_diario.py y su envoltorio produccion/lote_diario.ps1: el intérprete del entorno del caso, las entradas, el registro de ejecuciones, la carpeta de los registros del envoltorio y la de trabajo. La carpeta de salida es rutas.predicciones.",
+      "python": "%CONDA_PREFIX%\\python.exe",
+      "entradas": {
+        "venta": "data/raw/sales_train_evaluation.csv",
+        "precios": [
+          "data/raw/sell_prices.csv",
+          "data/raw/reserva/sell_prices.csv"
+        ],
+        "calendario": "data/raw/calendar.csv"
+      },
+      "registro": "data/predicciones/registro_lote_diario.jsonl",
+      "registros_del_envoltorio": "data/predicciones/_registros",
+      "trabajo": "data/predicciones/_trabajo"
+    },
+    "salida": "data/predicciones/AAAA-MM-DD/"
+  },
+  "lote": {
+    "script": "produccion/lote_diario.py",
+    "envoltorio": "produccion/lote_diario.ps1",
+    "llama_a": "produccion/ejecutar.py, como función (no copia su lógica)",
+    "como_se_lanza": "powershell.exe -NoProfile -File <caso>\\produccion\\lote_diario.ps1",
+    "argumentos": {
+      "--repetir": "repite a propósito un origen ya previsto",
+      "--origen AAAA-MM-DD": "el día de ayer que se espera; si la venta no llega, para",
+      "--fecha AAAA-MM-DD": "carpeta de la ejecución; por defecto, hoy"
+    },
+    "codigos_de_salida": {
+      "0": "previsión del día guardada",
+      "1": "para: la entrada o una comprobación no lo permiten",
+      "2": "fallo técnico"
+    },
+    "deja": {
+      "salida": "data/predicciones/AAAA-MM-DD/previsiones.parquet y resumen.json",
+      "archivo": "data/predicciones/_archivo/: la salida anterior del mismo día, antes de pisarla",
+      "registro": "data/predicciones/registro_lote_diario.jsonl",
+      "registro_del_envoltorio": "data/predicciones/_registros/lote_diario_AAAAMMDD_HHMMSS.log"
+    }
+  },
+  "programacion": {
+    "estado": "sin crear ni activar: lo decide el responsable del caso (puerta 6)",
+    "como": "el Programador de tareas de Windows llama solo al envoltorio, sin /WD ni privilegios altos, con dos opciones que el asistente básico no marca: que se ejecute aunque nadie haya iniciado sesión (la contraseña la escribe la persona) y que se ejecute en cuanto se pueda si se perdió un inicio",
+    "hora": null,
+    "zona": "hora local del equipo (el Programador de tareas usa la hora local)",
+    "probada": "solo a mano: «Ejecutar» o el envoltorio desde la consola prueban la acción, no el desencadenador"
+  },
+  "vuelta_atras": {
+    "modelo": {
+      "que_se_restaura": "el modelo en uso de la configuración; el código no cambia",
+      "comando": "python -W error produccion/vuelta_atras.py modelo --a modelos/reentrenos/<carpeta> --decide \"el responsable del caso, DD/MM/AAAA: «…» (referencia de la decisión)\"",
+      "anterior": "modelos/reentrenos/2026-11-25",
+      "deja": "una copia de la configuración de antes en produccion/_archivo/"
+    },
+    "salida_de_un_dia": {
+      "comando": "python -W error produccion/vuelta_atras.py salida --fecha AAAA-MM-DD [--restaurar AAAA-MM-DD_<hora>]",
+      "deja": "la carpeta del día en data/predicciones/_archivo/; no se borra nada"
+    },
+    "ensayo_modelo": {
+      "a_el_anterior": {
+        "codigo": 0,
+        "texto": [
+          "OK · modelo en uso: modelos/reentrenos/2015-05-22 → modelos/reentrenos/2026-11-25; copia de la configuración de antes en produccion/_archivo/configuracion_20261125_174547_611980.json"
+        ],
+        "lote": 0,
+        "modelo": {
+          "unidades": "1d9bae4659fe8e42377c2c8e43380abd12d88821dfb975bca14f73e2ffed7360",
+          "dolares": "f03315f21a0722aa9323e476971c31b54b89c7586919d48073b75e1be903228b"
+        },
+        "igual_que_sus_guardadas": {
+          "filas": 2660,
+          "solo_en_una": 0,
+          "diferencia_maxima": 0.0,
+          "coincide": true
+        },
+        "guardadas": "data/processed/prueba_final/tal_como_esta/2015-05-22/previsiones.parquet"
+      },
+      "otra_vez_a_el_en_uso": {
+        "codigo": 0,
+        "texto": [
+          "OK · modelo en uso: modelos/reentrenos/2026-11-25 → modelos/reentrenos/2015-05-22; copia de la configuración de antes en produccion/_archivo/configuracion_20261125_174602_631934.json"
+        ],
+        "lote": 0,
+        "igual_que_sus_guardadas": {
+          "filas": 2660,
+          "solo_en_una": 0,
+          "diferencia_maxima": 0.0,
+          "coincide": true
+        }
+      },
+      "copias_de_la_configuracion": [
+        "configuracion_20261125_174547_611980.json",
+        "configuracion_20261125_174602_631934.json"
+      ]
+    },
+    "ensayo_salida": {
+      "deshacer": {
+        "codigo": 0,
+        "texto": [
+          "OK · la salida del 2026-11-25 pasa a _archivo/2026-11-25_20261125_174616_378694_deshecha"
+        ],
+        "el_dia_queda_sin_salida": true
+      },
+      "restaurar": {
+        "codigo": 0,
+        "version": "2026-11-25_174559984639",
+        "texto": [
+          "OK · la salida del 2026-11-25 vuelve a ser 2026-11-25_174559984639 (sigue también en el archivo)"
+        ]
+      }
+    }
+  },
+  "avisos": {
+    "por_error": "el código de salida del envoltorio (1 para, 2 fallo técnico), la línea del registro con su estado y su mensaje y el registro del envoltorio con lo que imprimió",
+    "por_ausencia": "sin montar: cuántas ejecuciones se esperan por ventana y quién se entera si faltan se fija con la cadencia (puerta 6)",
+    "quien_los_lee": null
+  },
+  "teoria_aplicada": [
+    "40.3 Ejecución por lotes: configuración como única fuente, envoltorio, cada lote aparte, registro de cada ejecución, alertas por fallo y por ausencia, probar con un periodo nuevo simulado antes de activar"
+  ],
+  "datos_personales": {
+    "proteccion_datos_json": false,
+    "columnas_de_personas_usadas": [],
+    "nota": "ventas por departamento y tienda; el registro no lleva datos de personas"
+  },
+  "prueba_de_principio_a_fin": {
+    "como": "el envoltorio lote_diario.ps1, como lo lanzaría la tarea programada, sobre una carpeta de trabajo con la configuración del caso; la venta de trabajo es la de data/raw/ con el primer día de la reserva (d_1576) añadido, que se aparta y se devuelve",
+    "dia_apartado": {
+      "columna": "d_1576",
+      "fecha": "2015-05-23"
+    },
+    "primera": {
+      "codigo": 0,
+      "origen": "2015-05-22",
+      "modelo": {
+        "unidades": "a9f1689c436e217c9991f50c7e247de5c0508d1f0a81a8fc4ef5b42f86da28e9",
+        "dolares": "cc94fe31f31f5d805a91393754ceaf18f35e9ce2f7c3cf1f986af3aa6ac1c17d"
+      },
+      "filas": {
+        "unidades": {
+          "series": 70,
+          "horizonte": 10,
+          "esperadas": 700,
+          "salida": 700,
+          "con_prevision": 700,
+          "sin_prevision": {},
+          "con_aviso": 0
+        },
+        "dolares": {
+          "series": 70,
+          "horizonte": 28,
+          "esperadas": 1960,
+          "salida": 1960,
+          "con_prevision": 1960,
+          "sin_prevision": {},
+          "con_aviso": 0
+        }
+      },
+      "igual_que_las_guardadas": {
+        "filas": 2660,
+        "solo_en_una": 0,
+        "diferencia_maxima": 0.0,
+        "coincide": true
+      },
+      "guardadas": "data/processed/prueba_final/reentrenado/2015-05-22/previsiones.parquet"
+    },
+    "con_el_dia_devuelto": {
+      "codigo": 0,
+      "origen": "2015-05-23",
+      "archivadas_del_dia": [
+        "2026-11-25_174541210007"
+      ],
+      "la_archivada_es_la_primera": true
+    },
+    "misma_venta_otra_vez": {
+      "codigo": 1,
+      "mensaje": [
+        "PARA · lote diario · origen 2015-05-23 · la venta no llega hasta ayer: acaba el 2015-05-23 y la última ejecución buena (la del 2026-11-25) ya prevé desde el 2015-05-23. ¿Ha llegado la venta nueva? Para repetirla a propósito, lanza el lote con --repetir · 0.5 s"
+      ]
+    },
+    "origen_al_que_no_llega": {
+      "codigo": 1,
+      "mensaje": [
+        "PARA · lote diario · origen 2015-05-23 · la venta no llega hasta el día que se pide (2015-05-24): su último día es el 2015-05-23 · 0.5 s"
+      ]
+    },
+    "registro_del_envoltorio": [
+      "lote_diario_20261125_174514.log",
+      "lote_diario_20261125_174529.log",
+      "lote_diario_20261125_174542.log",
+      "lote_diario_20261125_174543.log"
+    ]
+  },
+  "ejecuciones_en_el_caso": [
+    {
+      "script": "produccion/lote_diario.py",
+      "inicio": "2026-11-25T17:35:57",
+      "fecha": "2026-11-25",
+      "origen": "2015-05-22",
+      "modelo": "modelos/reentrenos/2015-05-22",
+      "repetir": false,
+      "interprete": "python",
+      "carpeta": "data/predicciones/2026-11-25",
+      "comprobaciones": {
+        "carpeta_del_dia_con_resumen": true,
+        "resumen_en_ok": true,
+        "origen_pedido": true,
+        "filas_esperadas": true,
+        "modelo_en_uso": true
+      },
+      "filas": {
+        "unidades": 700,
+        "dolares": 1960
+      },
+      "huellas_modelo": {
+        "unidades": "a9f1689c436e217c9991f50c7e247de5c0508d1f0a81a8fc4ef5b42f86da28e9",
+        "dolares": "cc94fe31f31f5d805a91393754ceaf18f35e9ce2f7c3cf1f986af3aa6ac1c17d"
+      },
+      "estado": "OK",
+      "codigo": 0,
+      "mensaje": "previsión del día guardada",
+      "fin": "2026-11-25T17:36:09",
+      "duracion_s": 11.7
+    },
+    {
+      "script": "produccion/lote_diario.py",
+      "inicio": "2026-11-25T17:36:16",
+      "fecha": "2026-11-25",
+      "origen": "2015-05-22",
+      "modelo": null,
+      "repetir": false,
+      "interprete": "python",
+      "estado": "PARA",
+      "codigo": 1,
+      "mensaje": "la venta no llega hasta ayer: acaba el 2015-05-22 y la última ejecución buena (la del 2026-11-25) ya prevé desde el 2015-05-22. ¿Ha llegado la venta nueva? Para repetirla a propósito, lanza el lote con --repetir",
+      "fin": "2026-11-25T17:36:16",
+      "duracion_s": 0.5
+    }
+  ],
+  "repeticion_prueba_final": {
+    "carpeta": "una carpeta temporal de trabajo",
+    "script": "produccion/lote_prueba_final.py",
+    "comparacion": {
+      "tolerancia": 1e-12,
+      "referencia": {
+        "ruta": "data/processed/previsiones_prueba_final.parquet",
+        "sha256": "172ded6458ffbb794f301320ec02d0667252c541d3421b384acb8acfb496c89a",
+        "variante": "reentrenado",
+        "filas": 36680,
+        "solo_en_el_lote": 5880,
+        "solo_en_la_referencia": 0,
+        "diferencia_maxima": 0.0,
+        "filas_por_encima_de_la_tolerancia": 0,
+        "coincide": true
+      },
+      "lote_de_referencia": {
+        "ruta": "data/processed/prueba_final/reentrenado/previsiones_lote.parquet",
+        "sha256": "1ce1360bc24a852a0cf975215c78f214ea83eb6c236f4809fda299dd9efeb865",
+        "filas": 42560,
+        "solo_en_uno": 0,
+        "diferencia_maxima": 0.0,
+        "filas_por_encima_de_la_tolerancia": 0,
+        "coincide": true
+      },
+      "coincide": true
+    }
+  },
+  "huellas": {
+    "antes": {
+      "configuracion": "e68178923c7fc5f5c5803de72457c009bc8c5429a69d89004c42e1c490ad5a61",
+      "raw": {
+        "data/raw/sales_train_evaluation.csv": "fcbeed85b09a49d3b1b0625a721053388f26e19490bf42e480e97ad6e177b7b2",
+        "data/raw/sell_prices.csv": "3a3124852028006f94b6eb2c6b0a313df689ca2c75a6b8aaac0e67447f593a7f",
+        "data/raw/calendar.csv": "d12b5914ef03e66649adf5dd9e996e6602251c22b7a6af8f1f7e3aa12f8860f5",
+        "data/raw/reserva/sales_train_evaluation.csv": "07a8b4640c05d3ae3e6b1283ea175a5925e51a675a6f9eeec9c749dc588e688e",
+        "data/raw/reserva/sell_prices.csv": "d043d3640c9af463456681f6f918f4009bca9ae472c7f45858759d8d26e27f81"
+      },
+      "predicciones_del_caso": "df6ef2ed92d3f743886d72337ca6e01daf65ebb6962804af2a2a8644820576e4"
+    },
+    "despues": {
+      "configuracion": "e68178923c7fc5f5c5803de72457c009bc8c5429a69d89004c42e1c490ad5a61",
+      "raw": {
+        "data/raw/sales_train_evaluation.csv": "fcbeed85b09a49d3b1b0625a721053388f26e19490bf42e480e97ad6e177b7b2",
+        "data/raw/sell_prices.csv": "3a3124852028006f94b6eb2c6b0a313df689ca2c75a6b8aaac0e67447f593a7f",
+        "data/raw/calendar.csv": "d12b5914ef03e66649adf5dd9e996e6602251c22b7a6af8f1f7e3aa12f8860f5",
+        "data/raw/reserva/sales_train_evaluation.csv": "07a8b4640c05d3ae3e6b1283ea175a5925e51a675a6f9eeec9c749dc588e688e",
+        "data/raw/reserva/sell_prices.csv": "d043d3640c9af463456681f6f918f4009bca9ae472c7f45858759d8d26e27f81"
+      },
+      "predicciones_del_caso": "df6ef2ed92d3f743886d72337ca6e01daf65ebb6962804af2a2a8644820576e4"
+    }
+  },
+  "validaciones": {
+    "primera_sale_bien": true,
+    "primera_igual_que_las_guardadas": true,
+    "con_el_dia_devuelto_avanza_un_dia": true,
+    "dias_previstos_corridos_un_dia": true,
+    "la_primera_queda_en_archivo": true,
+    "misma_venta_para_sin_tocar": true,
+    "origen_al_que_no_llega_para": true,
+    "vuelta_al_anterior_da_sus_previsiones": true,
+    "vuelta_otra_vez_da_las_del_en_uso": true,
+    "configuracion_vuelve_a_la_de_antes": true,
+    "deshacer_la_salida_la_aparta": true,
+    "restaurar_devuelve_la_del_dia_siguiente": true,
+    "prueba_final_se_repite_igual": true,
+    "configuracion_del_caso_sin_tocar": true,
+    "raw_sin_tocar": true,
+    "predicciones_del_caso_sin_tocar": true
+  }
+}

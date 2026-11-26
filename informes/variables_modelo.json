@@ -1,0 +1,935 @@
+{
+  "metodo": "transformacion-datos",
+  "version_metodo": "20/11/2026",
+  "script": "scripts/11_variables_modelo.py",
+  "fecha_datos": "2015-05-22",
+  "fecha_ejecucion": "2026-11-24T15:08:24",
+  "entorno": {
+    "python": "3.13.15",
+    "pandas": "3.0.6",
+    "numpy": "2.5.3",
+    "pyarrow": "24.0.0",
+    "scikit-learn": "1.9.1",
+    "ejecutable": "python"
+  },
+  "entradas": [
+    {
+      "ruta": "data/processed/hechos_series_entrenamiento.parquet",
+      "sha256": "5f59c9aed638d2139630f4fc4e189a7c2aed98d646d8deaf7b94fff5feda95b9",
+      "filas": 84700,
+      "columnas": 26
+    },
+    {
+      "ruta": "data/processed/hechos_series_validacion.parquet",
+      "sha256": "08653136219d0ff3d1944c00e3ab742d1a6d64da9e189cbe693dd2389339a6b3",
+      "filas": 25550,
+      "columnas": 26
+    },
+    {
+      "ruta": "data/processed/precios_corregido.parquet",
+      "sha256": "d9ac5467e59d7f099a0e3ae0358417ef17be8e3c76d6fb59726fa6c70f99c1fa",
+      "filas": 854573,
+      "columnas": 4
+    },
+    {
+      "ruta": "data/processed/dim_producto.parquet",
+      "sha256": "5aa2ad7d0fc32f190175caa7ce67f64aaafd407c6105618ead65bb86b336c1e7",
+      "filas": 500,
+      "columnas": 3
+    },
+    {
+      "ruta": "data/processed/calendario.parquet",
+      "sha256": "a8478ae161ca3e4c99e5f8fa7530ba2a4f73f7e954bf785decefa975c32fbeda",
+      "filas": 1969,
+      "columnas": 18
+    }
+  ],
+  "resultado": {
+    "estado": "OK",
+    "riesgo": "bajo",
+    "resumen": "56 variables nuevas; entrenamiento con 82250 filas tras quitar 2450 y validación con 25550; 10 validaciones en verde.",
+    "artefactos": [
+      "informes/variables_modelo.json",
+      "data/processed/hechos_modelo_entrenamiento.parquet",
+      "data/processed/hechos_modelo_validacion.parquet",
+      "config/modelo/registro-transformaciones.md"
+    ],
+    "siguiente": "preparacion-modelo §4 a §6: scripts/12_preparacion.py"
+  },
+  "pendientes": [],
+  "uso_de_la_validacion": "hechos_modelo_validacion lleva los retardos y las medias calculados con la venta real hasta la víspera de cada día. Sirve solo para comprobar el preprocesador. Nunca mide el modelo: en la validación el modelo prevé de forma recursiva desde cada origen, con lo previsto después del origen (planteamientos §2, decisión 2).",
+  "parametros": [
+    {
+      "nombre": "retardos",
+      "valor": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        14,
+        21,
+        28
+      ],
+      "origen": "planteamientos §2, decisión 7"
+    },
+    {
+      "nombre": "ventanas de las medias",
+      "valor": [
+        7,
+        28
+      ],
+      "origen": "planteamientos §2, decisión 7"
+    },
+    {
+      "nombre": "dias_sin_historia",
+      "valor": 35,
+      "origen": "planteamientos §2, decisión 7; matriz, respuesta 2"
+    },
+    {
+      "nombre": "semanas_previas_con_precio",
+      "valor": 4,
+      "origen": "reglas-negocio §5, «El precio»; cuestión 001"
+    }
+  ],
+  "validaciones": [
+    {
+      "validacion": "sin huecos de fecha en ninguna serie",
+      "resultado": "pasa",
+      "detalle": "cada serie tiene una fila por día, sin huecos ni días repetidos"
+    },
+    {
+      "validacion": "filas del entrenamiento: las de entrada menos 35 días de cada serie",
+      "resultado": "pasa",
+      "detalle": {
+        "filas": 82250,
+        "esperadas": 82250
+      }
+    },
+    {
+      "validacion": "filas de la validación: las de entrada, sin perder ninguna",
+      "resultado": "pasa",
+      "detalle": {
+        "filas": 25550,
+        "esperadas": 25550
+      }
+    },
+    {
+      "validacion": "ninguna variable nueva vacía en entrenamiento",
+      "resultado": "pasa",
+      "detalle": {}
+    },
+    {
+      "validacion": "ninguna variable nueva vacía en validacion",
+      "resultado": "pasa",
+      "detalle": {}
+    },
+    {
+      "validacion": "retardos y medias de unidades: ninguno usa el día de su fila ni días de otra serie",
+      "resultado": "pasa",
+      "detalle": {
+        "filas_distintas": 0,
+        "por_variable": {
+          "unidades_lag_1": 0,
+          "unidades_lag_2": 0,
+          "unidades_lag_3": 0,
+          "unidades_lag_4": 0,
+          "unidades_lag_5": 0,
+          "unidades_lag_6": 0,
+          "unidades_lag_7": 0,
+          "unidades_lag_14": 0,
+          "unidades_lag_21": 0,
+          "unidades_lag_28": 0,
+          "unidades_media_7": 0,
+          "unidades_media_28": 0
+        }
+      }
+    },
+    {
+      "validacion": "retardos y medias de dolares: ninguno usa el día de su fila ni días de otra serie",
+      "resultado": "pasa",
+      "detalle": {
+        "filas_distintas": 0,
+        "por_variable": {
+          "dolares_lag_1": 0,
+          "dolares_lag_2": 0,
+          "dolares_lag_3": 0,
+          "dolares_lag_4": 0,
+          "dolares_lag_5": 0,
+          "dolares_lag_6": 0,
+          "dolares_lag_7": 0,
+          "dolares_lag_14": 0,
+          "dolares_lag_21": 0,
+          "dolares_lag_28": 0,
+          "dolares_media_7": 0,
+          "dolares_media_28": 0
+        }
+      }
+    },
+    {
+      "validacion": "precio medio de la semana anterior sin vacíos en entrenamiento",
+      "resultado": "pasa",
+      "detalle": {
+        "vacios": 0
+      }
+    },
+    {
+      "validacion": "precio medio de la semana anterior sin vacíos en validacion",
+      "resultado": "pasa",
+      "detalle": {
+        "vacios": 0
+      }
+    },
+    {
+      "validacion": "las unidades de entrada se conservan: entrenamiento más quitadas y validación",
+      "resultado": "pasa",
+      "detalle": {
+        "entrenamiento_entrada": 7003244,
+        "validacion_entrada": 2323947
+      }
+    }
+  ],
+  "salidas": [
+    {
+      "tabla": "hechos_modelo_entrenamiento",
+      "ruta": "data/processed/hechos_modelo_entrenamiento.parquet",
+      "sha256": "7975a014ba29fe5bf19ba18cfd9b53acd69698be70ee329550a510d4b2f91418",
+      "filas": 82250,
+      "columnas": 82,
+      "que_es_una_fila": "un departamento en una tienda un día",
+      "uso": "ajustar y elegir con validación cruzada"
+    },
+    {
+      "tabla": "hechos_modelo_validacion",
+      "ruta": "data/processed/hechos_modelo_validacion.parquet",
+      "sha256": "bed76d03da8b81d971be3fec58c1d46e1dbfb197c9f0301eca2a7cd00591bedd",
+      "filas": 25550,
+      "columnas": 82,
+      "que_es_una_fila": "un departamento en una tienda un día",
+      "uso": "solo comprobar el preprocesador; no mide el modelo"
+    }
+  ],
+  "cruces": [
+    {
+      "cruce": "precios con dim_producto (departamento de cada producto)",
+      "validate": "many_to_one",
+      "filas_antes": 854573,
+      "grupos_tienda_departamento_semana": 15750,
+      "nota": "la función para si algún precio no tiene departamento o su semana no está en el Calendario"
+    },
+    {
+      "cruce": "historia con el conteo por tienda, departamento y semana anterior",
+      "validate": "many_to_one",
+      "filas_antes": 110250,
+      "filas_despues": 110250
+    }
+  ],
+  "comprobacion_retardos": {
+    "unidades": {
+      "filas_distintas": 0,
+      "por_variable": {
+        "unidades_lag_1": 0,
+        "unidades_lag_2": 0,
+        "unidades_lag_3": 0,
+        "unidades_lag_4": 0,
+        "unidades_lag_5": 0,
+        "unidades_lag_6": 0,
+        "unidades_lag_7": 0,
+        "unidades_lag_14": 0,
+        "unidades_lag_21": 0,
+        "unidades_lag_28": 0,
+        "unidades_media_7": 0,
+        "unidades_media_28": 0
+      }
+    },
+    "dolares": {
+      "filas_distintas": 0,
+      "por_variable": {
+        "dolares_lag_1": 0,
+        "dolares_lag_2": 0,
+        "dolares_lag_3": 0,
+        "dolares_lag_4": 0,
+        "dolares_lag_5": 0,
+        "dolares_lag_6": 0,
+        "dolares_lag_7": 0,
+        "dolares_lag_14": 0,
+        "dolares_lag_21": 0,
+        "dolares_lag_28": 0,
+        "dolares_media_7": 0,
+        "dolares_media_28": 0
+      }
+    }
+  },
+  "filas_quitadas": {
+    "filas_antes": 84700,
+    "series": 70,
+    "dias_por_serie": 1210,
+    "filas_quitadas": 2450,
+    "filas_despues": 82250,
+    "desde": "2011-01-29",
+    "hasta": "2011-03-04",
+    "unidades_quitadas": 157519,
+    "dolares_quitados": 394448.77
+  },
+  "eventos": {
+    "numero": 30,
+    "lista": [
+      "Chanukah End",
+      "Christmas",
+      "Cinco De Mayo",
+      "ColumbusDay",
+      "Easter",
+      "Eid al-Fitr",
+      "EidAlAdha",
+      "Father's day",
+      "Halloween",
+      "IndependenceDay",
+      "LaborDay",
+      "LentStart",
+      "LentWeek2",
+      "MartinLutherKingDay",
+      "MemorialDay",
+      "Mother's day",
+      "NBAFinalsEnd",
+      "NBAFinalsStart",
+      "NewYear",
+      "OrthodoxChristmas",
+      "OrthodoxEaster",
+      "Pesach End",
+      "PresidentsDay",
+      "Purim End",
+      "Ramadan starts",
+      "StPatricksDay",
+      "SuperBowl",
+      "Thanksgiving",
+      "ValentinesDay",
+      "VeteransDay"
+    ],
+    "nuevos_en_validacion": [],
+    "filas_con_evento": {
+      "entrenamiento": 6720,
+      "validacion": 2030
+    },
+    "columnas": [
+      "evento_Chanukah End",
+      "evento_Christmas",
+      "evento_Cinco De Mayo",
+      "evento_ColumbusDay",
+      "evento_Easter",
+      "evento_Eid al-Fitr",
+      "evento_EidAlAdha",
+      "evento_Father's day",
+      "evento_Halloween",
+      "evento_IndependenceDay",
+      "evento_LaborDay",
+      "evento_LentStart",
+      "evento_LentWeek2",
+      "evento_MartinLutherKingDay",
+      "evento_MemorialDay",
+      "evento_Mother's day",
+      "evento_NBAFinalsEnd",
+      "evento_NBAFinalsStart",
+      "evento_NewYear",
+      "evento_OrthodoxChristmas",
+      "evento_OrthodoxEaster",
+      "evento_Pesach End",
+      "evento_PresidentsDay",
+      "evento_Purim End",
+      "evento_Ramadan starts",
+      "evento_StPatricksDay",
+      "evento_SuperBowl",
+      "evento_Thanksgiving",
+      "evento_ValentinesDay",
+      "evento_VeteransDay"
+    ]
+  },
+  "cifras_control": {
+    "entrenamiento": {
+      "unidades_lag_1": 6844472.0,
+      "unidades_lag_2": 6843576.0,
+      "unidades_lag_3": 6842128.0,
+      "unidades_lag_4": 6840400.0,
+      "unidades_lag_5": 6836477.0,
+      "unidades_lag_6": 6834296.0,
+      "unidades_lag_7": 6833616.0,
+      "unidades_lag_14": 6817485.0,
+      "unidades_lag_21": 6803085.0,
+      "unidades_lag_28": 6792938.0,
+      "unidades_media_7": 6839280.71,
+      "unidades_media_28": 6817389.54,
+      "dolares_lag_1": 17768502.62,
+      "dolares_lag_2": 17764617.96,
+      "dolares_lag_3": 17759438.73,
+      "dolares_lag_4": 17753548.18,
+      "dolares_lag_5": 17741886.43,
+      "dolares_lag_6": 17734585.5,
+      "dolares_lag_7": 17731097.84,
+      "dolares_lag_14": 17680467.16,
+      "dolares_lag_21": 17633925.37,
+      "dolares_lag_28": 17595206.4,
+      "dolares_media_7": 17750525.32,
+      "dolares_media_28": 17679525.13,
+      "productos_con_precio_semana_anterior": 4056817.0,
+      "evento_Chanukah End": 210.0,
+      "evento_Christmas": 210.0,
+      "evento_Cinco De Mayo": 280.0,
+      "evento_ColumbusDay": 210.0,
+      "evento_Easter": 280.0,
+      "evento_Eid al-Fitr": 210.0,
+      "evento_EidAlAdha": 210.0,
+      "evento_Father's day": 210.0,
+      "evento_Halloween": 210.0,
+      "evento_IndependenceDay": 210.0,
+      "evento_LaborDay": 210.0,
+      "evento_LentStart": 280.0,
+      "evento_LentWeek2": 280.0,
+      "evento_MartinLutherKingDay": 210.0,
+      "evento_MemorialDay": 210.0,
+      "evento_Mother's day": 280.0,
+      "evento_NBAFinalsEnd": 210.0,
+      "evento_NBAFinalsStart": 210.0,
+      "evento_NewYear": 210.0,
+      "evento_OrthodoxChristmas": 210.0,
+      "evento_OrthodoxEaster": 280.0,
+      "evento_Pesach End": 280.0,
+      "evento_PresidentsDay": 210.0,
+      "evento_Purim End": 280.0,
+      "evento_Ramadan starts": 210.0,
+      "evento_StPatricksDay": 280.0,
+      "evento_SuperBowl": 210.0,
+      "evento_Thanksgiving": 210.0,
+      "evento_ValentinesDay": 210.0,
+      "evento_VeteransDay": 210.0,
+      "dia_del_mes": 1291290.0,
+      "vacios_variables_nuevas": 0,
+      "vacios_precio_medio": 0,
+      "productos_min": 3,
+      "productos_max": 123,
+      "dia_del_mes_min": 1,
+      "dia_del_mes_max": 31,
+      "filas": 82250,
+      "unidades": 6845725,
+      "dolares": 17772757.07
+    },
+    "validacion": {
+      "unidades_lag_1": 2323283.0,
+      "unidades_lag_2": 2323017.0,
+      "unidades_lag_3": 2323067.0,
+      "unidades_lag_4": 2323530.0,
+      "unidades_lag_5": 2325136.0,
+      "unidades_lag_6": 2324690.0,
+      "unidades_lag_7": 2323208.0,
+      "unidades_lag_14": 2324227.0,
+      "unidades_lag_21": 2323591.0,
+      "unidades_lag_28": 2323072.0,
+      "unidades_media_7": 2323704.43,
+      "unidades_media_28": 2323660.96,
+      "dolares_lag_1": 6811631.97,
+      "dolares_lag_2": 6809767.18,
+      "dolares_lag_3": 6808071.54,
+      "dolares_lag_4": 6807851.31,
+      "dolares_lag_5": 6810985.47,
+      "dolares_lag_6": 6807751.94,
+      "dolares_lag_7": 6802138.8,
+      "dolares_lag_14": 6789843.11,
+      "dolares_lag_21": 6776922.28,
+      "dolares_lag_28": 6765303.59,
+      "dolares_media_7": 6808314.03,
+      "dolares_media_28": 6789408.83,
+      "productos_con_precio_semana_anterior": 1752315.0,
+      "evento_Chanukah End": 70.0,
+      "evento_Christmas": 70.0,
+      "evento_Cinco De Mayo": 70.0,
+      "evento_ColumbusDay": 70.0,
+      "evento_Easter": 70.0,
+      "evento_Eid al-Fitr": 70.0,
+      "evento_EidAlAdha": 70.0,
+      "evento_Father's day": 70.0,
+      "evento_Halloween": 70.0,
+      "evento_IndependenceDay": 70.0,
+      "evento_LaborDay": 70.0,
+      "evento_LentStart": 70.0,
+      "evento_LentWeek2": 70.0,
+      "evento_MartinLutherKingDay": 70.0,
+      "evento_MemorialDay": 70.0,
+      "evento_Mother's day": 70.0,
+      "evento_NBAFinalsEnd": 70.0,
+      "evento_NBAFinalsStart": 70.0,
+      "evento_NewYear": 70.0,
+      "evento_OrthodoxChristmas": 70.0,
+      "evento_OrthodoxEaster": 70.0,
+      "evento_Pesach End": 70.0,
+      "evento_PresidentsDay": 70.0,
+      "evento_Purim End": 70.0,
+      "evento_Ramadan starts": 70.0,
+      "evento_StPatricksDay": 70.0,
+      "evento_SuperBowl": 70.0,
+      "evento_Thanksgiving": 70.0,
+      "evento_ValentinesDay": 70.0,
+      "evento_VeteransDay": 70.0,
+      "dia_del_mes": 401660.0,
+      "vacios_variables_nuevas": 0,
+      "vacios_precio_medio": 0,
+      "productos_min": 19,
+      "productos_max": 129,
+      "dia_del_mes_min": 1,
+      "dia_del_mes_max": 31,
+      "filas": 25550,
+      "unidades": 2323947,
+      "dolares": 6815522.7
+    }
+  },
+  "variables_generadas": [
+    {
+      "columna": "unidades_lag_1",
+      "formula": "unidades de la misma serie el día t - 1",
+      "columnas_origen": [
+        "unidades",
+        "date"
+      ],
+      "unidad": "unidades",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "unidades_lag_2",
+      "formula": "unidades de la misma serie el día t - 2",
+      "columnas_origen": [
+        "unidades",
+        "date"
+      ],
+      "unidad": "unidades",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "unidades_lag_3",
+      "formula": "unidades de la misma serie el día t - 3",
+      "columnas_origen": [
+        "unidades",
+        "date"
+      ],
+      "unidad": "unidades",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "unidades_lag_4",
+      "formula": "unidades de la misma serie el día t - 4",
+      "columnas_origen": [
+        "unidades",
+        "date"
+      ],
+      "unidad": "unidades",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "unidades_lag_5",
+      "formula": "unidades de la misma serie el día t - 5",
+      "columnas_origen": [
+        "unidades",
+        "date"
+      ],
+      "unidad": "unidades",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "unidades_lag_6",
+      "formula": "unidades de la misma serie el día t - 6",
+      "columnas_origen": [
+        "unidades",
+        "date"
+      ],
+      "unidad": "unidades",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "unidades_lag_7",
+      "formula": "unidades de la misma serie el día t - 7",
+      "columnas_origen": [
+        "unidades",
+        "date"
+      ],
+      "unidad": "unidades",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "unidades_lag_14",
+      "formula": "unidades de la misma serie el día t - 14",
+      "columnas_origen": [
+        "unidades",
+        "date"
+      ],
+      "unidad": "unidades",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "unidades_lag_21",
+      "formula": "unidades de la misma serie el día t - 21",
+      "columnas_origen": [
+        "unidades",
+        "date"
+      ],
+      "unidad": "unidades",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "unidades_lag_28",
+      "formula": "unidades de la misma serie el día t - 28",
+      "columnas_origen": [
+        "unidades",
+        "date"
+      ],
+      "unidad": "unidades",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "dolares_lag_1",
+      "formula": "dolares de la misma serie el día t - 1",
+      "columnas_origen": [
+        "dolares",
+        "date"
+      ],
+      "unidad": "dólares",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "dolares_lag_2",
+      "formula": "dolares de la misma serie el día t - 2",
+      "columnas_origen": [
+        "dolares",
+        "date"
+      ],
+      "unidad": "dólares",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "dolares_lag_3",
+      "formula": "dolares de la misma serie el día t - 3",
+      "columnas_origen": [
+        "dolares",
+        "date"
+      ],
+      "unidad": "dólares",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "dolares_lag_4",
+      "formula": "dolares de la misma serie el día t - 4",
+      "columnas_origen": [
+        "dolares",
+        "date"
+      ],
+      "unidad": "dólares",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "dolares_lag_5",
+      "formula": "dolares de la misma serie el día t - 5",
+      "columnas_origen": [
+        "dolares",
+        "date"
+      ],
+      "unidad": "dólares",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "dolares_lag_6",
+      "formula": "dolares de la misma serie el día t - 6",
+      "columnas_origen": [
+        "dolares",
+        "date"
+      ],
+      "unidad": "dólares",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "dolares_lag_7",
+      "formula": "dolares de la misma serie el día t - 7",
+      "columnas_origen": [
+        "dolares",
+        "date"
+      ],
+      "unidad": "dólares",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "dolares_lag_14",
+      "formula": "dolares de la misma serie el día t - 14",
+      "columnas_origen": [
+        "dolares",
+        "date"
+      ],
+      "unidad": "dólares",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "dolares_lag_21",
+      "formula": "dolares de la misma serie el día t - 21",
+      "columnas_origen": [
+        "dolares",
+        "date"
+      ],
+      "unidad": "dólares",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "dolares_lag_28",
+      "formula": "dolares de la misma serie el día t - 28",
+      "columnas_origen": [
+        "dolares",
+        "date"
+      ],
+      "unidad": "dólares",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "unidades_media_7",
+      "formula": "media de unidades de la misma serie de t - 7 a t - 1",
+      "columnas_origen": [
+        "unidades",
+        "date"
+      ],
+      "unidad": "unidades",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false,
+      "nota": "es la media de los retardos 1 a 7: con lag_1 a lag_7 dentro, media_7 es su combinación lineal"
+    },
+    {
+      "columna": "unidades_media_28",
+      "formula": "media de unidades de la misma serie de t - 28 a t - 1",
+      "columnas_origen": [
+        "unidades",
+        "date"
+      ],
+      "unidad": "unidades",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false,
+      "nota": "es la media de los retardos 1 a 28: con lag_1 a lag_7 dentro, media_7 es su combinación lineal"
+    },
+    {
+      "columna": "dolares_media_7",
+      "formula": "media de dolares de la misma serie de t - 7 a t - 1",
+      "columnas_origen": [
+        "dolares",
+        "date"
+      ],
+      "unidad": "dólares",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false,
+      "nota": "es la media de los retardos 1 a 7: con lag_1 a lag_7 dentro, media_7 es su combinación lineal"
+    },
+    {
+      "columna": "dolares_media_28",
+      "formula": "media de dolares de la misma serie de t - 28 a t - 1",
+      "columnas_origen": [
+        "dolares",
+        "date"
+      ],
+      "unidad": "dólares",
+      "informacion_posterior": false,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false,
+      "nota": "es la media de los retardos 1 a 28: con lag_1 a lag_7 dentro, media_7 es su combinación lineal"
+    },
+    {
+      "columna": "productos_con_precio_semana_anterior",
+      "formula": "productos del departamento con precio en la tienda la semana anterior que ya tenían precio cuatro semanas antes",
+      "columnas_origen": [
+        "sell_price",
+        "wm_yr_wk",
+        "wm_yr_wk_anterior",
+        "dept_id"
+      ],
+      "unidad": "productos",
+      "informacion_posterior": false,
+      "sale_del_objetivo": false,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "evento_<nombre>",
+      "formula": "1 si event_name_1 o event_name_2 es ese evento",
+      "columnas_origen": [
+        "event_name_1",
+        "event_name_2"
+      ],
+      "unidad": null,
+      "informacion_posterior": false,
+      "sale_del_objetivo": false,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "dia_del_mes",
+      "formula": "date.dt.day",
+      "columnas_origen": [
+        "date"
+      ],
+      "unidad": "día",
+      "informacion_posterior": false,
+      "sale_del_objetivo": false,
+      "suma_de_otras": false
+    }
+  ],
+  "transformaciones": [
+    {
+      "id": "T-01",
+      "transformacion": "retardos y medias de unidades",
+      "columnas": [
+        "unidades_lag_1",
+        "unidades_lag_2",
+        "unidades_lag_3",
+        "unidades_lag_4",
+        "unidades_lag_5",
+        "unidades_lag_6",
+        "unidades_lag_7",
+        "unidades_lag_14",
+        "unidades_lag_21",
+        "unidades_lag_28",
+        "unidades_media_7",
+        "unidades_media_28"
+      ],
+      "regla": "planteamientos §2, decisión 7"
+    },
+    {
+      "id": "T-02",
+      "transformacion": "retardos y medias de dólares",
+      "columnas": [
+        "dolares_lag_1",
+        "dolares_lag_2",
+        "dolares_lag_3",
+        "dolares_lag_4",
+        "dolares_lag_5",
+        "dolares_lag_6",
+        "dolares_lag_7",
+        "dolares_lag_14",
+        "dolares_lag_21",
+        "dolares_lag_28",
+        "dolares_media_7",
+        "dolares_media_28"
+      ],
+      "regla": "planteamientos §2, decisión 7"
+    },
+    {
+      "id": "T-03",
+      "transformacion": "productos con precio la semana anterior",
+      "columnas": [
+        "productos_con_precio_semana_anterior"
+      ],
+      "regla": "reglas-negocio §5, «El precio»; cuestión 001"
+    },
+    {
+      "id": "T-04",
+      "transformacion": "una columna por evento",
+      "columnas": [
+        "evento_Chanukah End",
+        "evento_Christmas",
+        "evento_Cinco De Mayo",
+        "evento_ColumbusDay",
+        "evento_Easter",
+        "evento_Eid al-Fitr",
+        "evento_EidAlAdha",
+        "evento_Father's day",
+        "evento_Halloween",
+        "evento_IndependenceDay",
+        "evento_LaborDay",
+        "evento_LentStart",
+        "evento_LentWeek2",
+        "evento_MartinLutherKingDay",
+        "evento_MemorialDay",
+        "evento_Mother's day",
+        "evento_NBAFinalsEnd",
+        "evento_NBAFinalsStart",
+        "evento_NewYear",
+        "evento_OrthodoxChristmas",
+        "evento_OrthodoxEaster",
+        "evento_Pesach End",
+        "evento_PresidentsDay",
+        "evento_Purim End",
+        "evento_Ramadan starts",
+        "evento_StPatricksDay",
+        "evento_SuperBowl",
+        "evento_Thanksgiving",
+        "evento_ValentinesDay",
+        "evento_VeteransDay"
+      ],
+      "regla": "matriz aprobada, respuesta 3"
+    },
+    {
+      "id": "T-05",
+      "transformacion": "día del mes",
+      "columnas": [
+        "dia_del_mes"
+      ],
+      "regla": "matriz, respuesta 4"
+    },
+    {
+      "id": "T-06",
+      "transformacion": "salen los primeros 35 días de cada serie del entrenamiento",
+      "columnas": [],
+      "regla": "planteamientos §2, decisión 7; matriz, respuesta 2"
+    }
+  ],
+  "particion": {
+    "columna_fecha": "date",
+    "desarrollo": {
+      "desde": "2011-03-05",
+      "hasta": "2014-05-22"
+    },
+    "validacion": {
+      "desde": "2014-05-23",
+      "hasta": "2015-05-22"
+    },
+    "fuente": "reglas-negocio §5, «Fechas»; informes/particion.json"
+  },
+  "entradas_despues_iguales": true,
+  "fichas": [
+    "R-012",
+    "R-013",
+    "R-014",
+    "R-015",
+    "R-016",
+    "R-017"
+  ]
+}

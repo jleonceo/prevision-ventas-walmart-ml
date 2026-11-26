@@ -1,0 +1,186 @@
+{
+  "script": "scripts/07_consultas_informe_ejecutivo.py",
+  "fecha_datos": "2015-05-22",
+  "fecha_ejecucion": "2026-11-24T13:09:37",
+  "estado": "OK",
+  "errores": [],
+  "entradas": {
+    "data/processed/hechos_series.parquet": "31a6a1fbac4f87437ebdd70ca6ab06f55c189fcc87e8150c5d5d319056abf165",
+    "data/processed/precios_corregido.parquet": "d9ac5467e59d7f099a0e3ae0358417ef17be8e3c76d6fb59726fa6c70f99c1fa",
+    "informes/analisis-exploratorio__hechos_series.json": "075ec44c008df728ce7db83b7ba55adb7a3dc6a99d35e84112ae1af1b2bf34be"
+  },
+  "cifras": [
+    {
+      "nombre": "dolares_2013",
+      "valor": 6094766.85
+    },
+    {
+      "nombre": "dolares_2013_millones",
+      "valor": 6.09476685
+    },
+    {
+      "nombre": "unidades_2013",
+      "valor": 2312182
+    },
+    {
+      "nombre": "dias_2013",
+      "valor": 365
+    },
+    {
+      "nombre": "dolares_al_dia_2013",
+      "valor": 16697.99136986301
+    },
+    {
+      "nombre": "productos_tienda_construccion",
+      "valor": 4700
+    },
+    {
+      "nombre": "sin_cambio_precio_pct",
+      "valor": 41.14893617021277
+    },
+    {
+      "nombre": "parte_unidades_alimentacion_2013_pct",
+      "valor": 70.83374059654474
+    },
+    {
+      "nombre": "parte_dolares_alimentacion_2013_pct",
+      "valor": 58.81472168209355
+    },
+    {
+      "nombre": "parte_unidades_hogar_2013_pct",
+      "valor": 20.06027207200817
+    },
+    {
+      "nombre": "parte_dolares_hogar_2013_pct",
+      "valor": 29.308755920663316
+    },
+    {
+      "nombre": "parte_unidades_ocio_2013_pct",
+      "valor": 9.105987331447093
+    },
+    {
+      "nombre": "parte_dolares_ocio_2013_pct",
+      "valor": 11.876522397243138
+    },
+    {
+      "nombre": "departamentos_de_tienda_80_unidades",
+      "valor": 31
+    },
+    {
+      "nombre": "departamentos_de_tienda_80_dolares",
+      "valor": 34
+    },
+    {
+      "nombre": "departamentos_de_tienda",
+      "valor": 70
+    },
+    {
+      "nombre": "parte_unidades_foods_3_pct",
+      "valor": 48.684109821105764
+    },
+    {
+      "nombre": "accion_gracias_bajada_min_pct",
+      "valor": 9.093797517191293
+    },
+    {
+      "nombre": "accion_gracias_bajada_max_pct",
+      "valor": 72.22222222222221
+    },
+    {
+      "nombre": "accion_gracias_negativos",
+      "valor": 7
+    },
+    {
+      "nombre": "ano_nuevo_bajada_min_pct",
+      "valor": 20.048481391701124
+    },
+    {
+      "nombre": "ano_nuevo_bajada_max_pct",
+      "valor": 77.80269058295964
+    },
+    {
+      "nombre": "ano_nuevo_negativos",
+      "valor": 7
+    },
+    {
+      "nombre": "snap_alimentacion_min_pct",
+      "valor": 4.345988447753024
+    },
+    {
+      "nombre": "snap_alimentacion_max_pct",
+      "valor": 24.03590878858226
+    },
+    {
+      "nombre": "snap_resto_min_pct",
+      "valor": -4.673525585147353
+    },
+    {
+      "nombre": "snap_resto_max_pct",
+      "valor": 1.554617418569637
+    },
+    {
+      "nombre": "dia_cociente_min",
+      "valor": 1.2187360992407998
+    },
+    {
+      "nombre": "dia_cociente_max",
+      "valor": 1.5141694119972735
+    },
+    {
+      "nombre": "departamentos",
+      "valor": 7
+    },
+    {
+      "nombre": "dias_fuertes_fin_de_semana",
+      "valor": 7
+    },
+    {
+      "nombre": "mes_mayor_desvio_pct",
+      "valor": 8.928612644602529
+    },
+    {
+      "nombre": "cambios_de_nivel",
+      "valor": 28
+    },
+    {
+      "nombre": "cambios_de_nivel_bajadas",
+      "valor": 7
+    },
+    {
+      "nombre": "cambios_de_nivel_hobbies_2",
+      "valor": 10
+    },
+    {
+      "nombre": "cambios_mismo_dia_mayor",
+      "valor": 4
+    },
+    {
+      "nombre": "cambios_mismo_dia_tienda",
+      "valor": "WI_1"
+    },
+    {
+      "nombre": "cambios_mismo_dia_fecha",
+      "valor": "2012-10-26"
+    },
+    {
+      "nombre": "dias_cierre",
+      "valor": 175
+    },
+    {
+      "nombre": "dias_25_diciembre",
+      "valor": 35
+    },
+    {
+      "nombre": "dias_hobbies_2_a_cero",
+      "valor": 2171
+    },
+    {
+      "nombre": "departamentos_de_tienda_hobbies_2",
+      "valor": 10
+    },
+    {
+      "nombre": "dias_analizados",
+      "valor": 1210
+    }
+  ]
+}

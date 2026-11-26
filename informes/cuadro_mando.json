@@ -1,0 +1,2059 @@
+{
+ "script": "scripts/21_cuadro_mando.py",
+ "fecha_datos": "2016-05-22",
+ "origen_proximos": "2016-05-22",
+ "fecha_ejecucion": "2026-11-25T21:16:11",
+ "variante": "reentrenado",
+ "modelo_en_uso": "modelos/reentrenos/2015-05-22",
+ "entradas": [
+  {
+   "ruta": "informes/prueba_final.json",
+   "script": "scripts/20_prueba_final.py",
+   "sha256": "cd444519b45e91887e9dc403fb486431c10768f61cfcad2355c5814a00433479"
+  },
+  {
+   "ruta": "data/processed/previsiones_prueba_final.parquet",
+   "script": "scripts/20_prueba_final.py",
+   "sha256": "172ded6458ffbb794f301320ec02d0667252c541d3421b384acb8acfb496c89a"
+  },
+  {
+   "ruta": "data/processed/prueba_final/hechos_prueba_final.parquet",
+   "script": "scripts/20_prueba_final.py",
+   "sha256": "39c167ff85fa05432fbd927607f66ee22f9137dc5e156f9c2cce41dfb4781ec8"
+  },
+  {
+   "ruta": "data/processed/dim_tienda.parquet",
+   "script": "scripts/05_transformacion_datos.py",
+   "sha256": "744be76903218a6be24190f316231c569387936f0212b43068aed1715ef3571c"
+  },
+  {
+   "ruta": "data/processed/dim_producto.parquet",
+   "script": "scripts/05_transformacion_datos.py",
+   "sha256": "5aa2ad7d0fc32f190175caa7ce67f64aaafd407c6105618ead65bb86b336c1e7"
+  },
+  {
+   "ruta": "data/predicciones/desde_2016-05-22/previsiones_lote.parquet",
+   "script": "produccion/lote_prueba_final.py",
+   "sha256": "0eb0dc1db20e9b70f97aa65368518f61203adebf3857da7ced7a37335a4eb663"
+  },
+  {
+   "ruta": "data/predicciones/desde_2016-05-22/resumen.json",
+   "script": "produccion/lote_prueba_final.py",
+   "sha256": "ccd6730b5177e1b43be14cf64f2acf8213efdc36b358cfbd12fae2b5a6a8172c"
+  }
+ ],
+ "cifras_sin_filtros": {
+  "vision": [
+   {
+    "id": "venta",
+    "valor": 7462789.459999999
+   },
+   {
+    "id": "error_modelo",
+    "valor": 16.205475112993145
+   },
+   {
+    "id": "error_regla",
+    "valor": 18.610592794346367
+   },
+   {
+    "id": "pruebas_gana",
+    "valor": 13
+   }
+  ],
+  "pedido": [
+   {
+    "id": "error_modelo",
+    "valor": 14.499455602912935
+   },
+   {
+    "id": "error_regla",
+    "valor": 16.92062745183864
+   },
+   {
+    "id": "pruebas_gana",
+    "valor": 12
+   },
+   {
+    "id": "exceso",
+    "valor": 0.2663442230988505
+   }
+  ],
+  "donde": [
+   {
+    "id": "tiendas_gana",
+    "valor": 9
+   },
+   {
+    "id": "departamentos_gana",
+    "valor": 6
+   },
+   {
+    "id": "sumado_dolares",
+    "valor": 4.846299237810167
+   },
+   {
+    "id": "sumado_unidades",
+    "valor": 4.244218174655717
+   }
+  ],
+  "festivos": [
+   {
+    "id": "festivo_0",
+    "valor": 18.769465132024372
+   },
+   {
+    "id": "festivo_1",
+    "valor": 18.411734073945496
+   },
+   {
+    "id": "festivo_2",
+    "valor": 14.023600415640614
+   }
+  ],
+  "proximos": [
+   {
+    "id": "unidades_10",
+    "valor": 68566.0
+   },
+   {
+    "id": "dolares_10",
+    "valor": 205965.06438103138
+   },
+   {
+    "id": "dolares_28",
+    "valor": 649574.9180346236
+   },
+   {
+    "id": "con_regla",
+    "valor": 10
+   }
+  ]
+ },
+ "titulos_sin_filtros": {
+  "vision": {
+   "texto": "La previsión del modelo falla menos que la regla en dólares",
+   "concluye": true,
+   "gana": 13,
+   "de": 13
+  },
+  "pedido": {
+   "texto": "La previsión del pedido falla menos que la regla en unidades",
+   "concluye": true,
+   "gana": 12,
+   "de": 13
+  },
+  "donde": {
+   "texto": "La previsión falla menos que la regla en la mayoría de tiendas y departamentos",
+   "concluye": true,
+   "gana": 13,
+   "de": 13
+  },
+  "festivos": {
+   "texto": "La venta y la previsión tras cada víspera de festivo",
+   "concluye": false,
+   "gana": null,
+   "de": null
+  },
+  "proximos": {
+   "texto": "Lo que se prevé vender en los próximos 28 días",
+   "concluye": false,
+   "gana": null,
+   "de": null
+  }
+ },
+ "comparadas_con_el_json": [
+  {
+   "nombre": "unidades.modelo.error",
+   "cuadro": 14.499455602912935,
+   "json": 14.499455602912935,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.modelo.exceso",
+   "cuadro": 0.2663442230988505,
+   "json": 0.2663442230988505,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.repetir_semana_anterior.error",
+   "cuadro": 21.701035722297302,
+   "json": 21.701035722297302,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.repetir_semana_anterior.exceso",
+   "cuadro": -0.28122623392113627,
+   "json": -0.28122623392113627,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.media_28_dias.error",
+   "cuadro": 21.06056212418819,
+   "json": 21.06056212418819,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.media_28_dias.exceso",
+   "cuadro": -3.344622505758572,
+   "json": -3.344622505758572,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.media_mismo_dia_4_semanas.error",
+   "cuadro": 16.92062745183864,
+   "json": 16.92062745183864,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.media_mismo_dia_4_semanas.exceso",
+   "cuadro": 0.2624048672929513,
+   "json": 0.2624048672929513,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.regla_que_menos_falla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.pruebas_que_gana",
+   "cuadro": 12,
+   "json": 12,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.pruebas",
+   "cuadro": 13,
+   "json": 13,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.minimo",
+   "cuadro": 10,
+   "json": 10,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-05-22.modelo",
+   "cuadro": 16.433844406587166,
+   "json": 16.433844406587166,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-05-22.repetir_semana_anterior",
+   "cuadro": 21.34988237202888,
+   "json": 21.34988237202888,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-05-22.media_28_dias",
+   "cuadro": 21.88204753792488,
+   "json": 21.88204753792488,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-05-22.media_mismo_dia_4_semanas",
+   "cuadro": 21.619209864525025,
+   "json": 21.619209864525025,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-06-19.modelo",
+   "cuadro": 14.086800117842246,
+   "json": 14.086800117842246,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-06-19.repetir_semana_anterior",
+   "cuadro": 27.27117671685299,
+   "json": 27.27117671685299,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-06-19.media_28_dias",
+   "cuadro": 19.78044128820182,
+   "json": 19.78044128820182,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-06-19.media_mismo_dia_4_semanas",
+   "cuadro": 18.515187694788583,
+   "json": 18.515187694788583,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-07-17.modelo",
+   "cuadro": 13.306577946200784,
+   "json": 13.306577946200784,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-07-17.repetir_semana_anterior",
+   "cuadro": 19.90988706043833,
+   "json": 19.90988706043833,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-07-17.media_28_dias",
+   "cuadro": 18.555209094842375,
+   "json": 18.555209094842375,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-07-17.media_mismo_dia_4_semanas",
+   "cuadro": 15.290852939860056,
+   "json": 15.290852939860056,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-08-14.modelo",
+   "cuadro": 14.28858896410964,
+   "json": 14.28858896410964,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-08-14.repetir_semana_anterior",
+   "cuadro": 21.49540770126342,
+   "json": 21.49540770126342,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-08-14.media_28_dias",
+   "cuadro": 21.377545887053884,
+   "json": 21.377545887053884,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-08-14.media_mismo_dia_4_semanas",
+   "cuadro": 16.614203785951446,
+   "json": 16.614203785951446,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-09-11.modelo",
+   "cuadro": 13.076348960636887,
+   "json": 13.076348960636887,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-09-11.repetir_semana_anterior",
+   "cuadro": 22.06296992481203,
+   "json": 22.06296992481203,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-09-11.media_28_dias",
+   "cuadro": 20.07408226448474,
+   "json": 20.07408226448474,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-09-11.media_mismo_dia_4_semanas",
+   "cuadro": 15.06938301636444,
+   "json": 15.06938301636444,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-10-09.modelo",
+   "cuadro": 13.962331493836313,
+   "json": 13.962331493836313,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-10-09.repetir_semana_anterior",
+   "cuadro": 20.327814842269994,
+   "json": 20.327814842269994,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-10-09.media_28_dias",
+   "cuadro": 20.358015539631552,
+   "json": 20.358015539631552,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-10-09.media_mismo_dia_4_semanas",
+   "cuadro": 16.275430359937403,
+   "json": 16.275430359937403,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-11-06.modelo",
+   "cuadro": 13.569321533923304,
+   "json": 13.569321533923304,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-11-06.repetir_semana_anterior",
+   "cuadro": 20.05318453289158,
+   "json": 20.05318453289158,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-11-06.media_28_dias",
+   "cuadro": 21.153203423572663,
+   "json": 21.153203423572663,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-11-06.media_mismo_dia_4_semanas",
+   "cuadro": 14.810293968060218,
+   "json": 14.810293968060218,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-12-04.modelo",
+   "cuadro": 14.394409479065095,
+   "json": 14.394409479065095,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-12-04.repetir_semana_anterior",
+   "cuadro": 25.12336376798747,
+   "json": 25.12336376798747,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-12-04.media_28_dias",
+   "cuadro": 21.496321248116303,
+   "json": 21.496321248116303,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2015-12-04.media_mismo_dia_4_semanas",
+   "cuadro": 15.997399757704695,
+   "json": 15.997399757704695,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-01-01.modelo",
+   "cuadro": 14.602710042353205,
+   "json": 14.602710042353205,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-01-01.repetir_semana_anterior",
+   "cuadro": 28.024877231985815,
+   "json": 28.024877231985815,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-01-01.media_28_dias",
+   "cuadro": 23.313962487160364,
+   "json": 23.313962487160364,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-01-01.media_mismo_dia_4_semanas",
+   "cuadro": 20.85860220349238,
+   "json": 20.85860220349238,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-01-29.modelo",
+   "cuadro": 16.823313421384338,
+   "json": 16.823313421384338,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-01-29.repetir_semana_anterior",
+   "cuadro": 20.173179152737436,
+   "json": 20.173179152737436,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-01-29.media_28_dias",
+   "cuadro": 20.219762152682634,
+   "json": 20.219762152682634,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-01-29.media_mismo_dia_4_semanas",
+   "cuadro": 16.584918068723624,
+   "json": 16.584918068723624,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-02-26.modelo",
+   "cuadro": 15.159207762586497,
+   "json": 15.159207762586497,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-02-26.repetir_semana_anterior",
+   "cuadro": 19.03276935170032,
+   "json": 19.03276935170032,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-02-26.media_28_dias",
+   "cuadro": 21.825187170599076,
+   "json": 21.825187170599076,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-02-26.media_mismo_dia_4_semanas",
+   "cuadro": 16.762238573251032,
+   "json": 16.762238573251032,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-03-25.modelo",
+   "cuadro": 15.268109125117592,
+   "json": 15.268109125117592,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-03-25.repetir_semana_anterior",
+   "cuadro": 21.442010482462035,
+   "json": 21.442010482462035,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-03-25.media_28_dias",
+   "cuadro": 23.526407740895042,
+   "json": 23.526407740895042,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-03-25.media_mismo_dia_4_semanas",
+   "cuadro": 16.801505174035746,
+   "json": 16.801505174035746,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-04-22.modelo",
+   "cuadro": 13.543541087300289,
+   "json": 13.543541087300289,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-04-22.repetir_semana_anterior",
+   "cuadro": 16.804351382300016,
+   "json": 16.804351382300016,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-04-22.media_28_dias",
+   "cuadro": 20.00926986204264,
+   "json": 20.00926986204264,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.prueba_2016-04-22.media_mismo_dia_4_semanas",
+   "cuadro": 15.456131741098206,
+   "json": 15.456131741098206,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.regla_de_cada_prueba",
+   "cuadro": [
+    "repetir_semana_anterior",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas"
+   ],
+   "json": [
+    "repetir_semana_anterior",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas"
+   ],
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.FOODS_1.modelo",
+   "cuadro": 20.47350259375214,
+   "json": 20.47350259375214,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.FOODS_1.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.FOODS_1.error_regla",
+   "cuadro": 21.71439018259101,
+   "json": 21.71439018259101,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.FOODS_2.modelo",
+   "cuadro": 17.599332335277822,
+   "json": 17.599332335277822,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.FOODS_2.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.FOODS_2.error_regla",
+   "cuadro": 23.410424517749902,
+   "json": 23.410424517749902,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.FOODS_3.modelo",
+   "cuadro": 10.853654768158556,
+   "json": 10.853654768158556,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.FOODS_3.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.FOODS_3.error_regla",
+   "cuadro": 13.475731940089899,
+   "json": 13.475731940089899,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.HOBBIES_1.modelo",
+   "cuadro": 20.841844704525247,
+   "json": 20.841844704525247,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.HOBBIES_1.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.HOBBIES_1.error_regla",
+   "cuadro": 22.11073994857129,
+   "json": 22.11073994857129,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.HOBBIES_2.modelo",
+   "cuadro": 50.20055151667084,
+   "json": 50.20055151667084,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.HOBBIES_2.regla",
+   "cuadro": "media_28_dias",
+   "json": "media_28_dias",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.HOBBIES_2.error_regla",
+   "cuadro": 50.11281022812735,
+   "json": 50.11281022812735,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.HOUSEHOLD_1.modelo",
+   "cuadro": 12.08541686322609,
+   "json": 12.08541686322609,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.HOUSEHOLD_1.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.HOUSEHOLD_1.error_regla",
+   "cuadro": 13.027644117369563,
+   "json": 13.027644117369563,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.HOUSEHOLD_2.modelo",
+   "cuadro": 20.153457901042596,
+   "json": 20.153457901042596,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.HOUSEHOLD_2.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.HOUSEHOLD_2.error_regla",
+   "cuadro": 21.07369548038441,
+   "json": 21.07369548038441,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.departamentos",
+   "cuadro": [
+    "FOODS_1",
+    "FOODS_2",
+    "FOODS_3",
+    "HOBBIES_1",
+    "HOBBIES_2",
+    "HOUSEHOLD_1",
+    "HOUSEHOLD_2"
+   ],
+   "json": [
+    "FOODS_1",
+    "FOODS_2",
+    "FOODS_3",
+    "HOBBIES_1",
+    "HOBBIES_2",
+    "HOUSEHOLD_1",
+    "HOUSEHOLD_2"
+   ],
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.cadena.modelo",
+   "cuadro": 4.244218174655717,
+   "json": 4.244218174655717,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.cadena.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.cadena.error_regla",
+   "cuadro": 5.873798359696013,
+   "json": 5.873798359696013,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.CA.modelo",
+   "cuadro": 5.514548276626672,
+   "json": 5.514548276626672,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.CA.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.CA.error_regla",
+   "cuadro": 5.669269999260884,
+   "json": 5.669269999260884,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.TX.modelo",
+   "cuadro": 5.680490237993444,
+   "json": 5.680490237993444,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.TX.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.TX.error_regla",
+   "cuadro": 7.353569901667379,
+   "json": 7.353569901667379,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.WI.modelo",
+   "cuadro": 5.87795860807257,
+   "json": 5.87795860807257,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.WI.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.WI.error_regla",
+   "cuadro": 11.283683347943743,
+   "json": 11.283683347943743,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.CA_1.modelo",
+   "cuadro": 8.097259079717572,
+   "json": 8.097259079717572,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.CA_1.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.CA_1.error_regla",
+   "cuadro": 8.72668397505293,
+   "json": 8.72668397505293,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.CA_2.modelo",
+   "cuadro": 9.298800646979238,
+   "json": 9.298800646979238,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.CA_2.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.CA_2.error_regla",
+   "cuadro": 8.171673295830239,
+   "json": 8.171673295830239,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.CA_3.modelo",
+   "cuadro": 7.170244074306913,
+   "json": 7.170244074306913,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.CA_3.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.CA_3.error_regla",
+   "cuadro": 8.30460584037416,
+   "json": 8.30460584037416,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.CA_4.modelo",
+   "cuadro": 7.977076383542896,
+   "json": 7.977076383542896,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.CA_4.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.CA_4.error_regla",
+   "cuadro": 7.917201265931058,
+   "json": 7.917201265931058,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.TX_1.modelo",
+   "cuadro": 7.780411831187805,
+   "json": 7.780411831187805,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.TX_1.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.TX_1.error_regla",
+   "cuadro": 9.661769165035697,
+   "json": 9.661769165035697,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.TX_2.modelo",
+   "cuadro": 6.77689053819732,
+   "json": 6.77689053819732,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.TX_2.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.TX_2.error_regla",
+   "cuadro": 8.360668411693892,
+   "json": 8.360668411693892,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.TX_3.modelo",
+   "cuadro": 7.92988920943538,
+   "json": 7.92988920943538,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.TX_3.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.TX_3.error_regla",
+   "cuadro": 8.860820868384689,
+   "json": 8.860820868384689,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.WI_1.modelo",
+   "cuadro": 7.537994647294973,
+   "json": 7.537994647294973,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.WI_1.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.WI_1.error_regla",
+   "cuadro": 8.932326515006691,
+   "json": 8.932326515006691,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.WI_2.modelo",
+   "cuadro": 9.162828165988474,
+   "json": 9.162828165988474,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.WI_2.regla",
+   "cuadro": "media_28_dias",
+   "json": "media_28_dias",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.WI_2.error_regla",
+   "cuadro": 18.164542581538015,
+   "json": 18.164542581538015,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.WI_3.modelo",
+   "cuadro": 7.4442869709705795,
+   "json": 7.4442869709705795,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.WI_3.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.WI_3.error_regla",
+   "cuadro": 11.632538363796305,
+   "json": 11.632538363796305,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.FOODS.modelo",
+   "cuadro": 5.090633062210841,
+   "json": 5.090633062210841,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.FOODS.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.FOODS.error_regla",
+   "cuadro": 7.4868562442248345,
+   "json": 7.4868562442248345,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.HOBBIES.modelo",
+   "cuadro": 7.56140350877193,
+   "json": 7.56140350877193,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.HOBBIES.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.HOBBIES.error_regla",
+   "cuadro": 8.228070175438596,
+   "json": 8.228070175438596,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.HOUSEHOLD.modelo",
+   "cuadro": 4.7272140212094,
+   "json": 4.7272140212094,
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.HOUSEHOLD.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "unidades.sumado.HOUSEHOLD.error_regla",
+   "cuadro": 6.274531566892349,
+   "json": 6.274531566892349,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.modelo.error",
+   "cuadro": 16.205475112993145,
+   "json": 16.205475112993142,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.modelo.exceso",
+   "cuadro": -0.49949781089146467,
+   "json": -0.49949781089146456,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.repetir_semana_anterior.error",
+   "cuadro": 23.083882899732775,
+   "json": 23.083882899732775,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.repetir_semana_anterior.exceso",
+   "cuadro": -1.756891584611313,
+   "json": -1.7568915846113122,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.media_28_dias.error",
+   "cuadro": 21.286747152279208,
+   "json": 21.286747152279204,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.media_28_dias.exceso",
+   "cuadro": -1.454984032203958,
+   "json": -1.4549840322039578,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.media_mismo_dia_4_semanas.error",
+   "cuadro": 18.610592794346367,
+   "json": 18.610592794346363,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.media_mismo_dia_4_semanas.exceso",
+   "cuadro": -1.4406976516794303,
+   "json": -1.4406976516794299,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.regla_que_menos_falla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.pruebas_que_gana",
+   "cuadro": 13,
+   "json": 13,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.pruebas",
+   "cuadro": 13,
+   "json": 13,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.minimo",
+   "cuadro": 10,
+   "json": 10,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-05-22.modelo",
+   "cuadro": 19.267969336587672,
+   "json": 19.267969336587672,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-05-22.repetir_semana_anterior",
+   "cuadro": 21.64031051886759,
+   "json": 21.64031051886759,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-05-22.media_28_dias",
+   "cuadro": 21.353116701928855,
+   "json": 21.353116701928855,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-05-22.media_mismo_dia_4_semanas",
+   "cuadro": 20.42583636330555,
+   "json": 20.42583636330555,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-06-19.modelo",
+   "cuadro": 17.728015784483162,
+   "json": 17.728015784483162,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-06-19.repetir_semana_anterior",
+   "cuadro": 24.428592440676614,
+   "json": 24.428592440676614,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-06-19.media_28_dias",
+   "cuadro": 19.54125754947947,
+   "json": 19.54125754947947,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-06-19.media_mismo_dia_4_semanas",
+   "cuadro": 19.195400540404982,
+   "json": 19.195400540404986,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-07-17.modelo",
+   "cuadro": 14.484778675259408,
+   "json": 14.484778675259404,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-07-17.repetir_semana_anterior",
+   "cuadro": 21.295510948923376,
+   "json": 21.295510948923376,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-07-17.media_28_dias",
+   "cuadro": 19.49147002461015,
+   "json": 19.491470024610148,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-07-17.media_mismo_dia_4_semanas",
+   "cuadro": 17.47622274013024,
+   "json": 17.47622274013024,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-08-14.modelo",
+   "cuadro": 17.17068053424849,
+   "json": 17.17068053424849,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-08-14.repetir_semana_anterior",
+   "cuadro": 22.80518674745704,
+   "json": 22.805186747457036,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-08-14.media_28_dias",
+   "cuadro": 21.125391963286773,
+   "json": 21.125391963286773,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-08-14.media_mismo_dia_4_semanas",
+   "cuadro": 18.34284600198853,
+   "json": 18.34284600198853,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-09-11.modelo",
+   "cuadro": 15.431611757462981,
+   "json": 15.431611757462981,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-09-11.repetir_semana_anterior",
+   "cuadro": 24.04205550176937,
+   "json": 24.042055501769372,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-09-11.media_28_dias",
+   "cuadro": 21.80073035050518,
+   "json": 21.80073035050518,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-09-11.media_mismo_dia_4_semanas",
+   "cuadro": 18.36688229213869,
+   "json": 18.36688229213869,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-10-09.modelo",
+   "cuadro": 15.88202982946511,
+   "json": 15.882029829465102,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-10-09.repetir_semana_anterior",
+   "cuadro": 23.53516846744416,
+   "json": 23.53516846744415,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-10-09.media_28_dias",
+   "cuadro": 21.357693343561426,
+   "json": 21.35769334356142,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-10-09.media_mismo_dia_4_semanas",
+   "cuadro": 17.363818844552153,
+   "json": 17.36381884455215,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-11-06.modelo",
+   "cuadro": 16.443320821618457,
+   "json": 16.44332082161845,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-11-06.repetir_semana_anterior",
+   "cuadro": 24.305339418279335,
+   "json": 24.30533941827933,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-11-06.media_28_dias",
+   "cuadro": 23.349484235489406,
+   "json": 23.349484235489403,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-11-06.media_mismo_dia_4_semanas",
+   "cuadro": 20.22746363171089,
+   "json": 20.227463631710883,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-12-04.modelo",
+   "cuadro": 17.57911271243617,
+   "json": 17.57911271243617,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-12-04.repetir_semana_anterior",
+   "cuadro": 26.44672966173885,
+   "json": 26.446729661738853,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-12-04.media_28_dias",
+   "cuadro": 21.86594444775743,
+   "json": 21.865944447757425,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2015-12-04.media_mismo_dia_4_semanas",
+   "cuadro": 20.551397107835438,
+   "json": 20.55139710783544,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-01-01.modelo",
+   "cuadro": 15.83238703670102,
+   "json": 15.83238703670102,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-01-01.repetir_semana_anterior",
+   "cuadro": 28.446398933832846,
+   "json": 28.446398933832846,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-01-01.media_28_dias",
+   "cuadro": 22.96569604849914,
+   "json": 22.96569604849914,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-01-01.media_mismo_dia_4_semanas",
+   "cuadro": 21.83242421193346,
+   "json": 21.83242421193346,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-01-29.modelo",
+   "cuadro": 15.785829667185855,
+   "json": 15.785829667185855,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-01-29.repetir_semana_anterior",
+   "cuadro": 21.882471291324194,
+   "json": 21.882471291324197,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-01-29.media_28_dias",
+   "cuadro": 21.110256843055932,
+   "json": 21.110256843055932,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-01-29.media_mismo_dia_4_semanas",
+   "cuadro": 17.87010360752103,
+   "json": 17.870103607521035,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-02-26.modelo",
+   "cuadro": 15.37673210339818,
+   "json": 15.37673210339818,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-02-26.repetir_semana_anterior",
+   "cuadro": 19.995782350013485,
+   "json": 19.995782350013485,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-02-26.media_28_dias",
+   "cuadro": 20.938535496771184,
+   "json": 20.938535496771184,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-02-26.media_mismo_dia_4_semanas",
+   "cuadro": 16.62633495952429,
+   "json": 16.62633495952429,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-03-25.modelo",
+   "cuadro": 15.234314136289848,
+   "json": 15.234314136289846,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-03-25.repetir_semana_anterior",
+   "cuadro": 22.002723180558245,
+   "json": 22.002723180558245,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-03-25.media_28_dias",
+   "cuadro": 22.159420053310523,
+   "json": 22.159420053310527,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-03-25.media_mismo_dia_4_semanas",
+   "cuadro": 17.191534092391205,
+   "json": 17.19153409239121,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-04-22.modelo",
+   "cuadro": 15.069680412873252,
+   "json": 15.069680412873252,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-04-22.repetir_semana_anterior",
+   "cuadro": 20.0692328174368,
+   "json": 20.0692328174368,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-04-22.media_28_dias",
+   "cuadro": 19.68299403973668,
+   "json": 19.68299403973668,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.prueba_2016-04-22.media_mismo_dia_4_semanas",
+   "cuadro": 17.14496858213652,
+   "json": 17.144968582136517,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.regla_de_cada_prueba",
+   "cuadro": [
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas"
+   ],
+   "json": [
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas",
+    "media_mismo_dia_4_semanas"
+   ],
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.FOODS_1.modelo",
+   "cuadro": 21.556321295082622,
+   "json": 21.556321295082626,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.FOODS_1.regla",
+   "cuadro": "media_28_dias",
+   "json": "media_28_dias",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.FOODS_1.error_regla",
+   "cuadro": 24.186401381219213,
+   "json": 24.186401381219213,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.FOODS_2.modelo",
+   "cuadro": 16.854420067932693,
+   "json": 16.854420067932697,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.FOODS_2.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.FOODS_2.error_regla",
+   "cuadro": 22.57011098799624,
+   "json": 22.570110987996244,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.FOODS_3.modelo",
+   "cuadro": 13.151610638785941,
+   "json": 13.151610638785943,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.FOODS_3.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.FOODS_3.error_regla",
+   "cuadro": 15.122565382084652,
+   "json": 15.122565382084652,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.HOBBIES_1.modelo",
+   "cuadro": 19.249023561763956,
+   "json": 19.249023561763956,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.HOBBIES_1.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.HOBBIES_1.error_regla",
+   "cuadro": 21.14167822644757,
+   "json": 21.141678226447574,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.HOBBIES_2.modelo",
+   "cuadro": 60.48658233987348,
+   "json": 60.486582339873486,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.HOBBIES_2.regla",
+   "cuadro": "media_28_dias",
+   "json": "media_28_dias",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.HOBBIES_2.error_regla",
+   "cuadro": 59.75384984791411,
+   "json": 59.75384984791412,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.HOUSEHOLD_1.modelo",
+   "cuadro": 14.511485022100981,
+   "json": 14.511485022100981,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.HOUSEHOLD_1.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.HOUSEHOLD_1.error_regla",
+   "cuadro": 15.896590552641944,
+   "json": 15.896590552641944,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.HOUSEHOLD_2.modelo",
+   "cuadro": 22.34393569605999,
+   "json": 22.34393569606,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.HOUSEHOLD_2.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.HOUSEHOLD_2.error_regla",
+   "cuadro": 24.11473652764875,
+   "json": 24.114736527648752,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.departamentos",
+   "cuadro": [
+    "FOODS_1",
+    "FOODS_2",
+    "FOODS_3",
+    "HOBBIES_1",
+    "HOBBIES_2",
+    "HOUSEHOLD_1",
+    "HOUSEHOLD_2"
+   ],
+   "json": [
+    "FOODS_1",
+    "FOODS_2",
+    "FOODS_3",
+    "HOBBIES_1",
+    "HOBBIES_2",
+    "HOUSEHOLD_1",
+    "HOUSEHOLD_2"
+   ],
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.cadena.modelo",
+   "cuadro": 4.846299237810167,
+   "json": 4.846299237810168,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.cadena.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.cadena.error_regla",
+   "cuadro": 7.151749829747978,
+   "json": 7.151749829747978,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.CA.modelo",
+   "cuadro": 5.707378435527207,
+   "json": 5.7073784355272075,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.CA.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.CA.error_regla",
+   "cuadro": 6.833121882821389,
+   "json": 6.833121882821389,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.TX.modelo",
+   "cuadro": 7.2723987226617135,
+   "json": 7.272398722661712,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.TX.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.TX.error_regla",
+   "cuadro": 9.009763660634347,
+   "json": 9.009763660634347,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.WI.modelo",
+   "cuadro": 6.9359161928327415,
+   "json": 6.935916192832742,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.WI.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.WI.error_regla",
+   "cuadro": 12.027776016710343,
+   "json": 12.027776016710344,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.CA_1.modelo",
+   "cuadro": 8.277629529482535,
+   "json": 8.277629529482535,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.CA_1.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.CA_1.error_regla",
+   "cuadro": 8.983119027557327,
+   "json": 8.983119027557326,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.CA_2.modelo",
+   "cuadro": 10.30548310842247,
+   "json": 10.30548310842247,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.CA_2.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.CA_2.error_regla",
+   "cuadro": 10.806929096137994,
+   "json": 10.806929096137994,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.CA_3.modelo",
+   "cuadro": 7.155876136846742,
+   "json": 7.155876136846744,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.CA_3.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.CA_3.error_regla",
+   "cuadro": 8.760776505499374,
+   "json": 8.760776505499374,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.CA_4.modelo",
+   "cuadro": 9.240114090497757,
+   "json": 9.240114090497757,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.CA_4.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.CA_4.error_regla",
+   "cuadro": 9.208459714561517,
+   "json": 9.208459714561517,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.TX_1.modelo",
+   "cuadro": 8.603462578789161,
+   "json": 8.603462578789157,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.TX_1.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.TX_1.error_regla",
+   "cuadro": 10.544103036908664,
+   "json": 10.544103036908664,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.TX_2.modelo",
+   "cuadro": 8.8953053508989,
+   "json": 8.8953053508989,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.TX_2.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.TX_2.error_regla",
+   "cuadro": 10.730308814615748,
+   "json": 10.73030881461575,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.TX_3.modelo",
+   "cuadro": 9.313562354263132,
+   "json": 9.313562354263132,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.TX_3.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.TX_3.error_regla",
+   "cuadro": 11.004035025033051,
+   "json": 11.004035025033051,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.WI_1.modelo",
+   "cuadro": 8.634147499481022,
+   "json": 8.634147499481022,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.WI_1.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.WI_1.error_regla",
+   "cuadro": 10.803180697042952,
+   "json": 10.803180697042952,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.WI_2.modelo",
+   "cuadro": 9.547598671831238,
+   "json": 9.547598671831237,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.WI_2.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.WI_2.error_regla",
+   "cuadro": 17.819231591386828,
+   "json": 17.819231591386828,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.WI_3.modelo",
+   "cuadro": 8.86575150514716,
+   "json": 8.865751505147161,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.WI_3.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.WI_3.error_regla",
+   "cuadro": 12.319023922482009,
+   "json": 12.319023922482007,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.FOODS.modelo",
+   "cuadro": 6.094884962605382,
+   "json": 6.094884962605377,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.FOODS.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.FOODS.error_regla",
+   "cuadro": 9.28446208500419,
+   "json": 9.284462085004188,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.HOBBIES.modelo",
+   "cuadro": 6.811534334102026,
+   "json": 6.811534334102024,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.HOBBIES.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.HOBBIES.error_regla",
+   "cuadro": 7.97748494364922,
+   "json": 7.977484943649224,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.HOUSEHOLD.modelo",
+   "cuadro": 6.508765039818733,
+   "json": 6.5087650398187336,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.HOUSEHOLD.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.sumado.HOUSEHOLD.error_regla",
+   "cuadro": 8.35227014599318,
+   "json": 8.352270145993177,
+   "coinciden": true
+  },
+  {
+   "nombre": "dolares.tiendas_que_gana",
+   "cuadro": 9,
+   "json": 9,
+   "coinciden": true
+  },
+  {
+   "nombre": "festivo_0.nombre",
+   "cuadro": "Acción de Gracias",
+   "json": "Acción de Gracias",
+   "coinciden": true
+  },
+  {
+   "nombre": "festivo_0.origen",
+   "cuadro": "2015-11-25",
+   "json": "2015-11-25",
+   "coinciden": true
+  },
+  {
+   "nombre": "festivo_0.modelo",
+   "cuadro": 18.769465132024372,
+   "json": 18.769465132024372,
+   "coinciden": true
+  },
+  {
+   "nombre": "festivo_0.regla",
+   "cuadro": "media_28_dias",
+   "json": "media_28_dias",
+   "coinciden": true
+  },
+  {
+   "nombre": "festivo_0.error_regla",
+   "cuadro": 25.51455653351388,
+   "json": 25.51455653351388,
+   "coinciden": true
+  },
+  {
+   "nombre": "festivo_1.nombre",
+   "cuadro": "Navidad",
+   "json": "Navidad",
+   "coinciden": true
+  },
+  {
+   "nombre": "festivo_1.origen",
+   "cuadro": "2015-12-24",
+   "json": "2015-12-24",
+   "coinciden": true
+  },
+  {
+   "nombre": "festivo_1.modelo",
+   "cuadro": 18.411734073945496,
+   "json": 18.411734073945496,
+   "coinciden": true
+  },
+  {
+   "nombre": "festivo_1.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "festivo_1.error_regla",
+   "cuadro": 21.234160735983338,
+   "json": 21.234160735983338,
+   "coinciden": true
+  },
+  {
+   "nombre": "festivo_2.nombre",
+   "cuadro": "Año Nuevo",
+   "json": "Año Nuevo",
+   "coinciden": true
+  },
+  {
+   "nombre": "festivo_2.origen",
+   "cuadro": "2015-12-31",
+   "json": "2015-12-31",
+   "coinciden": true
+  },
+  {
+   "nombre": "festivo_2.modelo",
+   "cuadro": 14.023600415640614,
+   "json": 14.023600415640614,
+   "coinciden": true
+  },
+  {
+   "nombre": "festivo_2.regla",
+   "cuadro": "media_mismo_dia_4_semanas",
+   "json": "media_mismo_dia_4_semanas",
+   "coinciden": true
+  },
+  {
+   "nombre": "festivo_2.error_regla",
+   "cuadro": 20.535777831551677,
+   "json": 20.535777831551677,
+   "coinciden": true
+  }
+ ],
+ "venta_por_otro_camino": {
+  "cuadro": 7462789.459999999,
+  "hechos_prueba_final": 7462789.460000001,
+  "dias": 363
+ },
+ "recomendado": {
+  "FOODS_1": "modelo",
+  "FOODS_2": "modelo",
+  "FOODS_3": "modelo",
+  "HOBBIES_1": "modelo",
+  "HOBBIES_2": "media_28_dias",
+  "HOUSEHOLD_1": "modelo",
+  "HOUSEHOLD_2": "modelo"
+ },
+ "proximos_dias": {
+  "filas": 1960,
+  "desde": "2016-05-23",
+  "hasta": "2016-06-19",
+  "dias_unidades": 10,
+  "csv": "informes/cuadro_mando_proximos_dias.csv"
+ },
+ "huella_data": {
+  "antes": {
+   "ficheros": 104,
+   "sha256": "338d7b964b347fa847d8f48b7c9515135fdd160aa5c64b5725e2e069ad6c8855"
+  },
+  "despues": {
+   "ficheros": 104,
+   "sha256": "338d7b964b347fa847d8f48b7c9515135fdd160aa5c64b5725e2e069ad6c8855"
+  }
+ },
+ "validaciones": {
+  "entradas_mas_nuevas": true,
+  "fecha_datos_igual": true,
+  "lote_del_modelo_en_uso": true,
+  "raw_igual_que_la_prueba": true,
+  "lote_completo": true,
+  "recomendado_del_json": true,
+  "cifras_iguales_al_json": true,
+  "venta_por_otro_camino": true,
+  "sin_resultados_escritos": true,
+  "sin_palabras_vetadas": true,
+  "huella_data_igual": true
+ },
+ "decisiones": [
+  "Las cifras de la visión general, el pedido y dónde gana son del modelo en uso (variante reentrenado) en el último año guardado; sin el 25 de diciembre, con la previsión acotada en cero y, en unidades, redondeada, como las midió la prueba final.",
+  "La regla que menos falla es la de la selección: la de menor error de las tres con las mismas filas; en cada prueba, la de menor error en esa prueba (como el veredicto de reglas, apartado 7).",
+  "Un título dice «falla menos» solo si el modelo gana al menos 10 de las 13 pruebas en la selección (reglas, apartado 7, sin intervalo: con un filtro estrecho no hay combinaciones bastantes para remuestrear).",
+  "Dónde gana va en dólares a 28 días: cada tienda con la previsión sumada de sus departamentos y cada departamento sin sumar, como el informe final.",
+  "En los próximos días, HOBBIES_2 va con la media de los últimos 28 días hasta el 22/05/2016, calculada con prevision_recursiva.reglas_sencillas sobre hechos_prueba_final; en unidades, redondeada.",
+  "La etiqueta y el contexto de las cifras pueden partirse en dos líneas para que el nombre entero de la regla quepa sin cortarse; el número grande no se parte."
+ ]
+}

@@ -1,0 +1,2318 @@
+{
+  "metodo": "correccion-datos",
+  "version_metodo": "20/11/2026",
+  "script": "scripts/03_correccion_datos.py",
+  "fecha_datos": "2015-05-22",
+  "fecha_ejecucion": "2026-11-24T08:37:57",
+  "entorno": {
+    "python": "3.13.15",
+    "pandas": "3.0.6",
+    "numpy": "2.5.3",
+    "pyarrow": "24.0.0",
+    "ejecutable": "python"
+  },
+  "entradas": [
+    {
+      "ruta": "data/raw/sales_train_evaluation.csv",
+      "sha256": "fcbeed85b09a49d3b1b0625a721053388f26e19490bf42e480e97ad6e177b7b2",
+      "filas": 5000,
+      "columnas": 1581
+    },
+    {
+      "ruta": "data/raw/sell_prices.csv",
+      "sha256": "3a3124852028006f94b6eb2c6b0a313df689ca2c75a6b8aaac0e67447f593a7f",
+      "filas": 854573,
+      "columnas": 4
+    },
+    {
+      "ruta": "data/raw/calendar.csv",
+      "sha256": "d12b5914ef03e66649adf5dd9e996e6602251c22b7a6af8f1f7e3aa12f8860f5",
+      "filas": 1969,
+      "columnas": 14
+    }
+  ],
+  "huellas_despues": {
+    "data/raw/sales_train_evaluation.csv": "fcbeed85b09a49d3b1b0625a721053388f26e19490bf42e480e97ad6e177b7b2",
+    "data/raw/sell_prices.csv": "3a3124852028006f94b6eb2c6b0a313df689ca2c75a6b8aaac0e67447f593a7f",
+    "data/raw/calendar.csv": "d12b5914ef03e66649adf5dd9e996e6602251c22b7a6af8f1f7e3aa12f8860f5"
+  },
+  "resultado": {
+    "estado": "OK",
+    "riesgo": "bajo",
+    "resumen": "La fecha del calendario pasa de texto a fecha y 3 nombres de columna pasan a minúsculas. Ninguna fila ni valor cambia (0 diferencias); 6 cuestiones de la calidad quedan decididas por la petición 07 y los 2.687 días de serie a cero de los dos periodos quedan clasificados.",
+    "artefactos": [
+      "informes/correccion-datos.json",
+      "informes/correccion-datos.md",
+      "data/processed/venta_corregido.parquet",
+      "data/processed/precios_corregido.parquet",
+      "data/processed/calendario_corregido.parquet"
+    ],
+    "siguiente": "la sesión principal rehace las cifras; después, la cascada de las reglas, apartado 5 y el diseño del modelo de datos (modelado-datos)"
+  },
+  "pendientes": [],
+  "calidad": {
+    "ruta": "informes/calidad-datos.json",
+    "estado": "AVISO",
+    "fecha_ejecucion": "2026-11-24T08:37:43",
+    "problemas": 29,
+    "pendientes": 6
+  },
+  "salidas": [
+    {
+      "tabla": "venta",
+      "ruta": "data/processed/venta_corregido.parquet",
+      "sha256": "8d54b88b01a9f00c53461cc40dde91d48cb2c97bffaf2c9c569c1449e18304cd",
+      "filas": 5000,
+      "columnas": 1581,
+      "campos_salida": [
+        {
+          "columna": "id",
+          "tipo": "str",
+          "nulos": 0,
+          "distintos": 5000,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "item_id",
+          "tipo": "str",
+          "nulos": 0,
+          "distintos": 500,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "dept_id",
+          "tipo": "str",
+          "nulos": 0,
+          "distintos": 7,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "cat_id",
+          "tipo": "str",
+          "nulos": 0,
+          "distintos": 3,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "store_id",
+          "tipo": "str",
+          "nulos": 0,
+          "distintos": 10,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "state_id",
+          "tipo": "str",
+          "nulos": 0,
+          "distintos": 3,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "d_1 a d_1575",
+          "columnas": 1575,
+          "tipo": "int64",
+          "nulos": 0,
+          "distintos": 220,
+          "regla_aplicada": null
+        }
+      ]
+    },
+    {
+      "tabla": "precios",
+      "ruta": "data/processed/precios_corregido.parquet",
+      "sha256": "d9ac5467e59d7f099a0e3ae0358417ef17be8e3c76d6fb59726fa6c70f99c1fa",
+      "filas": 854573,
+      "columnas": 4,
+      "campos_salida": [
+        {
+          "columna": "store_id",
+          "tipo": "str",
+          "nulos": 0,
+          "distintos": 10,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "item_id",
+          "tipo": "str",
+          "nulos": 0,
+          "distintos": 500,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "wm_yr_wk",
+          "tipo": "int64",
+          "nulos": 0,
+          "distintos": 225,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "sell_price",
+          "tipo": "float64",
+          "nulos": 0,
+          "distintos": 572,
+          "regla_aplicada": null
+        }
+      ]
+    },
+    {
+      "tabla": "calendario",
+      "ruta": "data/processed/calendario_corregido.parquet",
+      "sha256": "1754b2bb702dc7193b81f638906027dccbbbd16a647a2d65cfd3dcb296581d27",
+      "filas": 1969,
+      "columnas": 14,
+      "campos_salida": [
+        {
+          "columna": "date",
+          "tipo": "datetime64[us]",
+          "nulos": 0,
+          "distintos": 1969,
+          "regla_aplicada": "R-001"
+        },
+        {
+          "columna": "wm_yr_wk",
+          "tipo": "int64",
+          "nulos": 0,
+          "distintos": 282,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "weekday",
+          "tipo": "str",
+          "nulos": 0,
+          "distintos": 7,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "wday",
+          "tipo": "int64",
+          "nulos": 0,
+          "distintos": 7,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "month",
+          "tipo": "int64",
+          "nulos": 0,
+          "distintos": 12,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "year",
+          "tipo": "int64",
+          "nulos": 0,
+          "distintos": 6,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "d",
+          "tipo": "str",
+          "nulos": 0,
+          "distintos": 1969,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "event_name_1",
+          "tipo": "str",
+          "nulos": 1807,
+          "distintos": 30,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "event_type_1",
+          "tipo": "str",
+          "nulos": 1807,
+          "distintos": 4,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "event_name_2",
+          "tipo": "str",
+          "nulos": 1964,
+          "distintos": 4,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "event_type_2",
+          "tipo": "str",
+          "nulos": 1964,
+          "distintos": 2,
+          "regla_aplicada": null
+        },
+        {
+          "columna": "snap_ca",
+          "tipo": "int64",
+          "nulos": 0,
+          "distintos": 2,
+          "regla_aplicada": "R-002"
+        },
+        {
+          "columna": "snap_tx",
+          "tipo": "int64",
+          "nulos": 0,
+          "distintos": 2,
+          "regla_aplicada": "R-002"
+        },
+        {
+          "columna": "snap_wi",
+          "tipo": "int64",
+          "nulos": 0,
+          "distintos": 2,
+          "regla_aplicada": "R-002"
+        }
+      ]
+    }
+  ],
+  "correcciones": [
+    {
+      "id": "K-01",
+      "problema_calidad": "C-04",
+      "tabla": "calendario",
+      "columna": "date",
+      "correccion": "de texto a fecha con el formato %Y-%m-%d",
+      "criterio": "tecnicamente_inequivoca",
+      "ficha": "R-001",
+      "antes": "texto",
+      "despues": "fecha",
+      "dtype_despues": "datetime64[us]",
+      "filas_afectadas": 1969,
+      "no_convierten": 0,
+      "vacias_antes": 0,
+      "vacias_despues": 0
+    },
+    {
+      "id": "K-02",
+      "problema_calidad": "C-03",
+      "tabla": "calendario",
+      "columna": "snap_CA, snap_TX, snap_WI",
+      "correccion": "nombre en minúsculas (criterios.md §5)",
+      "criterio": "tecnicamente_inequivoca",
+      "ficha": "R-002",
+      "antes": [
+        "snap_CA",
+        "snap_TX",
+        "snap_WI"
+      ],
+      "despues": [
+        "snap_ca",
+        "snap_tx",
+        "snap_wi"
+      ],
+      "columnas_afectadas": 3
+    }
+  ],
+  "sin_cambios": [
+    {
+      "problema_calidad": "C-01",
+      "pendientes": [],
+      "motivo": "pasar la venta a una fila por día es reestructurar; lo hace la transformación.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-02",
+      "pendientes": [],
+      "motivo": "la clave es item_id con store_id; id no se usa como variable.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-05",
+      "pendientes": [],
+      "motivo": "D2, cerrada el 21/11/2026; el vacío es «sin evento» (reglas, apartado 5). Los cinco días con segundo evento traen dos fiestas distintas; ninguno repite ni contradice al primero.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-06",
+      "pendientes": [],
+      "motivo": "D2, cerrada el 21/11/2026; el vacío es «sin evento» (reglas, apartado 5). Los cinco días con segundo evento traen dos fiestas distintas; ninguno repite ni contradice al primero.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-07",
+      "pendientes": [],
+      "motivo": "D2, cerrada el 21/11/2026; el vacío es «sin evento» (reglas, apartado 5). Los cinco días con segundo evento traen dos fiestas distintas; ninguno repite ni contradice al primero.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-08",
+      "pendientes": [],
+      "motivo": "D2, cerrada el 21/11/2026; el vacío es «sin evento» (reglas, apartado 5). Los cinco días con segundo evento traen dos fiestas distintas; ninguno repite ni contradice al primero.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-09",
+      "pendientes": [],
+      "motivo": "una semana sin precio es una semana sin venta (reglas, apartado 5).",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-10",
+      "pendientes": [],
+      "motivo": "un día con cero unidades es un dato válido (reglas, apartado 5).",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-11",
+      "pendientes": [],
+      "motivo": "un día con cero unidades es un dato válido (reglas, apartado 5).",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-12",
+      "pendientes": [
+        "PC-01"
+      ],
+      "motivo": "los 9.438 precios bajo 0,5 dólares pesan el 0,41 % de los dólares de la construcción y el 0,31 % de la validación; en una serie, como mucho el 3,3 %. Quitarlos dejaría semanas con venta y sin precio, que paran el trabajo (reglas, apartado 5).",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-13",
+      "pendientes": [
+        "PC-02"
+      ],
+      "motivo": "las 350 subidas de más del doble pesan el 0,03 % de los dólares de cada periodo.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-14",
+      "pendientes": [
+        "PC-03"
+      ],
+      "motivo": "WI_1 el 2011-02-02 es un cierre por la definición de las reglas, apartado 5, en el quinto día de los datos.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-15",
+      "pendientes": [
+        "PC-04"
+      ],
+      "motivo": "22 de 9.327.191 unidades; el 25 de diciembre queda fuera del error (reglas, apartado 6).",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-16",
+      "pendientes": [
+        "PC-05",
+        "PC-06"
+      ],
+      "motivo": "los saltos son cambios reales de la venta; cómo entra la historia anterior al salto lo fijan los planteamientos.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-17",
+      "pendientes": [
+        "PC-05",
+        "PC-06"
+      ],
+      "motivo": "los saltos son cambios reales de la venta; cómo entra la historia anterior al salto lo fijan los planteamientos.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-18",
+      "pendientes": [],
+      "motivo": "los ceros son datos válidos; su clase está en clases_de_ceros.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-19",
+      "pendientes": [],
+      "motivo": "suman cero a su departamento (reglas, apartado 3) y no están mal.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-20",
+      "pendientes": [],
+      "motivo": "suman cero a su departamento (reglas, apartado 3) y no están mal.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-21",
+      "pendientes": [],
+      "motivo": "describen; no son errores.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-22",
+      "pendientes": [],
+      "motivo": "describen; no son errores.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-23",
+      "pendientes": [],
+      "motivo": "describen; no son errores.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-24",
+      "pendientes": [],
+      "motivo": "describen; no son errores.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-25",
+      "pendientes": [],
+      "motivo": "un atípico no es un error; son ventas y precios reales.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-26",
+      "pendientes": [],
+      "motivo": "un atípico no es un error; son ventas y precios reales.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-27",
+      "pendientes": [],
+      "motivo": "un atípico no es un error; son ventas y precios reales.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-28",
+      "pendientes": [],
+      "motivo": "un atípico no es un error; son ventas y precios reales.",
+      "ficha": "R-003"
+    },
+    {
+      "problema_calidad": "C-29",
+      "pendientes": [],
+      "motivo": "suman cero a su departamento (reglas, apartado 3) y no están mal.",
+      "ficha": "R-003"
+    }
+  ],
+  "decisiones_usuario": [
+    {
+      "pendiente": "PC-01",
+      "problema_calidad": "C-12",
+      "decision": "son precios reales de productos baratos y se usan como están",
+      "nota": null,
+      "motivo": "los 9.438 precios bajo 0,5 dólares pesan el 0,41 % de los dólares de la construcción y el 0,31 % de la validación; en una serie, como mucho el 3,3 %. Quitarlos dejaría semanas con venta y sin precio, que paran el trabajo (reglas, apartado 5).",
+      "fecha": "2026-11-23",
+      "fuente": "config/modelo/decisiones-correccion.json"
+    },
+    {
+      "pendiente": "PC-02",
+      "problema_calidad": "C-13",
+      "decision": "son cambios reales de precio y se usan como están",
+      "nota": null,
+      "motivo": "las 350 subidas de más del doble pesan el 0,03 % de los dólares de cada periodo.",
+      "fecha": "2026-11-23",
+      "fuente": "config/modelo/decisiones-correccion.json"
+    },
+    {
+      "pendiente": "PC-03",
+      "problema_calidad": "C-14",
+      "decision": "es un cierre real de la tienda y se trata como el 25 de diciembre",
+      "nota": "En la corrección no cambia ningún dato; ningún error se mide ese día",
+      "motivo": "WI_1 el 2011-02-02 es un cierre por la definición de las reglas, apartado 5, en el quinto día de los datos.",
+      "fecha": "2026-11-23",
+      "fuente": "config/modelo/decisiones-correccion.json"
+    },
+    {
+      "pendiente": "PC-04",
+      "problema_calidad": "C-15",
+      "decision": "se dejan como vendidas",
+      "nota": null,
+      "motivo": "22 de 9.327.191 unidades; el 25 de diciembre queda fuera del error (reglas, apartado 6).",
+      "fecha": "2026-11-23",
+      "fuente": "config/modelo/decisiones-correccion.json"
+    },
+    {
+      "pendiente": "PC-05",
+      "problema_calidad": "C-16",
+      "decision": "son cambios reales de la venta y la serie se usa entera",
+      "nota": "Cómo pesa en el modelo la historia anterior al salto lo fijan los planteamientos, no los datos",
+      "motivo": "los saltos son cambios reales de la venta; cómo entra la historia anterior al salto lo fijan los planteamientos.",
+      "fecha": "2026-11-23",
+      "fuente": "config/modelo/decisiones-correccion.json"
+    },
+    {
+      "pendiente": "PC-06",
+      "problema_calidad": "C-17",
+      "decision": "son cambios reales de la venta y la serie se usa entera",
+      "nota": "Cómo pesa en el modelo la historia anterior al salto lo fijan los planteamientos, no los datos",
+      "motivo": "los saltos son cambios reales de la venta; cómo entra la historia anterior al salto lo fijan los planteamientos.",
+      "fecha": "2026-11-23",
+      "fuente": "config/modelo/decisiones-correccion.json"
+    }
+  ],
+  "sumas_control": [
+    {
+      "columna": "filas de venta",
+      "antes": 5000,
+      "despues": 5000,
+      "coincide": true,
+      "via_antes": "pandas sobre data/raw/",
+      "via_despues": "pyarrow sobre data/processed/"
+    },
+    {
+      "columna": "columnas de venta",
+      "antes": 1581,
+      "despues": 1581,
+      "coincide": true,
+      "via_antes": "pandas sobre data/raw/",
+      "via_despues": "pyarrow sobre data/processed/"
+    },
+    {
+      "columna": "filas de precios",
+      "antes": 854573,
+      "despues": 854573,
+      "coincide": true,
+      "via_antes": "pandas sobre data/raw/",
+      "via_despues": "pyarrow sobre data/processed/"
+    },
+    {
+      "columna": "columnas de precios",
+      "antes": 4,
+      "despues": 4,
+      "coincide": true,
+      "via_antes": "pandas sobre data/raw/",
+      "via_despues": "pyarrow sobre data/processed/"
+    },
+    {
+      "columna": "filas de calendario",
+      "antes": 1969,
+      "despues": 1969,
+      "coincide": true,
+      "via_antes": "pandas sobre data/raw/",
+      "via_despues": "pyarrow sobre data/processed/"
+    },
+    {
+      "columna": "columnas de calendario",
+      "antes": 14,
+      "despues": 14,
+      "coincide": true,
+      "via_antes": "pandas sobre data/raw/",
+      "via_despues": "pyarrow sobre data/processed/"
+    },
+    {
+      "columna": "unidades (total)",
+      "antes": 9327191,
+      "despues": 9327191,
+      "coincide": true,
+      "via_antes": "pandas sobre data/raw/",
+      "via_despues": "pyarrow sobre data/processed/"
+    },
+    {
+      "columna": "unidades (construcción)",
+      "antes": 7003244,
+      "despues": 7003244,
+      "coincide": true,
+      "via_antes": "pandas sobre data/raw/",
+      "via_despues": "pyarrow sobre data/processed/"
+    },
+    {
+      "columna": "unidades (validación)",
+      "antes": 2323947,
+      "despues": 2323947,
+      "coincide": true,
+      "via_antes": "pandas sobre data/raw/",
+      "via_despues": "pyarrow sobre data/processed/"
+    },
+    {
+      "columna": "suma de sell_price",
+      "antes": 3750011.81,
+      "despues": 3750011.81,
+      "coincide": true,
+      "via_antes": "pandas sobre data/raw/",
+      "via_despues": "pyarrow sobre data/processed/"
+    },
+    {
+      "columna": "días SNAP de CA",
+      "antes": 650,
+      "despues": 650,
+      "coincide": true,
+      "via_antes": "pandas sobre data/raw/",
+      "via_despues": "pyarrow sobre data/processed/"
+    },
+    {
+      "columna": "días SNAP de TX",
+      "antes": 650,
+      "despues": 650,
+      "coincide": true,
+      "via_antes": "pandas sobre data/raw/",
+      "via_despues": "pyarrow sobre data/processed/"
+    },
+    {
+      "columna": "días SNAP de WI",
+      "antes": 650,
+      "despues": 650,
+      "coincide": true,
+      "via_antes": "pandas sobre data/raw/",
+      "via_despues": "pyarrow sobre data/processed/"
+    }
+  ],
+  "comprobaciones": {
+    "completitud": "pasa",
+    "consistencia": "pasa",
+    "utilidad": "pasa",
+    "datos_personales": "pasa"
+  },
+  "nombres": [
+    {
+      "tabla": "calendario",
+      "antes": "snap_CA",
+      "despues": "snap_ca",
+      "ficha": "R-002"
+    },
+    {
+      "tabla": "calendario",
+      "antes": "snap_TX",
+      "despues": "snap_tx",
+      "ficha": "R-002"
+    },
+    {
+      "tabla": "calendario",
+      "antes": "snap_WI",
+      "despues": "snap_wi",
+      "ficha": "R-002"
+    }
+  ],
+  "tipos_comprobados": [
+    {
+      "tabla": "venta",
+      "columna": "id",
+      "esperado": "texto",
+      "antes": "texto",
+      "despues": "texto",
+      "cambia": false
+    },
+    {
+      "tabla": "venta",
+      "columna": "item_id",
+      "esperado": "texto",
+      "antes": "texto",
+      "despues": "texto",
+      "cambia": false
+    },
+    {
+      "tabla": "venta",
+      "columna": "dept_id",
+      "esperado": "texto",
+      "antes": "texto",
+      "despues": "texto",
+      "cambia": false
+    },
+    {
+      "tabla": "venta",
+      "columna": "cat_id",
+      "esperado": "texto",
+      "antes": "texto",
+      "despues": "texto",
+      "cambia": false
+    },
+    {
+      "tabla": "venta",
+      "columna": "store_id",
+      "esperado": "texto",
+      "antes": "texto",
+      "despues": "texto",
+      "cambia": false
+    },
+    {
+      "tabla": "venta",
+      "columna": "state_id",
+      "esperado": "texto",
+      "antes": "texto",
+      "despues": "texto",
+      "cambia": false
+    },
+    {
+      "tabla": "venta",
+      "columna": "d_1 a d_1575",
+      "columnas": 1575,
+      "esperado": "entero",
+      "antes": "entero",
+      "despues": "entero",
+      "cambia": false
+    },
+    {
+      "tabla": "precios",
+      "columna": "store_id",
+      "esperado": "texto",
+      "antes": "texto",
+      "despues": "texto",
+      "cambia": false
+    },
+    {
+      "tabla": "precios",
+      "columna": "item_id",
+      "esperado": "texto",
+      "antes": "texto",
+      "despues": "texto",
+      "cambia": false
+    },
+    {
+      "tabla": "precios",
+      "columna": "wm_yr_wk",
+      "esperado": "entero",
+      "antes": "entero",
+      "despues": "entero",
+      "cambia": false
+    },
+    {
+      "tabla": "precios",
+      "columna": "sell_price",
+      "esperado": "decimal",
+      "antes": "decimal",
+      "despues": "decimal",
+      "cambia": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "date",
+      "esperado": "fecha",
+      "antes": "texto",
+      "despues": "fecha",
+      "cambia": true
+    },
+    {
+      "tabla": "calendario",
+      "columna": "wm_yr_wk",
+      "esperado": "entero",
+      "antes": "entero",
+      "despues": "entero",
+      "cambia": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "weekday",
+      "esperado": "texto",
+      "antes": "texto",
+      "despues": "texto",
+      "cambia": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "wday",
+      "esperado": "entero",
+      "antes": "entero",
+      "despues": "entero",
+      "cambia": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "month",
+      "esperado": "entero",
+      "antes": "entero",
+      "despues": "entero",
+      "cambia": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "year",
+      "esperado": "entero",
+      "antes": "entero",
+      "despues": "entero",
+      "cambia": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "d",
+      "esperado": "texto",
+      "antes": "texto",
+      "despues": "texto",
+      "cambia": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "event_name_1",
+      "esperado": "texto",
+      "antes": "texto",
+      "despues": "texto",
+      "cambia": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "event_type_1",
+      "esperado": "texto",
+      "antes": "texto",
+      "despues": "texto",
+      "cambia": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "event_name_2",
+      "esperado": "texto",
+      "antes": "texto",
+      "despues": "texto",
+      "cambia": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "event_type_2",
+      "esperado": "texto",
+      "antes": "texto",
+      "despues": "texto",
+      "cambia": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "snap_ca",
+      "esperado": "entero",
+      "antes": "entero",
+      "despues": "entero",
+      "cambia": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "snap_tx",
+      "esperado": "entero",
+      "antes": "entero",
+      "despues": "entero",
+      "cambia": false
+    },
+    {
+      "tabla": "calendario",
+      "columna": "snap_wi",
+      "esperado": "entero",
+      "antes": "entero",
+      "despues": "entero",
+      "cambia": false
+    }
+  ],
+  "va_a_modelo": true,
+  "parametros": [
+    {
+      "nombre": "forma de los nombres de columna",
+      "valor": "minúsculas, sin tildes ni eñes, guion bajo",
+      "origen": "por defecto (criterios.md §5)"
+    },
+    {
+      "nombre": "etiqueta del vacío en una categórica",
+      "valor": "sin dato",
+      "origen": "por defecto; no se usa: ningún vacío se rellena"
+    },
+    {
+      "nombre": "marca de lo imputado",
+      "valor": "<campo>_faltante, 0 y 1",
+      "origen": "por defecto; no se usa: nada se imputa"
+    },
+    {
+      "nombre": "si los datos van a un modelo",
+      "valor": "no se imputa aquí",
+      "origen": "por defecto; el caso entrena un modelo (petición 07)"
+    },
+    {
+      "nombre": "formato de la tabla corregida",
+      "valor": "Parquet",
+      "origen": "por defecto"
+    },
+    {
+      "nombre": "formato de la fecha",
+      "valor": "%Y-%m-%d",
+      "origen": "diccionario (tipo declarado «fecha y-m-d») y petición 07"
+    },
+    {
+      "nombre": "umbral de la demanda intermitente",
+      "valor": 10,
+      "origen": "petición 07, tabla de clases de los ceros (guía de forecasting §3)"
+    },
+    {
+      "nombre": "periodos",
+      "valor": {
+        "construccion": [
+          "2011-01-29",
+          "2014-05-22"
+        ],
+        "validacion": [
+          "2014-05-23",
+          "2015-05-22"
+        ]
+      },
+      "origen": "reglas de negocio §5"
+    }
+  ],
+  "clases_de_ceros": {
+    "construccion": {
+      "dias": 1210,
+      "series": 70,
+      "dias_serie_a_cero": 2416,
+      "clases": {
+        "cierre": {
+          "dias_serie": 175,
+          "series": 63,
+          "dias_de_tienda": 25,
+          "tiendas_y_fechas": [
+            {
+              "tienda": "CA_1",
+              "fecha": "2011-12-25"
+            },
+            {
+              "tienda": "CA_1",
+              "fecha": "2012-12-25"
+            },
+            {
+              "tienda": "CA_1",
+              "fecha": "2013-12-25"
+            },
+            {
+              "tienda": "CA_3",
+              "fecha": "2011-12-25"
+            },
+            {
+              "tienda": "CA_4",
+              "fecha": "2011-12-25"
+            },
+            {
+              "tienda": "CA_4",
+              "fecha": "2012-12-25"
+            },
+            {
+              "tienda": "CA_4",
+              "fecha": "2013-12-25"
+            },
+            {
+              "tienda": "TX_1",
+              "fecha": "2011-12-25"
+            },
+            {
+              "tienda": "TX_1",
+              "fecha": "2012-12-25"
+            },
+            {
+              "tienda": "TX_1",
+              "fecha": "2013-12-25"
+            },
+            {
+              "tienda": "TX_2",
+              "fecha": "2011-12-25"
+            },
+            {
+              "tienda": "TX_2",
+              "fecha": "2012-12-25"
+            },
+            {
+              "tienda": "TX_3",
+              "fecha": "2011-12-25"
+            },
+            {
+              "tienda": "TX_3",
+              "fecha": "2012-12-25"
+            },
+            {
+              "tienda": "TX_3",
+              "fecha": "2013-12-25"
+            },
+            {
+              "tienda": "WI_1",
+              "fecha": "2011-02-02"
+            },
+            {
+              "tienda": "WI_1",
+              "fecha": "2011-12-25"
+            },
+            {
+              "tienda": "WI_1",
+              "fecha": "2012-12-25"
+            },
+            {
+              "tienda": "WI_1",
+              "fecha": "2013-12-25"
+            },
+            {
+              "tienda": "WI_2",
+              "fecha": "2011-12-25"
+            },
+            {
+              "tienda": "WI_2",
+              "fecha": "2012-12-25"
+            },
+            {
+              "tienda": "WI_2",
+              "fecha": "2013-12-25"
+            },
+            {
+              "tienda": "WI_3",
+              "fecha": "2011-12-25"
+            },
+            {
+              "tienda": "WI_3",
+              "fecha": "2012-12-25"
+            },
+            {
+              "tienda": "WI_3",
+              "fecha": "2013-12-25"
+            }
+          ]
+        },
+        "25_diciembre": {
+          "dias_serie": 35,
+          "series": 18,
+          "lista": [
+            {
+              "serie": "CA_2 FOODS_1",
+              "fecha": "2011-12-25"
+            },
+            {
+              "serie": "CA_2 FOODS_1",
+              "fecha": "2012-12-25"
+            },
+            {
+              "serie": "CA_2 FOODS_1",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "CA_2 FOODS_2",
+              "fecha": "2011-12-25"
+            },
+            {
+              "serie": "CA_2 FOODS_2",
+              "fecha": "2012-12-25"
+            },
+            {
+              "serie": "CA_2 FOODS_2",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "CA_2 HOBBIES_1",
+              "fecha": "2011-12-25"
+            },
+            {
+              "serie": "CA_2 HOBBIES_1",
+              "fecha": "2012-12-25"
+            },
+            {
+              "serie": "CA_2 HOBBIES_1",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "CA_2 HOBBIES_2",
+              "fecha": "2011-12-25"
+            },
+            {
+              "serie": "CA_2 HOBBIES_2",
+              "fecha": "2012-12-25"
+            },
+            {
+              "serie": "CA_2 HOBBIES_2",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "CA_2 HOUSEHOLD_1",
+              "fecha": "2011-12-25"
+            },
+            {
+              "serie": "CA_2 HOUSEHOLD_1",
+              "fecha": "2012-12-25"
+            },
+            {
+              "serie": "CA_2 HOUSEHOLD_1",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "CA_2 HOUSEHOLD_2",
+              "fecha": "2011-12-25"
+            },
+            {
+              "serie": "CA_2 HOUSEHOLD_2",
+              "fecha": "2012-12-25"
+            },
+            {
+              "serie": "CA_2 HOUSEHOLD_2",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "CA_3 FOODS_1",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "CA_3 FOODS_2",
+              "fecha": "2012-12-25"
+            },
+            {
+              "serie": "CA_3 FOODS_2",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "CA_3 HOBBIES_1",
+              "fecha": "2012-12-25"
+            },
+            {
+              "serie": "CA_3 HOBBIES_1",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "CA_3 HOBBIES_2",
+              "fecha": "2012-12-25"
+            },
+            {
+              "serie": "CA_3 HOBBIES_2",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "CA_3 HOUSEHOLD_1",
+              "fecha": "2012-12-25"
+            },
+            {
+              "serie": "CA_3 HOUSEHOLD_1",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "CA_3 HOUSEHOLD_2",
+              "fecha": "2012-12-25"
+            },
+            {
+              "serie": "CA_3 HOUSEHOLD_2",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "TX_2 FOODS_1",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "TX_2 FOODS_2",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "TX_2 HOBBIES_1",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "TX_2 HOBBIES_2",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "TX_2 HOUSEHOLD_1",
+              "fecha": "2013-12-25"
+            },
+            {
+              "serie": "TX_2 HOUSEHOLD_2",
+              "fecha": "2013-12-25"
+            }
+          ]
+        },
+        "demanda_intermitente": {
+          "dias_serie": 2171,
+          "series": 10,
+          "umbral": 10,
+          "series_bajo_el_umbral": 10,
+          "lista": [
+            {
+              "serie": "CA_1 HOBBIES_2",
+              "media": 2.58,
+              "dias_a_cero": 240
+            },
+            {
+              "serie": "CA_2 HOBBIES_2",
+              "media": 3.68,
+              "dias_a_cero": 125
+            },
+            {
+              "serie": "CA_3 HOBBIES_2",
+              "media": 3.65,
+              "dias_a_cero": 99
+            },
+            {
+              "serie": "CA_4 HOBBIES_2",
+              "media": 1.23,
+              "dias_a_cero": 484
+            },
+            {
+              "serie": "TX_1 HOBBIES_2",
+              "media": 2.22,
+              "dias_a_cero": 262
+            },
+            {
+              "serie": "TX_2 HOBBIES_2",
+              "media": 4.73,
+              "dias_a_cero": 76
+            },
+            {
+              "serie": "TX_3 HOBBIES_2",
+              "media": 3.61,
+              "dias_a_cero": 143
+            },
+            {
+              "serie": "WI_1 HOBBIES_2",
+              "media": 2.43,
+              "dias_a_cero": 251
+            },
+            {
+              "serie": "WI_2 HOBBIES_2",
+              "media": 2.4,
+              "dias_a_cero": 259
+            },
+            {
+              "serie": "WI_3 HOBBIES_2",
+              "media": 2.19,
+              "dias_a_cero": 232
+            }
+          ]
+        },
+        "resto": {
+          "dias_serie": 35,
+          "series": 3,
+          "lista": [
+            {
+              "serie": "WI_1 FOODS_2",
+              "fecha": "2011-11-24"
+            },
+            {
+              "serie": "WI_1 FOODS_2",
+              "fecha": "2011-11-26"
+            },
+            {
+              "serie": "WI_1 FOODS_2",
+              "fecha": "2011-11-30"
+            },
+            {
+              "serie": "WI_1 FOODS_2",
+              "fecha": "2011-12-01"
+            },
+            {
+              "serie": "WI_1 FOODS_2",
+              "fecha": "2011-12-02"
+            },
+            {
+              "serie": "WI_1 FOODS_2",
+              "fecha": "2011-12-27"
+            },
+            {
+              "serie": "WI_1 FOODS_2",
+              "fecha": "2012-07-22"
+            },
+            {
+              "serie": "WI_1 FOODS_2",
+              "fecha": "2012-10-19"
+            },
+            {
+              "serie": "WI_1 FOODS_2",
+              "fecha": "2012-10-20"
+            },
+            {
+              "serie": "WI_1 FOODS_2",
+              "fecha": "2012-10-21"
+            },
+            {
+              "serie": "WI_1 FOODS_2",
+              "fecha": "2012-10-22"
+            },
+            {
+              "serie": "WI_1 FOODS_2",
+              "fecha": "2012-10-23"
+            },
+            {
+              "serie": "WI_1 FOODS_2",
+              "fecha": "2012-10-24"
+            },
+            {
+              "serie": "WI_1 FOODS_2",
+              "fecha": "2012-10-25"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-09-29"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-09-30"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-02"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-03"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-04"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-06"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-07"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-08"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-12"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-13"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-16"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-17"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-18"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-20"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-21"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-23"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-24"
+            },
+            {
+              "serie": "WI_1 HOUSEHOLD_2",
+              "fecha": "2012-10-25"
+            },
+            {
+              "serie": "WI_2 FOODS_2",
+              "fecha": "2012-04-30"
+            },
+            {
+              "serie": "WI_2 FOODS_2",
+              "fecha": "2012-05-01"
+            },
+            {
+              "serie": "WI_2 FOODS_2",
+              "fecha": "2012-05-02"
+            }
+          ]
+        }
+      },
+      "partes_suman_el_total": true,
+      "media_mas_baja_de_las_demas": {
+        "serie": "WI_2 HOUSEHOLD_2",
+        "media": 14.01
+      },
+      "medias": [
+        {
+          "serie": "CA_1 FOODS_1",
+          "media": 64.8
+        },
+        {
+          "serie": "CA_1 FOODS_2",
+          "media": 77.72
+        },
+        {
+          "serie": "CA_1 FOODS_3",
+          "media": 333.69
+        },
+        {
+          "serie": "CA_1 HOBBIES_1",
+          "media": 68.84
+        },
+        {
+          "serie": "CA_1 HOBBIES_2",
+          "media": 2.58
+        },
+        {
+          "serie": "CA_1 HOUSEHOLD_1",
+          "media": 85.39
+        },
+        {
+          "serie": "CA_1 HOUSEHOLD_2",
+          "media": 27.79
+        },
+        {
+          "serie": "CA_2 FOODS_1",
+          "media": 99.14
+        },
+        {
+          "serie": "CA_2 FOODS_2",
+          "media": 23.76
+        },
+        {
+          "serie": "CA_2 FOODS_3",
+          "media": 208.79
+        },
+        {
+          "serie": "CA_2 HOBBIES_1",
+          "media": 55.38
+        },
+        {
+          "serie": "CA_2 HOBBIES_2",
+          "media": 3.68
+        },
+        {
+          "serie": "CA_2 HOUSEHOLD_1",
+          "media": 85.43
+        },
+        {
+          "serie": "CA_2 HOUSEHOLD_2",
+          "media": 36.85
+        },
+        {
+          "serie": "CA_3 FOODS_1",
+          "media": 91.26
+        },
+        {
+          "serie": "CA_3 FOODS_2",
+          "media": 111.14
+        },
+        {
+          "serie": "CA_3 FOODS_3",
+          "media": 492.57
+        },
+        {
+          "serie": "CA_3 HOBBIES_1",
+          "media": 78.95
+        },
+        {
+          "serie": "CA_3 HOBBIES_2",
+          "media": 3.65
+        },
+        {
+          "serie": "CA_3 HOUSEHOLD_1",
+          "media": 152.49
+        },
+        {
+          "serie": "CA_3 HOUSEHOLD_2",
+          "media": 47.74
+        },
+        {
+          "serie": "CA_4 FOODS_1",
+          "media": 39.65
+        },
+        {
+          "serie": "CA_4 FOODS_2",
+          "media": 47.8
+        },
+        {
+          "serie": "CA_4 FOODS_3",
+          "media": 167.13
+        },
+        {
+          "serie": "CA_4 HOBBIES_1",
+          "media": 45.99
+        },
+        {
+          "serie": "CA_4 HOBBIES_2",
+          "media": 1.23
+        },
+        {
+          "serie": "CA_4 HOUSEHOLD_1",
+          "media": 42.66
+        },
+        {
+          "serie": "CA_4 HOUSEHOLD_2",
+          "media": 14.67
+        },
+        {
+          "serie": "TX_1 FOODS_1",
+          "media": 44.36
+        },
+        {
+          "serie": "TX_1 FOODS_2",
+          "media": 56.32
+        },
+        {
+          "serie": "TX_1 FOODS_3",
+          "media": 262.0
+        },
+        {
+          "serie": "TX_1 HOBBIES_1",
+          "media": 36.42
+        },
+        {
+          "serie": "TX_1 HOBBIES_2",
+          "media": 2.22
+        },
+        {
+          "serie": "TX_1 HOUSEHOLD_1",
+          "media": 79.15
+        },
+        {
+          "serie": "TX_1 HOUSEHOLD_2",
+          "media": 18.68
+        },
+        {
+          "serie": "TX_2 FOODS_1",
+          "media": 85.04
+        },
+        {
+          "serie": "TX_2 FOODS_2",
+          "media": 85.09
+        },
+        {
+          "serie": "TX_2 FOODS_3",
+          "media": 370.97
+        },
+        {
+          "serie": "TX_2 HOBBIES_1",
+          "media": 56.37
+        },
+        {
+          "serie": "TX_2 HOBBIES_2",
+          "media": 4.73
+        },
+        {
+          "serie": "TX_2 HOUSEHOLD_1",
+          "media": 93.65
+        },
+        {
+          "serie": "TX_2 HOUSEHOLD_2",
+          "media": 25.56
+        },
+        {
+          "serie": "TX_3 FOODS_1",
+          "media": 48.62
+        },
+        {
+          "serie": "TX_3 FOODS_2",
+          "media": 88.67
+        },
+        {
+          "serie": "TX_3 FOODS_3",
+          "media": 281.02
+        },
+        {
+          "serie": "TX_3 HOBBIES_1",
+          "media": 37.57
+        },
+        {
+          "serie": "TX_3 HOBBIES_2",
+          "media": 3.61
+        },
+        {
+          "serie": "TX_3 HOUSEHOLD_1",
+          "media": 75.89
+        },
+        {
+          "serie": "TX_3 HOUSEHOLD_2",
+          "media": 18.07
+        },
+        {
+          "serie": "WI_1 FOODS_1",
+          "media": 50.62
+        },
+        {
+          "serie": "WI_1 FOODS_2",
+          "media": 39.63
+        },
+        {
+          "serie": "WI_1 FOODS_3",
+          "media": 152.31
+        },
+        {
+          "serie": "WI_1 HOBBIES_1",
+          "media": 51.68
+        },
+        {
+          "serie": "WI_1 HOBBIES_2",
+          "media": 2.43
+        },
+        {
+          "serie": "WI_1 HOUSEHOLD_1",
+          "media": 67.57
+        },
+        {
+          "serie": "WI_1 HOUSEHOLD_2",
+          "media": 18.09
+        },
+        {
+          "serie": "WI_2 FOODS_1",
+          "media": 56.13
+        },
+        {
+          "serie": "WI_2 FOODS_2",
+          "media": 103.97
+        },
+        {
+          "serie": "WI_2 FOODS_3",
+          "media": 244.9
+        },
+        {
+          "serie": "WI_2 HOBBIES_1",
+          "media": 28.48
+        },
+        {
+          "serie": "WI_2 HOBBIES_2",
+          "media": 2.4
+        },
+        {
+          "serie": "WI_2 HOUSEHOLD_1",
+          "media": 87.69
+        },
+        {
+          "serie": "WI_2 HOUSEHOLD_2",
+          "media": 14.01
+        },
+        {
+          "serie": "WI_3 FOODS_1",
+          "media": 44.97
+        },
+        {
+          "serie": "WI_3 FOODS_2",
+          "media": 88.46
+        },
+        {
+          "serie": "WI_3 FOODS_3",
+          "media": 309.85
+        },
+        {
+          "serie": "WI_3 HOBBIES_1",
+          "media": 41.06
+        },
+        {
+          "serie": "WI_3 HOBBIES_2",
+          "media": 2.19
+        },
+        {
+          "serie": "WI_3 HOUSEHOLD_1",
+          "media": 89.99
+        },
+        {
+          "serie": "WI_3 HOUSEHOLD_2",
+          "media": 17.79
+        }
+      ]
+    },
+    "validacion": {
+      "dias": 365,
+      "series": 70,
+      "dias_serie_a_cero": 271,
+      "clases": {
+        "cierre": {
+          "dias_serie": 56,
+          "series": 56,
+          "dias_de_tienda": 8,
+          "tiendas_y_fechas": [
+            {
+              "tienda": "CA_1",
+              "fecha": "2014-12-25"
+            },
+            {
+              "tienda": "CA_3",
+              "fecha": "2014-12-25"
+            },
+            {
+              "tienda": "CA_4",
+              "fecha": "2014-12-25"
+            },
+            {
+              "tienda": "TX_1",
+              "fecha": "2014-12-25"
+            },
+            {
+              "tienda": "TX_2",
+              "fecha": "2014-12-25"
+            },
+            {
+              "tienda": "TX_3",
+              "fecha": "2014-12-25"
+            },
+            {
+              "tienda": "WI_1",
+              "fecha": "2014-12-25"
+            },
+            {
+              "tienda": "WI_2",
+              "fecha": "2014-12-25"
+            }
+          ]
+        },
+        "25_diciembre": {
+          "dias_serie": 12,
+          "series": 12,
+          "lista": [
+            {
+              "serie": "CA_2 FOODS_1",
+              "fecha": "2014-12-25"
+            },
+            {
+              "serie": "CA_2 FOODS_2",
+              "fecha": "2014-12-25"
+            },
+            {
+              "serie": "CA_2 HOBBIES_1",
+              "fecha": "2014-12-25"
+            },
+            {
+              "serie": "CA_2 HOBBIES_2",
+              "fecha": "2014-12-25"
+            },
+            {
+              "serie": "CA_2 HOUSEHOLD_1",
+              "fecha": "2014-12-25"
+            },
+            {
+              "serie": "CA_2 HOUSEHOLD_2",
+              "fecha": "2014-12-25"
+            },
+            {
+              "serie": "WI_3 FOODS_1",
+              "fecha": "2014-12-25"
+            },
+            {
+              "serie": "WI_3 FOODS_2",
+              "fecha": "2014-12-25"
+            },
+            {
+              "serie": "WI_3 HOBBIES_1",
+              "fecha": "2014-12-25"
+            },
+            {
+              "serie": "WI_3 HOBBIES_2",
+              "fecha": "2014-12-25"
+            },
+            {
+              "serie": "WI_3 HOUSEHOLD_1",
+              "fecha": "2014-12-25"
+            },
+            {
+              "serie": "WI_3 HOUSEHOLD_2",
+              "fecha": "2014-12-25"
+            }
+          ]
+        },
+        "demanda_intermitente": {
+          "dias_serie": 201,
+          "series": 9,
+          "umbral": 10,
+          "series_bajo_el_umbral": 10,
+          "lista": [
+            {
+              "serie": "CA_1 HOBBIES_2",
+              "media": 7.54,
+              "dias_a_cero": 9
+            },
+            {
+              "serie": "CA_2 HOBBIES_2",
+              "media": 5.28,
+              "dias_a_cero": 14
+            },
+            {
+              "serie": "CA_3 HOBBIES_2",
+              "media": 8.68,
+              "dias_a_cero": 0
+            },
+            {
+              "serie": "CA_4 HOBBIES_2",
+              "media": 2.34,
+              "dias_a_cero": 67
+            },
+            {
+              "serie": "TX_1 HOBBIES_2",
+              "media": 3.97,
+              "dias_a_cero": 17
+            },
+            {
+              "serie": "TX_2 HOBBIES_2",
+              "media": 7.91,
+              "dias_a_cero": 3
+            },
+            {
+              "serie": "TX_3 HOBBIES_2",
+              "media": 7.6,
+              "dias_a_cero": 8
+            },
+            {
+              "serie": "WI_1 HOBBIES_2",
+              "media": 5.33,
+              "dias_a_cero": 11
+            },
+            {
+              "serie": "WI_2 HOBBIES_2",
+              "media": 3.94,
+              "dias_a_cero": 37
+            },
+            {
+              "serie": "WI_3 HOBBIES_2",
+              "media": 3.68,
+              "dias_a_cero": 35
+            }
+          ]
+        },
+        "resto": {
+          "dias_serie": 2,
+          "series": 1,
+          "lista": [
+            {
+              "serie": "CA_2 FOODS_2",
+              "fecha": "2014-10-08"
+            },
+            {
+              "serie": "CA_2 FOODS_2",
+              "fecha": "2014-10-09"
+            }
+          ]
+        }
+      },
+      "partes_suman_el_total": true,
+      "media_mas_baja_de_las_demas": {
+        "serie": "CA_2 FOODS_2",
+        "media": 15.64
+      },
+      "medias": [
+        {
+          "serie": "CA_1 FOODS_1",
+          "media": 82.64
+        },
+        {
+          "serie": "CA_1 FOODS_2",
+          "media": 72.6
+        },
+        {
+          "serie": "CA_1 FOODS_3",
+          "media": 391.45
+        },
+        {
+          "serie": "CA_1 HOBBIES_1",
+          "media": 69.72
+        },
+        {
+          "serie": "CA_1 HOBBIES_2",
+          "media": 7.54
+        },
+        {
+          "serie": "CA_1 HOUSEHOLD_1",
+          "media": 114.0
+        },
+        {
+          "serie": "CA_1 HOUSEHOLD_2",
+          "media": 30.55
+        },
+        {
+          "serie": "CA_2 FOODS_1",
+          "media": 81.79
+        },
+        {
+          "serie": "CA_2 FOODS_2",
+          "media": 15.64
+        },
+        {
+          "serie": "CA_2 FOODS_3",
+          "media": 196.76
+        },
+        {
+          "serie": "CA_2 HOBBIES_1",
+          "media": 46.29
+        },
+        {
+          "serie": "CA_2 HOBBIES_2",
+          "media": 5.28
+        },
+        {
+          "serie": "CA_2 HOUSEHOLD_1",
+          "media": 81.1
+        },
+        {
+          "serie": "CA_2 HOUSEHOLD_2",
+          "media": 30.94
+        },
+        {
+          "serie": "CA_3 FOODS_1",
+          "media": 89.06
+        },
+        {
+          "serie": "CA_3 FOODS_2",
+          "media": 102.67
+        },
+        {
+          "serie": "CA_3 FOODS_3",
+          "media": 569.83
+        },
+        {
+          "serie": "CA_3 HOBBIES_1",
+          "media": 90.17
+        },
+        {
+          "serie": "CA_3 HOBBIES_2",
+          "media": 8.68
+        },
+        {
+          "serie": "CA_3 HOUSEHOLD_1",
+          "media": 186.08
+        },
+        {
+          "serie": "CA_3 HOUSEHOLD_2",
+          "media": 46.3
+        },
+        {
+          "serie": "CA_4 FOODS_1",
+          "media": 38.86
+        },
+        {
+          "serie": "CA_4 FOODS_2",
+          "media": 46.56
+        },
+        {
+          "serie": "CA_4 FOODS_3",
+          "media": 197.02
+        },
+        {
+          "serie": "CA_4 HOBBIES_1",
+          "media": 50.76
+        },
+        {
+          "serie": "CA_4 HOBBIES_2",
+          "media": 2.34
+        },
+        {
+          "serie": "CA_4 HOUSEHOLD_1",
+          "media": 55.26
+        },
+        {
+          "serie": "CA_4 HOUSEHOLD_2",
+          "media": 18.52
+        },
+        {
+          "serie": "TX_1 FOODS_1",
+          "media": 49.33
+        },
+        {
+          "serie": "TX_1 FOODS_2",
+          "media": 53.91
+        },
+        {
+          "serie": "TX_1 FOODS_3",
+          "media": 275.64
+        },
+        {
+          "serie": "TX_1 HOBBIES_1",
+          "media": 36.23
+        },
+        {
+          "serie": "TX_1 HOBBIES_2",
+          "media": 3.97
+        },
+        {
+          "serie": "TX_1 HOUSEHOLD_1",
+          "media": 90.83
+        },
+        {
+          "serie": "TX_1 HOUSEHOLD_2",
+          "media": 23.22
+        },
+        {
+          "serie": "TX_2 FOODS_1",
+          "media": 66.99
+        },
+        {
+          "serie": "TX_2 FOODS_2",
+          "media": 64.54
+        },
+        {
+          "serie": "TX_2 FOODS_3",
+          "media": 363.21
+        },
+        {
+          "serie": "TX_2 HOBBIES_1",
+          "media": 46.58
+        },
+        {
+          "serie": "TX_2 HOBBIES_2",
+          "media": 7.91
+        },
+        {
+          "serie": "TX_2 HOUSEHOLD_1",
+          "media": 101.19
+        },
+        {
+          "serie": "TX_2 HOUSEHOLD_2",
+          "media": 24.99
+        },
+        {
+          "serie": "TX_3 FOODS_1",
+          "media": 53.37
+        },
+        {
+          "serie": "TX_3 FOODS_2",
+          "media": 71.96
+        },
+        {
+          "serie": "TX_3 FOODS_3",
+          "media": 308.71
+        },
+        {
+          "serie": "TX_3 HOBBIES_1",
+          "media": 44.77
+        },
+        {
+          "serie": "TX_3 HOBBIES_2",
+          "media": 7.6
+        },
+        {
+          "serie": "TX_3 HOUSEHOLD_1",
+          "media": 100.95
+        },
+        {
+          "serie": "TX_3 HOUSEHOLD_2",
+          "media": 25.69
+        },
+        {
+          "serie": "WI_1 FOODS_1",
+          "media": 56.19
+        },
+        {
+          "serie": "WI_1 FOODS_2",
+          "media": 84.43
+        },
+        {
+          "serie": "WI_1 FOODS_3",
+          "media": 267.01
+        },
+        {
+          "serie": "WI_1 HOBBIES_1",
+          "media": 63.44
+        },
+        {
+          "serie": "WI_1 HOBBIES_2",
+          "media": 5.33
+        },
+        {
+          "serie": "WI_1 HOUSEHOLD_1",
+          "media": 87.26
+        },
+        {
+          "serie": "WI_1 HOUSEHOLD_2",
+          "media": 24.25
+        },
+        {
+          "serie": "WI_2 FOODS_1",
+          "media": 66.07
+        },
+        {
+          "serie": "WI_2 FOODS_2",
+          "media": 142.17
+        },
+        {
+          "serie": "WI_2 FOODS_3",
+          "media": 337.3
+        },
+        {
+          "serie": "WI_2 HOBBIES_1",
+          "media": 36.28
+        },
+        {
+          "serie": "WI_2 HOBBIES_2",
+          "media": 3.94
+        },
+        {
+          "serie": "WI_2 HOUSEHOLD_1",
+          "media": 131.26
+        },
+        {
+          "serie": "WI_2 HOUSEHOLD_2",
+          "media": 20.58
+        },
+        {
+          "serie": "WI_3 FOODS_1",
+          "media": 37.49
+        },
+        {
+          "serie": "WI_3 FOODS_2",
+          "media": 63.55
+        },
+        {
+          "serie": "WI_3 FOODS_3",
+          "media": 266.84
+        },
+        {
+          "serie": "WI_3 HOBBIES_1",
+          "media": 36.1
+        },
+        {
+          "serie": "WI_3 HOBBIES_2",
+          "media": 3.68
+        },
+        {
+          "serie": "WI_3 HOUSEHOLD_1",
+          "media": 80.65
+        },
+        {
+          "serie": "WI_3 HOUSEHOLD_2",
+          "media": 18.02
+        }
+      ]
+    }
+  },
+  "cobertura": {
+    "faltan": [],
+    "repetidos": [],
+    "sobran": []
+  },
+  "diferencias_de_valores": [],
+  "datos_personales": [],
+  "datos_personales_nota": "No existe config/fuentes/proteccion-datos.json: los datos no pasaron por la protección. Las reglas de negocio §9 dicen que los datos son de productos, tiendas, precios y calendario y no traen nada de personas. Esta ejecución buscó correos, documentos de identidad, teléfonos y cuentas bancarias en las columnas de texto de las tres tablas y los encontró en 0 columnas. Este método no usa ni deja ninguna columna de datos personales.",
+  "periodos": {
+    "construccion": {
+      "desde": "2011-01-29",
+      "hasta": "2014-05-22"
+    },
+    "validacion": {
+      "desde": "2014-05-23",
+      "hasta": "2015-05-22"
+    }
+  },
+  "teoria_aplicada": [
+    {
+      "apartado": "8.1",
+      "por_que": "cada corrección responde a un problema diagnosticado; la limpieza solo hace reglas que no aprenden nada de los datos, porque los datos van a un modelo"
+    },
+    {
+      "apartado": "8.2",
+      "por_que": "nombres en minúsculas, sin tildes y con guion bajo; el mapeo se guarda"
+    },
+    {
+      "apartado": "8.3",
+      "por_que": "la fecha se convierte con su formato explícito y se cuentan los valores que no se leen antes de darla por buena"
+    },
+    {
+      "apartado": "8.10",
+      "por_que": "el cierre: recuentos y sumas de antes y después, el registro junto al dato y lo pendiente con su motivo"
+    }
+  ],
+  "limites": [
+    "La corrección mira una tabla cada vez. Una clave huérfana o repetida al otro lado de un cruce no se ve ni se corrige aquí.",
+    "El diagnóstico completo de la calidad no se vuelve a pasar sobre las tablas corregidas (manual 8.10, paso 1). Se comparan filas, columnas, valores, tipos y sumas de antes y después.",
+    "Los pesos que dan los motivos de C-12 a C-15 (porcentajes de dólares y unidades) vienen de la petición 07, copiados en el fichero de decisiones; este script no los recalcula.",
+    "La regla de no tener dos decisiones sobre el mismo campo se aplica por cuestión: PC-03 y PC-04 son de la misma columna de la venta, igual que PC-05 y PC-06, porque cada una contesta una pregunta distinta.",
+    "El script lista los días del resto de los ceros con su serie y su fecha. Qué son lo decide la cascada de D8.",
+    "Los días del calendario posteriores a la fecha de referencia se corrigen igual que los demás. No son de ningún periodo y no entran en la clasificación de los ceros."
+  ],
+  "cifras_de_control": {
+    "filas_venta_antes": 5000,
+    "filas_venta_despues": 5000,
+    "columnas_venta_antes": 1581,
+    "columnas_venta_despues": 1581,
+    "filas_precios_antes": 854573,
+    "filas_precios_despues": 854573,
+    "columnas_precios_antes": 4,
+    "columnas_precios_despues": 4,
+    "filas_calendario_antes": 1969,
+    "filas_calendario_despues": 1969,
+    "columnas_calendario_antes": 14,
+    "columnas_calendario_despues": 14,
+    "unidades_total_antes": 9327191,
+    "unidades_total_despues": 9327191,
+    "unidades_construccion_antes": 7003244,
+    "unidades_construccion_despues": 7003244,
+    "unidades_validacion_antes": 2323947,
+    "unidades_validacion_despues": 2323947,
+    "suma_sell_price_antes": 3750011.81,
+    "suma_sell_price_despues": 3750011.81,
+    "dias_snap_antes": {
+      "CA": 650,
+      "TX": 650,
+      "WI": 650
+    },
+    "dias_snap_despues": {
+      "CA": 650,
+      "TX": 650,
+      "WI": 650
+    },
+    "nombres_cambiados": 3,
+    "colisiones": 0,
+    "fechas_leidas": 1969,
+    "fechas_vacias": 0,
+    "fecha_minima": "2011-01-29",
+    "fecha_maxima": "2016-06-19",
+    "clases_de_ceros": {
+      "construccion": {
+        "cierre": 175,
+        "25_diciembre": 35,
+        "demanda_intermitente": 2171,
+        "resto": 35
+      },
+      "validacion": {
+        "cierre": 56,
+        "25_diciembre": 12,
+        "demanda_intermitente": 201,
+        "resto": 2
+      }
+    },
+    "dias_de_tienda_cerrada": {
+      "construccion": 25,
+      "validacion": 8
+    },
+    "series_intermitentes": {
+      "construccion": [
+        "CA_1 HOBBIES_2",
+        "CA_2 HOBBIES_2",
+        "CA_3 HOBBIES_2",
+        "CA_4 HOBBIES_2",
+        "TX_1 HOBBIES_2",
+        "TX_2 HOBBIES_2",
+        "TX_3 HOBBIES_2",
+        "WI_1 HOBBIES_2",
+        "WI_2 HOBBIES_2",
+        "WI_3 HOBBIES_2"
+      ],
+      "validacion": [
+        "CA_1 HOBBIES_2",
+        "CA_2 HOBBIES_2",
+        "CA_3 HOBBIES_2",
+        "CA_4 HOBBIES_2",
+        "TX_1 HOBBIES_2",
+        "TX_2 HOBBIES_2",
+        "TX_3 HOBBIES_2",
+        "WI_1 HOBBIES_2",
+        "WI_2 HOBBIES_2",
+        "WI_3 HOBBIES_2"
+      ]
+    },
+    "resto_por_serie": {
+      "construccion": [
+        {
+          "serie": "WI_1 FOODS_2",
+          "dias": 14,
+          "desde": "2011-11-24",
+          "hasta": "2012-10-25"
+        },
+        {
+          "serie": "WI_1 HOUSEHOLD_2",
+          "dias": 18,
+          "desde": "2012-09-29",
+          "hasta": "2012-10-25"
+        },
+        {
+          "serie": "WI_2 FOODS_2",
+          "dias": 3,
+          "desde": "2012-04-30",
+          "hasta": "2012-05-02"
+        }
+      ],
+      "validacion": [
+        {
+          "serie": "CA_2 FOODS_2",
+          "dias": 2,
+          "desde": "2014-10-08",
+          "hasta": "2014-10-09"
+        }
+      ]
+    }
+  },
+  "paradas": [],
+  "validacion": {
+    "comprobaciones": [
+      "data/raw/ intacto",
+      "sumas de control iguales antes y después",
+      "cada problema de la calidad una sola vez",
+      "ningún valor cambiado",
+      "las clases de ceros suman el total"
+    ],
+    "fallos": []
+  },
+  "duracion_segundos": 2.62,
+  "duracion_por_parte": {
+    "lectura": 0.79,
+    "correccion": 0.08,
+    "validacion_antes_de_guardar": 0.45,
+    "escritura": 0.59,
+    "comprobacion_parquet": 0.33,
+    "ceros": 0.04
+  },
+  "comprobaciones_detalle": {
+    "completitud": "filas y columnas de las tres tablas, iguales antes y después",
+    "consistencia": "cada columna con el tipo de su rol y ningún valor distinto al deshacer la corrección",
+    "utilidad": "el análisis del caso, la previsión de las 70 series de departamento y tienda, sigue siendo posible: las 70 series se forman y cada día de la venta tiene su fecha en el calendario",
+    "datos_personales": "ninguna columna de texto con forma de dato personal"
+  }
+}

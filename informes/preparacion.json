@@ -1,0 +1,1478 @@
+{
+  "metodo": "preparacion-modelo",
+  "version_metodo": "20/11/2026",
+  "script": "scripts/12_preparacion.py",
+  "fecha_datos": "2015-05-22",
+  "fecha_ejecucion": "2026-11-24T15:26:42",
+  "entorno": {
+    "python": "3.13.15",
+    "pandas": "3.0.6",
+    "numpy": "2.5.3",
+    "pyarrow": "24.0.0",
+    "scikit-learn": "1.9.1",
+    "ejecutable": "python"
+  },
+  "entradas": [
+    {
+      "ruta": "data/processed/hechos_modelo_entrenamiento.parquet",
+      "sha256": "7975a014ba29fe5bf19ba18cfd9b53acd69698be70ee329550a510d4b2f91418",
+      "filas": 82250,
+      "columnas": 82
+    },
+    {
+      "ruta": "data/processed/hechos_modelo_validacion.parquet",
+      "sha256": "bed76d03da8b81d971be3fec58c1d46e1dbfb197c9f0301eca2a7cd00591bedd",
+      "filas": 25550,
+      "columnas": 82
+    }
+  ],
+  "resultado": {
+    "estado": "OK",
+    "riesgo": "bajo",
+    "resumen": "preprocesador de la matriz aprobada, uno por objetivo con 117 columnas de salida; 9 de 9 validaciones en verde en los dos",
+    "artefactos": [
+      "informes/preparacion.json"
+    ],
+    "siguiente": "preseleccion-variables §1: propuesta al responsable del caso (informes/preseleccion_propuesta.md)"
+  },
+  "pendientes": [],
+  "objetivo": {
+    "columna": [
+      "unidades",
+      "dolares"
+    ],
+    "tipo": "cantidad",
+    "clase_positiva": null,
+    "nota": "dos modelos: unidades a 10 días y dólares a 28 (reglas, apartado 5, «El horizonte»)"
+  },
+  "desequilibrio": null,
+  "algoritmo_previsto": "HistGradientBoosting y Ridge, con un solo preprocesador por objetivo",
+  "matriz": {
+    "ruta": "config/modelo/matriz_transformaciones.md",
+    "aprobada_por": "el responsable del caso",
+    "fecha": "2026-11-24",
+    "variables": [
+      {
+        "variable": "store_id",
+        "tipo": "nominal",
+        "rama": "una columna por categoría, sin drop",
+        "escalado": "ninguno",
+        "relleno": "no tiene vacíos",
+        "significado_relleno": null,
+        "salida": [
+          "store_id_ohe_<categoría>"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada; planteamientos §2, decisión 6 (tienda y departamento)"
+      },
+      {
+        "variable": "dept_id",
+        "tipo": "nominal",
+        "rama": "una columna por categoría, sin drop",
+        "escalado": "ninguno",
+        "relleno": "no tiene vacíos",
+        "significado_relleno": null,
+        "salida": [
+          "dept_id_ohe_<categoría>"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada; planteamientos §2, decisión 6 (tienda y departamento)"
+      },
+      {
+        "variable": "weekday",
+        "tipo": "nominal",
+        "rama": "una columna por categoría, sin drop",
+        "escalado": "ninguno",
+        "relleno": "no tiene vacíos",
+        "significado_relleno": null,
+        "salida": [
+          "weekday_ohe_<categoría>"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada; planteamientos §2, decisión 6 (tienda y departamento)"
+      },
+      {
+        "variable": "month",
+        "tipo": "nominal",
+        "rama": "una columna por categoría, sin drop",
+        "escalado": "ninguno",
+        "relleno": "no tiene vacíos",
+        "significado_relleno": null,
+        "salida": [
+          "month_ohe_<categoría>"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada; planteamientos §2, decisión 6 (tienda y departamento)"
+      },
+      {
+        "variable": "event_name_1",
+        "tipo": "nominal",
+        "rama": "una columna por categoría, handle_unknown=infrequent_if_exist",
+        "escalado": "ninguno",
+        "relleno": "constante «sin evento», sin marca",
+        "significado_relleno": "día sin evento (reglas, apartado 5)",
+        "salida": [
+          "event_name_1_ohe_<evento>"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada: eventos del calendario, conocidos de antemano"
+      },
+      {
+        "variable": "event_name_2",
+        "tipo": "nominal",
+        "rama": "una columna por categoría, handle_unknown=infrequent_if_exist",
+        "escalado": "ninguno",
+        "relleno": "constante «sin evento», sin marca",
+        "significado_relleno": "día sin evento (reglas, apartado 5)",
+        "salida": [
+          "event_name_2_ohe_<evento>"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada: eventos del calendario, conocidos de antemano"
+      },
+      {
+        "variable": "snap",
+        "tipo": "binaria",
+        "rama": "tal cual",
+        "escalado": "ninguno",
+        "relleno": "no tiene vacíos",
+        "significado_relleno": null,
+        "salida": [
+          "snap"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada: SNAP sube la alimentación (exploratorio, H-04)"
+      },
+      {
+        "variable": "evento_<nombre>",
+        "tipo": "binaria",
+        "rama": "tal cual",
+        "escalado": "ninguno",
+        "relleno": "0 en los días sin ese evento",
+        "significado_relleno": "sin ese evento",
+        "salida": [
+          "evento_Chanukah End",
+          "evento_Christmas",
+          "evento_Cinco De Mayo",
+          "evento_ColumbusDay",
+          "evento_Easter",
+          "evento_Eid al-Fitr",
+          "evento_EidAlAdha",
+          "evento_Father's day",
+          "evento_Halloween",
+          "evento_IndependenceDay",
+          "evento_LaborDay",
+          "evento_LentStart",
+          "evento_LentWeek2",
+          "evento_MartinLutherKingDay",
+          "evento_MemorialDay",
+          "evento_Mother's day",
+          "evento_NBAFinalsEnd",
+          "evento_NBAFinalsStart",
+          "evento_NewYear",
+          "evento_OrthodoxChristmas",
+          "evento_OrthodoxEaster",
+          "evento_Pesach End",
+          "evento_PresidentsDay",
+          "evento_Purim End",
+          "evento_Ramadan starts",
+          "evento_StPatricksDay",
+          "evento_SuperBowl",
+          "evento_Thanksgiving",
+          "evento_ValentinesDay",
+          "evento_VeteransDay"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, respuesta 3"
+      },
+      {
+        "variable": "precio_medio_semana_anterior",
+        "tipo": "continua",
+        "rama": "tal cual",
+        "escalado": "StandardScaler",
+        "relleno": "ninguno: no quedan vacíos",
+        "significado_relleno": null,
+        "salida": [
+          "precio_medio_semana_anterior_ss"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, escalado pregunta 4"
+      },
+      {
+        "variable": "productos_con_precio_semana_anterior",
+        "tipo": "discreta",
+        "rama": "tal cual",
+        "escalado": "StandardScaler",
+        "relleno": "ninguno: no quedan vacíos",
+        "significado_relleno": null,
+        "salida": [
+          "productos_con_precio_semana_anterior_ss"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, escalado pregunta 4"
+      },
+      {
+        "variable": "dia_del_mes",
+        "tipo": "discreta",
+        "rama": "tal cual",
+        "escalado": "StandardScaler",
+        "relleno": "ninguno: no quedan vacíos",
+        "significado_relleno": null,
+        "salida": [
+          "dia_del_mes_ss"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, escalado pregunta 4"
+      },
+      {
+        "variable": "<obj>_lag_1",
+        "tipo": "continua",
+        "rama": "tal cual",
+        "escalado": "RobustScaler",
+        "relleno": "ninguno: salen los 35 primeros días",
+        "significado_relleno": null,
+        "salida": [
+          "<obj>_lag_1_rs"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, escalado pregunta 3 (colas sin tratar); <obj> es el objetivo del modelo"
+      },
+      {
+        "variable": "<obj>_lag_2",
+        "tipo": "continua",
+        "rama": "tal cual",
+        "escalado": "RobustScaler",
+        "relleno": "ninguno: salen los 35 primeros días",
+        "significado_relleno": null,
+        "salida": [
+          "<obj>_lag_2_rs"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, escalado pregunta 3 (colas sin tratar); <obj> es el objetivo del modelo"
+      },
+      {
+        "variable": "<obj>_lag_3",
+        "tipo": "continua",
+        "rama": "tal cual",
+        "escalado": "RobustScaler",
+        "relleno": "ninguno: salen los 35 primeros días",
+        "significado_relleno": null,
+        "salida": [
+          "<obj>_lag_3_rs"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, escalado pregunta 3 (colas sin tratar); <obj> es el objetivo del modelo"
+      },
+      {
+        "variable": "<obj>_lag_4",
+        "tipo": "continua",
+        "rama": "tal cual",
+        "escalado": "RobustScaler",
+        "relleno": "ninguno: salen los 35 primeros días",
+        "significado_relleno": null,
+        "salida": [
+          "<obj>_lag_4_rs"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, escalado pregunta 3 (colas sin tratar); <obj> es el objetivo del modelo"
+      },
+      {
+        "variable": "<obj>_lag_5",
+        "tipo": "continua",
+        "rama": "tal cual",
+        "escalado": "RobustScaler",
+        "relleno": "ninguno: salen los 35 primeros días",
+        "significado_relleno": null,
+        "salida": [
+          "<obj>_lag_5_rs"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, escalado pregunta 3 (colas sin tratar); <obj> es el objetivo del modelo"
+      },
+      {
+        "variable": "<obj>_lag_6",
+        "tipo": "continua",
+        "rama": "tal cual",
+        "escalado": "RobustScaler",
+        "relleno": "ninguno: salen los 35 primeros días",
+        "significado_relleno": null,
+        "salida": [
+          "<obj>_lag_6_rs"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, escalado pregunta 3 (colas sin tratar); <obj> es el objetivo del modelo"
+      },
+      {
+        "variable": "<obj>_lag_7",
+        "tipo": "continua",
+        "rama": "tal cual",
+        "escalado": "RobustScaler",
+        "relleno": "ninguno: salen los 35 primeros días",
+        "significado_relleno": null,
+        "salida": [
+          "<obj>_lag_7_rs"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, escalado pregunta 3 (colas sin tratar); <obj> es el objetivo del modelo"
+      },
+      {
+        "variable": "<obj>_lag_14",
+        "tipo": "continua",
+        "rama": "tal cual",
+        "escalado": "RobustScaler",
+        "relleno": "ninguno: salen los 35 primeros días",
+        "significado_relleno": null,
+        "salida": [
+          "<obj>_lag_14_rs"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, escalado pregunta 3 (colas sin tratar); <obj> es el objetivo del modelo"
+      },
+      {
+        "variable": "<obj>_lag_21",
+        "tipo": "continua",
+        "rama": "tal cual",
+        "escalado": "RobustScaler",
+        "relleno": "ninguno: salen los 35 primeros días",
+        "significado_relleno": null,
+        "salida": [
+          "<obj>_lag_21_rs"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, escalado pregunta 3 (colas sin tratar); <obj> es el objetivo del modelo"
+      },
+      {
+        "variable": "<obj>_lag_28",
+        "tipo": "continua",
+        "rama": "tal cual",
+        "escalado": "RobustScaler",
+        "relleno": "ninguno: salen los 35 primeros días",
+        "significado_relleno": null,
+        "salida": [
+          "<obj>_lag_28_rs"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, escalado pregunta 3 (colas sin tratar); <obj> es el objetivo del modelo"
+      },
+      {
+        "variable": "<obj>_media_7",
+        "tipo": "continua",
+        "rama": "tal cual",
+        "escalado": "RobustScaler",
+        "relleno": "ninguno: salen los 35 primeros días",
+        "significado_relleno": null,
+        "salida": [
+          "<obj>_media_7_rs"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, escalado pregunta 3 (colas sin tratar); <obj> es el objetivo del modelo"
+      },
+      {
+        "variable": "<obj>_media_28",
+        "tipo": "continua",
+        "rama": "tal cual",
+        "escalado": "RobustScaler",
+        "relleno": "ninguno: salen los 35 primeros días",
+        "significado_relleno": null,
+        "salida": [
+          "<obj>_media_28_rs"
+        ],
+        "entra": true,
+        "porque": "matriz aprobada, escalado pregunta 3 (colas sin tratar); <obj> es el objetivo del modelo"
+      }
+    ]
+  },
+  "preprocesadores": {
+    "unidades": {
+      "script": "scripts/12_preparacion.py",
+      "funcion": "construir_preprocesador",
+      "columnas_entrada": [
+        "store_id",
+        "dept_id",
+        "weekday",
+        "month",
+        "event_name_1",
+        "event_name_2",
+        "snap",
+        "evento_Chanukah End",
+        "evento_Christmas",
+        "evento_Cinco De Mayo",
+        "evento_ColumbusDay",
+        "evento_Easter",
+        "evento_Eid al-Fitr",
+        "evento_EidAlAdha",
+        "evento_Father's day",
+        "evento_Halloween",
+        "evento_IndependenceDay",
+        "evento_LaborDay",
+        "evento_LentStart",
+        "evento_LentWeek2",
+        "evento_MartinLutherKingDay",
+        "evento_MemorialDay",
+        "evento_Mother's day",
+        "evento_NBAFinalsEnd",
+        "evento_NBAFinalsStart",
+        "evento_NewYear",
+        "evento_OrthodoxChristmas",
+        "evento_OrthodoxEaster",
+        "evento_Pesach End",
+        "evento_PresidentsDay",
+        "evento_Purim End",
+        "evento_Ramadan starts",
+        "evento_StPatricksDay",
+        "evento_SuperBowl",
+        "evento_Thanksgiving",
+        "evento_ValentinesDay",
+        "evento_VeteransDay",
+        "precio_medio_semana_anterior",
+        "productos_con_precio_semana_anterior",
+        "dia_del_mes",
+        "unidades_lag_1",
+        "unidades_lag_2",
+        "unidades_lag_3",
+        "unidades_lag_4",
+        "unidades_lag_5",
+        "unidades_lag_6",
+        "unidades_lag_7",
+        "unidades_lag_14",
+        "unidades_lag_21",
+        "unidades_lag_28",
+        "unidades_media_7",
+        "unidades_media_28"
+      ],
+      "columnas_salida": [
+        "store_id_ohe_CA_1",
+        "store_id_ohe_CA_2",
+        "store_id_ohe_CA_3",
+        "store_id_ohe_CA_4",
+        "store_id_ohe_TX_1",
+        "store_id_ohe_TX_2",
+        "store_id_ohe_TX_3",
+        "store_id_ohe_WI_1",
+        "store_id_ohe_WI_2",
+        "store_id_ohe_WI_3",
+        "dept_id_ohe_FOODS_1",
+        "dept_id_ohe_FOODS_2",
+        "dept_id_ohe_FOODS_3",
+        "dept_id_ohe_HOBBIES_1",
+        "dept_id_ohe_HOBBIES_2",
+        "dept_id_ohe_HOUSEHOLD_1",
+        "dept_id_ohe_HOUSEHOLD_2",
+        "weekday_ohe_Friday",
+        "weekday_ohe_Monday",
+        "weekday_ohe_Saturday",
+        "weekday_ohe_Sunday",
+        "weekday_ohe_Thursday",
+        "weekday_ohe_Tuesday",
+        "weekday_ohe_Wednesday",
+        "month_ohe_1",
+        "month_ohe_2",
+        "month_ohe_3",
+        "month_ohe_4",
+        "month_ohe_5",
+        "month_ohe_6",
+        "month_ohe_7",
+        "month_ohe_8",
+        "month_ohe_9",
+        "month_ohe_10",
+        "month_ohe_11",
+        "month_ohe_12",
+        "event_name_1_ohe_Chanukah End",
+        "event_name_1_ohe_Christmas",
+        "event_name_1_ohe_Cinco De Mayo",
+        "event_name_1_ohe_ColumbusDay",
+        "event_name_1_ohe_Easter",
+        "event_name_1_ohe_Eid al-Fitr",
+        "event_name_1_ohe_EidAlAdha",
+        "event_name_1_ohe_Father's day",
+        "event_name_1_ohe_Halloween",
+        "event_name_1_ohe_IndependenceDay",
+        "event_name_1_ohe_LaborDay",
+        "event_name_1_ohe_LentStart",
+        "event_name_1_ohe_LentWeek2",
+        "event_name_1_ohe_MartinLutherKingDay",
+        "event_name_1_ohe_MemorialDay",
+        "event_name_1_ohe_Mother's day",
+        "event_name_1_ohe_NBAFinalsEnd",
+        "event_name_1_ohe_NBAFinalsStart",
+        "event_name_1_ohe_NewYear",
+        "event_name_1_ohe_OrthodoxChristmas",
+        "event_name_1_ohe_OrthodoxEaster",
+        "event_name_1_ohe_Pesach End",
+        "event_name_1_ohe_PresidentsDay",
+        "event_name_1_ohe_Purim End",
+        "event_name_1_ohe_Ramadan starts",
+        "event_name_1_ohe_StPatricksDay",
+        "event_name_1_ohe_SuperBowl",
+        "event_name_1_ohe_Thanksgiving",
+        "event_name_1_ohe_ValentinesDay",
+        "event_name_1_ohe_VeteransDay",
+        "event_name_1_ohe_sin evento",
+        "event_name_2_ohe_Cinco De Mayo",
+        "event_name_2_ohe_Easter",
+        "event_name_2_ohe_OrthodoxEaster",
+        "event_name_2_ohe_sin evento",
+        "snap",
+        "evento_Chanukah End",
+        "evento_Christmas",
+        "evento_Cinco De Mayo",
+        "evento_ColumbusDay",
+        "evento_Easter",
+        "evento_Eid al-Fitr",
+        "evento_EidAlAdha",
+        "evento_Father's day",
+        "evento_Halloween",
+        "evento_IndependenceDay",
+        "evento_LaborDay",
+        "evento_LentStart",
+        "evento_LentWeek2",
+        "evento_MartinLutherKingDay",
+        "evento_MemorialDay",
+        "evento_Mother's day",
+        "evento_NBAFinalsEnd",
+        "evento_NBAFinalsStart",
+        "evento_NewYear",
+        "evento_OrthodoxChristmas",
+        "evento_OrthodoxEaster",
+        "evento_Pesach End",
+        "evento_PresidentsDay",
+        "evento_Purim End",
+        "evento_Ramadan starts",
+        "evento_StPatricksDay",
+        "evento_SuperBowl",
+        "evento_Thanksgiving",
+        "evento_ValentinesDay",
+        "evento_VeteransDay",
+        "precio_medio_semana_anterior_ss",
+        "productos_con_precio_semana_anterior_ss",
+        "dia_del_mes_ss",
+        "unidades_lag_1_rs",
+        "unidades_lag_2_rs",
+        "unidades_lag_3_rs",
+        "unidades_lag_4_rs",
+        "unidades_lag_5_rs",
+        "unidades_lag_6_rs",
+        "unidades_lag_7_rs",
+        "unidades_lag_14_rs",
+        "unidades_lag_21_rs",
+        "unidades_lag_28_rs",
+        "unidades_media_7_rs",
+        "unidades_media_28_rs"
+      ],
+      "remainder": "drop",
+      "ajustado_con_filas": 82250,
+      "validaciones": {
+        "filas": true,
+        "sin_objetivo": true,
+        "sin_intermedias": true,
+        "sin_vacios": true,
+        "nombres_unicos": true,
+        "sin_redundancia": true,
+        "columnas_esperadas": true,
+        "relleno_sin_choque": true,
+        "escalado_segun_matriz": true
+      },
+      "detalle_validaciones": {
+        "filas": {
+          "entrenamiento": [
+            82250,
+            82250
+          ],
+          "validacion": [
+            25550,
+            25550
+          ]
+        },
+        "sin_objetivo": {
+          "objetivo_en_entrada": [],
+          "objetivo_en_salida": []
+        },
+        "sin_intermedias": {
+          "originales": [],
+          "intermedias": []
+        },
+        "sin_vacios": {
+          "entrenamiento": 0,
+          "validacion": 0
+        },
+        "nombres_unicos": {
+          "entrenamiento": {
+            "repetidos": []
+          },
+          "validacion": {
+            "repetidos": []
+          },
+          "mismas_columnas": true
+        },
+        "sin_redundancia": {
+          "store_id": {
+            "columnas": 10,
+            "suman_1": true,
+            "drop": null,
+            "drop_de_la_matriz": null,
+            "algoritmos_lo_admiten": true
+          },
+          "dept_id": {
+            "columnas": 7,
+            "suman_1": true,
+            "drop": null,
+            "drop_de_la_matriz": null,
+            "algoritmos_lo_admiten": true
+          },
+          "weekday": {
+            "columnas": 7,
+            "suman_1": true,
+            "drop": null,
+            "drop_de_la_matriz": null,
+            "algoritmos_lo_admiten": true
+          },
+          "month": {
+            "columnas": 12,
+            "suman_1": true,
+            "drop": null,
+            "drop_de_la_matriz": null,
+            "algoritmos_lo_admiten": true
+          },
+          "event_name_1": {
+            "columnas": 31,
+            "suman_1": true,
+            "drop": null,
+            "drop_de_la_matriz": null,
+            "algoritmos_lo_admiten": true
+          },
+          "event_name_2": {
+            "columnas": 4,
+            "suman_1": true,
+            "drop": null,
+            "drop_de_la_matriz": null,
+            "algoritmos_lo_admiten": true
+          }
+        },
+        "columnas_esperadas": {
+          "salida": 117,
+          "esperadas": 117,
+          "sobran": [],
+          "faltan": [],
+          "por_codificacion": {
+            "store_id": 10,
+            "dept_id": 7,
+            "weekday": 7,
+            "month": 12,
+            "event_name_1": 31,
+            "event_name_2": 4
+          },
+          "matriz": {
+            "store_id": 10,
+            "dept_id": 7,
+            "weekday": 7,
+            "month": 12,
+            "event_name_1": 31,
+            "event_name_2": 4
+          }
+        },
+        "relleno_sin_choque": {
+          "relleno": "sin evento",
+          "filas_con_ese_valor": {
+            "event_name_1": 0,
+            "event_name_2": 0
+          }
+        },
+        "escalado_segun_matriz": {
+          "binarias_fuera_de_0_y_1": [],
+          "escalador_distinto_de_la_matriz": [],
+          "minmax_sin_clip": [],
+          "salida_dispersa": [],
+          "binarias": 102
+        }
+      },
+      "sin_variables_del_otro_objetivo": true,
+      "comprobacion_evento_nuevo": {
+        "eventos": [
+          "Father's day"
+        ],
+        "filas": 70,
+        "todas_a_cero": true
+      }
+    },
+    "dolares": {
+      "script": "scripts/12_preparacion.py",
+      "funcion": "construir_preprocesador",
+      "columnas_entrada": [
+        "store_id",
+        "dept_id",
+        "weekday",
+        "month",
+        "event_name_1",
+        "event_name_2",
+        "snap",
+        "evento_Chanukah End",
+        "evento_Christmas",
+        "evento_Cinco De Mayo",
+        "evento_ColumbusDay",
+        "evento_Easter",
+        "evento_Eid al-Fitr",
+        "evento_EidAlAdha",
+        "evento_Father's day",
+        "evento_Halloween",
+        "evento_IndependenceDay",
+        "evento_LaborDay",
+        "evento_LentStart",
+        "evento_LentWeek2",
+        "evento_MartinLutherKingDay",
+        "evento_MemorialDay",
+        "evento_Mother's day",
+        "evento_NBAFinalsEnd",
+        "evento_NBAFinalsStart",
+        "evento_NewYear",
+        "evento_OrthodoxChristmas",
+        "evento_OrthodoxEaster",
+        "evento_Pesach End",
+        "evento_PresidentsDay",
+        "evento_Purim End",
+        "evento_Ramadan starts",
+        "evento_StPatricksDay",
+        "evento_SuperBowl",
+        "evento_Thanksgiving",
+        "evento_ValentinesDay",
+        "evento_VeteransDay",
+        "precio_medio_semana_anterior",
+        "productos_con_precio_semana_anterior",
+        "dia_del_mes",
+        "dolares_lag_1",
+        "dolares_lag_2",
+        "dolares_lag_3",
+        "dolares_lag_4",
+        "dolares_lag_5",
+        "dolares_lag_6",
+        "dolares_lag_7",
+        "dolares_lag_14",
+        "dolares_lag_21",
+        "dolares_lag_28",
+        "dolares_media_7",
+        "dolares_media_28"
+      ],
+      "columnas_salida": [
+        "store_id_ohe_CA_1",
+        "store_id_ohe_CA_2",
+        "store_id_ohe_CA_3",
+        "store_id_ohe_CA_4",
+        "store_id_ohe_TX_1",
+        "store_id_ohe_TX_2",
+        "store_id_ohe_TX_3",
+        "store_id_ohe_WI_1",
+        "store_id_ohe_WI_2",
+        "store_id_ohe_WI_3",
+        "dept_id_ohe_FOODS_1",
+        "dept_id_ohe_FOODS_2",
+        "dept_id_ohe_FOODS_3",
+        "dept_id_ohe_HOBBIES_1",
+        "dept_id_ohe_HOBBIES_2",
+        "dept_id_ohe_HOUSEHOLD_1",
+        "dept_id_ohe_HOUSEHOLD_2",
+        "weekday_ohe_Friday",
+        "weekday_ohe_Monday",
+        "weekday_ohe_Saturday",
+        "weekday_ohe_Sunday",
+        "weekday_ohe_Thursday",
+        "weekday_ohe_Tuesday",
+        "weekday_ohe_Wednesday",
+        "month_ohe_1",
+        "month_ohe_2",
+        "month_ohe_3",
+        "month_ohe_4",
+        "month_ohe_5",
+        "month_ohe_6",
+        "month_ohe_7",
+        "month_ohe_8",
+        "month_ohe_9",
+        "month_ohe_10",
+        "month_ohe_11",
+        "month_ohe_12",
+        "event_name_1_ohe_Chanukah End",
+        "event_name_1_ohe_Christmas",
+        "event_name_1_ohe_Cinco De Mayo",
+        "event_name_1_ohe_ColumbusDay",
+        "event_name_1_ohe_Easter",
+        "event_name_1_ohe_Eid al-Fitr",
+        "event_name_1_ohe_EidAlAdha",
+        "event_name_1_ohe_Father's day",
+        "event_name_1_ohe_Halloween",
+        "event_name_1_ohe_IndependenceDay",
+        "event_name_1_ohe_LaborDay",
+        "event_name_1_ohe_LentStart",
+        "event_name_1_ohe_LentWeek2",
+        "event_name_1_ohe_MartinLutherKingDay",
+        "event_name_1_ohe_MemorialDay",
+        "event_name_1_ohe_Mother's day",
+        "event_name_1_ohe_NBAFinalsEnd",
+        "event_name_1_ohe_NBAFinalsStart",
+        "event_name_1_ohe_NewYear",
+        "event_name_1_ohe_OrthodoxChristmas",
+        "event_name_1_ohe_OrthodoxEaster",
+        "event_name_1_ohe_Pesach End",
+        "event_name_1_ohe_PresidentsDay",
+        "event_name_1_ohe_Purim End",
+        "event_name_1_ohe_Ramadan starts",
+        "event_name_1_ohe_StPatricksDay",
+        "event_name_1_ohe_SuperBowl",
+        "event_name_1_ohe_Thanksgiving",
+        "event_name_1_ohe_ValentinesDay",
+        "event_name_1_ohe_VeteransDay",
+        "event_name_1_ohe_sin evento",
+        "event_name_2_ohe_Cinco De Mayo",
+        "event_name_2_ohe_Easter",
+        "event_name_2_ohe_OrthodoxEaster",
+        "event_name_2_ohe_sin evento",
+        "snap",
+        "evento_Chanukah End",
+        "evento_Christmas",
+        "evento_Cinco De Mayo",
+        "evento_ColumbusDay",
+        "evento_Easter",
+        "evento_Eid al-Fitr",
+        "evento_EidAlAdha",
+        "evento_Father's day",
+        "evento_Halloween",
+        "evento_IndependenceDay",
+        "evento_LaborDay",
+        "evento_LentStart",
+        "evento_LentWeek2",
+        "evento_MartinLutherKingDay",
+        "evento_MemorialDay",
+        "evento_Mother's day",
+        "evento_NBAFinalsEnd",
+        "evento_NBAFinalsStart",
+        "evento_NewYear",
+        "evento_OrthodoxChristmas",
+        "evento_OrthodoxEaster",
+        "evento_Pesach End",
+        "evento_PresidentsDay",
+        "evento_Purim End",
+        "evento_Ramadan starts",
+        "evento_StPatricksDay",
+        "evento_SuperBowl",
+        "evento_Thanksgiving",
+        "evento_ValentinesDay",
+        "evento_VeteransDay",
+        "precio_medio_semana_anterior_ss",
+        "productos_con_precio_semana_anterior_ss",
+        "dia_del_mes_ss",
+        "dolares_lag_1_rs",
+        "dolares_lag_2_rs",
+        "dolares_lag_3_rs",
+        "dolares_lag_4_rs",
+        "dolares_lag_5_rs",
+        "dolares_lag_6_rs",
+        "dolares_lag_7_rs",
+        "dolares_lag_14_rs",
+        "dolares_lag_21_rs",
+        "dolares_lag_28_rs",
+        "dolares_media_7_rs",
+        "dolares_media_28_rs"
+      ],
+      "remainder": "drop",
+      "ajustado_con_filas": 82250,
+      "validaciones": {
+        "filas": true,
+        "sin_objetivo": true,
+        "sin_intermedias": true,
+        "sin_vacios": true,
+        "nombres_unicos": true,
+        "sin_redundancia": true,
+        "columnas_esperadas": true,
+        "relleno_sin_choque": true,
+        "escalado_segun_matriz": true
+      },
+      "detalle_validaciones": {
+        "filas": {
+          "entrenamiento": [
+            82250,
+            82250
+          ],
+          "validacion": [
+            25550,
+            25550
+          ]
+        },
+        "sin_objetivo": {
+          "objetivo_en_entrada": [],
+          "objetivo_en_salida": []
+        },
+        "sin_intermedias": {
+          "originales": [],
+          "intermedias": []
+        },
+        "sin_vacios": {
+          "entrenamiento": 0,
+          "validacion": 0
+        },
+        "nombres_unicos": {
+          "entrenamiento": {
+            "repetidos": []
+          },
+          "validacion": {
+            "repetidos": []
+          },
+          "mismas_columnas": true
+        },
+        "sin_redundancia": {
+          "store_id": {
+            "columnas": 10,
+            "suman_1": true,
+            "drop": null,
+            "drop_de_la_matriz": null,
+            "algoritmos_lo_admiten": true
+          },
+          "dept_id": {
+            "columnas": 7,
+            "suman_1": true,
+            "drop": null,
+            "drop_de_la_matriz": null,
+            "algoritmos_lo_admiten": true
+          },
+          "weekday": {
+            "columnas": 7,
+            "suman_1": true,
+            "drop": null,
+            "drop_de_la_matriz": null,
+            "algoritmos_lo_admiten": true
+          },
+          "month": {
+            "columnas": 12,
+            "suman_1": true,
+            "drop": null,
+            "drop_de_la_matriz": null,
+            "algoritmos_lo_admiten": true
+          },
+          "event_name_1": {
+            "columnas": 31,
+            "suman_1": true,
+            "drop": null,
+            "drop_de_la_matriz": null,
+            "algoritmos_lo_admiten": true
+          },
+          "event_name_2": {
+            "columnas": 4,
+            "suman_1": true,
+            "drop": null,
+            "drop_de_la_matriz": null,
+            "algoritmos_lo_admiten": true
+          }
+        },
+        "columnas_esperadas": {
+          "salida": 117,
+          "esperadas": 117,
+          "sobran": [],
+          "faltan": [],
+          "por_codificacion": {
+            "store_id": 10,
+            "dept_id": 7,
+            "weekday": 7,
+            "month": 12,
+            "event_name_1": 31,
+            "event_name_2": 4
+          },
+          "matriz": {
+            "store_id": 10,
+            "dept_id": 7,
+            "weekday": 7,
+            "month": 12,
+            "event_name_1": 31,
+            "event_name_2": 4
+          }
+        },
+        "relleno_sin_choque": {
+          "relleno": "sin evento",
+          "filas_con_ese_valor": {
+            "event_name_1": 0,
+            "event_name_2": 0
+          }
+        },
+        "escalado_segun_matriz": {
+          "binarias_fuera_de_0_y_1": [],
+          "escalador_distinto_de_la_matriz": [],
+          "minmax_sin_clip": [],
+          "salida_dispersa": [],
+          "binarias": 102
+        }
+      },
+      "sin_variables_del_otro_objetivo": true,
+      "comprobacion_evento_nuevo": {
+        "eventos": [
+          "Father's day"
+        ],
+        "filas": 70,
+        "todas_a_cero": true
+      }
+    }
+  },
+  "validaciones": {
+    "filas": true,
+    "sin_objetivo": true,
+    "sin_intermedias": true,
+    "sin_vacios": true,
+    "nombres_unicos": true,
+    "sin_redundancia": true,
+    "columnas_esperadas": true,
+    "relleno_sin_choque": true,
+    "escalado_segun_matriz": true
+  },
+  "fuera": [
+    {
+      "variable": "d",
+      "motivo": "identificador del día"
+    },
+    {
+      "variable": "unidades",
+      "motivo": "objetivo del modelo de unidades; venta del mismo día en el otro"
+    },
+    {
+      "variable": "dolares",
+      "motivo": "objetivo del modelo de dólares; venta del mismo día en el otro"
+    },
+    {
+      "variable": "periodo",
+      "motivo": "marca de la partición"
+    },
+    {
+      "variable": "cierre_tienda",
+      "motivo": "posterior a la decisión: se conoce al cerrar el día"
+    },
+    {
+      "variable": "fuera_del_error",
+      "motivo": "posterior a la decisión: se conoce al cerrar el día"
+    },
+    {
+      "variable": "clase_cero",
+      "motivo": "posterior a la decisión: usa la media del periodo entero"
+    },
+    {
+      "variable": "cat_id",
+      "motivo": "copia de dept_id"
+    },
+    {
+      "variable": "state_id",
+      "motivo": "copia de store_id"
+    },
+    {
+      "variable": "wday",
+      "motivo": "copia de weekday"
+    },
+    {
+      "variable": "event_type_1",
+      "motivo": "copia agrupada de event_name_1"
+    },
+    {
+      "variable": "event_type_2",
+      "motivo": "copia agrupada de event_name_2"
+    },
+    {
+      "variable": "year",
+      "motivo": "en la validación toma un valor que el entrenamiento no tiene"
+    },
+    {
+      "variable": "date",
+      "motivo": "sus componentes ya entran"
+    },
+    {
+      "variable": "wm_yr_wk",
+      "motivo": "identificador de la semana"
+    },
+    {
+      "variable": "wm_yr_wk_anterior",
+      "motivo": "identificador de la semana anterior"
+    },
+    {
+      "variable": "mes_parcial",
+      "motivo": "marca para no comparar"
+    },
+    {
+      "variable": "semana_parcial",
+      "motivo": "marca para no comparar"
+    }
+  ],
+  "preprocesador": {
+    "script": "scripts/12_preparacion.py",
+    "funcion": "construir_preprocesador(objetivo, columnas_evento)",
+    "columnas_entrada": {
+      "unidades": [
+        "store_id",
+        "dept_id",
+        "weekday",
+        "month",
+        "event_name_1",
+        "event_name_2",
+        "snap",
+        "evento_Chanukah End",
+        "evento_Christmas",
+        "evento_Cinco De Mayo",
+        "evento_ColumbusDay",
+        "evento_Easter",
+        "evento_Eid al-Fitr",
+        "evento_EidAlAdha",
+        "evento_Father's day",
+        "evento_Halloween",
+        "evento_IndependenceDay",
+        "evento_LaborDay",
+        "evento_LentStart",
+        "evento_LentWeek2",
+        "evento_MartinLutherKingDay",
+        "evento_MemorialDay",
+        "evento_Mother's day",
+        "evento_NBAFinalsEnd",
+        "evento_NBAFinalsStart",
+        "evento_NewYear",
+        "evento_OrthodoxChristmas",
+        "evento_OrthodoxEaster",
+        "evento_Pesach End",
+        "evento_PresidentsDay",
+        "evento_Purim End",
+        "evento_Ramadan starts",
+        "evento_StPatricksDay",
+        "evento_SuperBowl",
+        "evento_Thanksgiving",
+        "evento_ValentinesDay",
+        "evento_VeteransDay",
+        "precio_medio_semana_anterior",
+        "productos_con_precio_semana_anterior",
+        "dia_del_mes",
+        "unidades_lag_1",
+        "unidades_lag_2",
+        "unidades_lag_3",
+        "unidades_lag_4",
+        "unidades_lag_5",
+        "unidades_lag_6",
+        "unidades_lag_7",
+        "unidades_lag_14",
+        "unidades_lag_21",
+        "unidades_lag_28",
+        "unidades_media_7",
+        "unidades_media_28"
+      ],
+      "dolares": [
+        "store_id",
+        "dept_id",
+        "weekday",
+        "month",
+        "event_name_1",
+        "event_name_2",
+        "snap",
+        "evento_Chanukah End",
+        "evento_Christmas",
+        "evento_Cinco De Mayo",
+        "evento_ColumbusDay",
+        "evento_Easter",
+        "evento_Eid al-Fitr",
+        "evento_EidAlAdha",
+        "evento_Father's day",
+        "evento_Halloween",
+        "evento_IndependenceDay",
+        "evento_LaborDay",
+        "evento_LentStart",
+        "evento_LentWeek2",
+        "evento_MartinLutherKingDay",
+        "evento_MemorialDay",
+        "evento_Mother's day",
+        "evento_NBAFinalsEnd",
+        "evento_NBAFinalsStart",
+        "evento_NewYear",
+        "evento_OrthodoxChristmas",
+        "evento_OrthodoxEaster",
+        "evento_Pesach End",
+        "evento_PresidentsDay",
+        "evento_Purim End",
+        "evento_Ramadan starts",
+        "evento_StPatricksDay",
+        "evento_SuperBowl",
+        "evento_Thanksgiving",
+        "evento_ValentinesDay",
+        "evento_VeteransDay",
+        "precio_medio_semana_anterior",
+        "productos_con_precio_semana_anterior",
+        "dia_del_mes",
+        "dolares_lag_1",
+        "dolares_lag_2",
+        "dolares_lag_3",
+        "dolares_lag_4",
+        "dolares_lag_5",
+        "dolares_lag_6",
+        "dolares_lag_7",
+        "dolares_lag_14",
+        "dolares_lag_21",
+        "dolares_lag_28",
+        "dolares_media_7",
+        "dolares_media_28"
+      ]
+    },
+    "columnas_salida": {
+      "unidades": [
+        "store_id_ohe_CA_1",
+        "store_id_ohe_CA_2",
+        "store_id_ohe_CA_3",
+        "store_id_ohe_CA_4",
+        "store_id_ohe_TX_1",
+        "store_id_ohe_TX_2",
+        "store_id_ohe_TX_3",
+        "store_id_ohe_WI_1",
+        "store_id_ohe_WI_2",
+        "store_id_ohe_WI_3",
+        "dept_id_ohe_FOODS_1",
+        "dept_id_ohe_FOODS_2",
+        "dept_id_ohe_FOODS_3",
+        "dept_id_ohe_HOBBIES_1",
+        "dept_id_ohe_HOBBIES_2",
+        "dept_id_ohe_HOUSEHOLD_1",
+        "dept_id_ohe_HOUSEHOLD_2",
+        "weekday_ohe_Friday",
+        "weekday_ohe_Monday",
+        "weekday_ohe_Saturday",
+        "weekday_ohe_Sunday",
+        "weekday_ohe_Thursday",
+        "weekday_ohe_Tuesday",
+        "weekday_ohe_Wednesday",
+        "month_ohe_1",
+        "month_ohe_2",
+        "month_ohe_3",
+        "month_ohe_4",
+        "month_ohe_5",
+        "month_ohe_6",
+        "month_ohe_7",
+        "month_ohe_8",
+        "month_ohe_9",
+        "month_ohe_10",
+        "month_ohe_11",
+        "month_ohe_12",
+        "event_name_1_ohe_Chanukah End",
+        "event_name_1_ohe_Christmas",
+        "event_name_1_ohe_Cinco De Mayo",
+        "event_name_1_ohe_ColumbusDay",
+        "event_name_1_ohe_Easter",
+        "event_name_1_ohe_Eid al-Fitr",
+        "event_name_1_ohe_EidAlAdha",
+        "event_name_1_ohe_Father's day",
+        "event_name_1_ohe_Halloween",
+        "event_name_1_ohe_IndependenceDay",
+        "event_name_1_ohe_LaborDay",
+        "event_name_1_ohe_LentStart",
+        "event_name_1_ohe_LentWeek2",
+        "event_name_1_ohe_MartinLutherKingDay",
+        "event_name_1_ohe_MemorialDay",
+        "event_name_1_ohe_Mother's day",
+        "event_name_1_ohe_NBAFinalsEnd",
+        "event_name_1_ohe_NBAFinalsStart",
+        "event_name_1_ohe_NewYear",
+        "event_name_1_ohe_OrthodoxChristmas",
+        "event_name_1_ohe_OrthodoxEaster",
+        "event_name_1_ohe_Pesach End",
+        "event_name_1_ohe_PresidentsDay",
+        "event_name_1_ohe_Purim End",
+        "event_name_1_ohe_Ramadan starts",
+        "event_name_1_ohe_StPatricksDay",
+        "event_name_1_ohe_SuperBowl",
+        "event_name_1_ohe_Thanksgiving",
+        "event_name_1_ohe_ValentinesDay",
+        "event_name_1_ohe_VeteransDay",
+        "event_name_1_ohe_sin evento",
+        "event_name_2_ohe_Cinco De Mayo",
+        "event_name_2_ohe_Easter",
+        "event_name_2_ohe_OrthodoxEaster",
+        "event_name_2_ohe_sin evento",
+        "snap",
+        "evento_Chanukah End",
+        "evento_Christmas",
+        "evento_Cinco De Mayo",
+        "evento_ColumbusDay",
+        "evento_Easter",
+        "evento_Eid al-Fitr",
+        "evento_EidAlAdha",
+        "evento_Father's day",
+        "evento_Halloween",
+        "evento_IndependenceDay",
+        "evento_LaborDay",
+        "evento_LentStart",
+        "evento_LentWeek2",
+        "evento_MartinLutherKingDay",
+        "evento_MemorialDay",
+        "evento_Mother's day",
+        "evento_NBAFinalsEnd",
+        "evento_NBAFinalsStart",
+        "evento_NewYear",
+        "evento_OrthodoxChristmas",
+        "evento_OrthodoxEaster",
+        "evento_Pesach End",
+        "evento_PresidentsDay",
+        "evento_Purim End",
+        "evento_Ramadan starts",
+        "evento_StPatricksDay",
+        "evento_SuperBowl",
+        "evento_Thanksgiving",
+        "evento_ValentinesDay",
+        "evento_VeteransDay",
+        "precio_medio_semana_anterior_ss",
+        "productos_con_precio_semana_anterior_ss",
+        "dia_del_mes_ss",
+        "unidades_lag_1_rs",
+        "unidades_lag_2_rs",
+        "unidades_lag_3_rs",
+        "unidades_lag_4_rs",
+        "unidades_lag_5_rs",
+        "unidades_lag_6_rs",
+        "unidades_lag_7_rs",
+        "unidades_lag_14_rs",
+        "unidades_lag_21_rs",
+        "unidades_lag_28_rs",
+        "unidades_media_7_rs",
+        "unidades_media_28_rs"
+      ],
+      "dolares": [
+        "store_id_ohe_CA_1",
+        "store_id_ohe_CA_2",
+        "store_id_ohe_CA_3",
+        "store_id_ohe_CA_4",
+        "store_id_ohe_TX_1",
+        "store_id_ohe_TX_2",
+        "store_id_ohe_TX_3",
+        "store_id_ohe_WI_1",
+        "store_id_ohe_WI_2",
+        "store_id_ohe_WI_3",
+        "dept_id_ohe_FOODS_1",
+        "dept_id_ohe_FOODS_2",
+        "dept_id_ohe_FOODS_3",
+        "dept_id_ohe_HOBBIES_1",
+        "dept_id_ohe_HOBBIES_2",
+        "dept_id_ohe_HOUSEHOLD_1",
+        "dept_id_ohe_HOUSEHOLD_2",
+        "weekday_ohe_Friday",
+        "weekday_ohe_Monday",
+        "weekday_ohe_Saturday",
+        "weekday_ohe_Sunday",
+        "weekday_ohe_Thursday",
+        "weekday_ohe_Tuesday",
+        "weekday_ohe_Wednesday",
+        "month_ohe_1",
+        "month_ohe_2",
+        "month_ohe_3",
+        "month_ohe_4",
+        "month_ohe_5",
+        "month_ohe_6",
+        "month_ohe_7",
+        "month_ohe_8",
+        "month_ohe_9",
+        "month_ohe_10",
+        "month_ohe_11",
+        "month_ohe_12",
+        "event_name_1_ohe_Chanukah End",
+        "event_name_1_ohe_Christmas",
+        "event_name_1_ohe_Cinco De Mayo",
+        "event_name_1_ohe_ColumbusDay",
+        "event_name_1_ohe_Easter",
+        "event_name_1_ohe_Eid al-Fitr",
+        "event_name_1_ohe_EidAlAdha",
+        "event_name_1_ohe_Father's day",
+        "event_name_1_ohe_Halloween",
+        "event_name_1_ohe_IndependenceDay",
+        "event_name_1_ohe_LaborDay",
+        "event_name_1_ohe_LentStart",
+        "event_name_1_ohe_LentWeek2",
+        "event_name_1_ohe_MartinLutherKingDay",
+        "event_name_1_ohe_MemorialDay",
+        "event_name_1_ohe_Mother's day",
+        "event_name_1_ohe_NBAFinalsEnd",
+        "event_name_1_ohe_NBAFinalsStart",
+        "event_name_1_ohe_NewYear",
+        "event_name_1_ohe_OrthodoxChristmas",
+        "event_name_1_ohe_OrthodoxEaster",
+        "event_name_1_ohe_Pesach End",
+        "event_name_1_ohe_PresidentsDay",
+        "event_name_1_ohe_Purim End",
+        "event_name_1_ohe_Ramadan starts",
+        "event_name_1_ohe_StPatricksDay",
+        "event_name_1_ohe_SuperBowl",
+        "event_name_1_ohe_Thanksgiving",
+        "event_name_1_ohe_ValentinesDay",
+        "event_name_1_ohe_VeteransDay",
+        "event_name_1_ohe_sin evento",
+        "event_name_2_ohe_Cinco De Mayo",
+        "event_name_2_ohe_Easter",
+        "event_name_2_ohe_OrthodoxEaster",
+        "event_name_2_ohe_sin evento",
+        "snap",
+        "evento_Chanukah End",
+        "evento_Christmas",
+        "evento_Cinco De Mayo",
+        "evento_ColumbusDay",
+        "evento_Easter",
+        "evento_Eid al-Fitr",
+        "evento_EidAlAdha",
+        "evento_Father's day",
+        "evento_Halloween",
+        "evento_IndependenceDay",
+        "evento_LaborDay",
+        "evento_LentStart",
+        "evento_LentWeek2",
+        "evento_MartinLutherKingDay",
+        "evento_MemorialDay",
+        "evento_Mother's day",
+        "evento_NBAFinalsEnd",
+        "evento_NBAFinalsStart",
+        "evento_NewYear",
+        "evento_OrthodoxChristmas",
+        "evento_OrthodoxEaster",
+        "evento_Pesach End",
+        "evento_PresidentsDay",
+        "evento_Purim End",
+        "evento_Ramadan starts",
+        "evento_StPatricksDay",
+        "evento_SuperBowl",
+        "evento_Thanksgiving",
+        "evento_ValentinesDay",
+        "evento_VeteransDay",
+        "precio_medio_semana_anterior_ss",
+        "productos_con_precio_semana_anterior_ss",
+        "dia_del_mes_ss",
+        "dolares_lag_1_rs",
+        "dolares_lag_2_rs",
+        "dolares_lag_3_rs",
+        "dolares_lag_4_rs",
+        "dolares_lag_5_rs",
+        "dolares_lag_6_rs",
+        "dolares_lag_7_rs",
+        "dolares_lag_14_rs",
+        "dolares_lag_21_rs",
+        "dolares_lag_28_rs",
+        "dolares_media_7_rs",
+        "dolares_media_28_rs"
+      ]
+    },
+    "remainder": "drop",
+    "ajustado": "no: lo ajusta aprendizaje-automatico con el entrenamiento"
+  },
+  "parametros": [
+    {
+      "nombre": "sobrante del ColumnTransformer",
+      "valor": "drop",
+      "origen": "parametros.md"
+    },
+    {
+      "nombre": "mínimo para no agrupar una categoría",
+      "valor": 30,
+      "origen": "parametros.md; ninguna categoría de eventos queda por debajo en el entrenamiento"
+    },
+    {
+      "nombre": "relleno categórico",
+      "valor": "sin evento",
+      "origen": "matriz aprobada (en lugar de «sin dato»: el vacío es un día sin evento)"
+    },
+    {
+      "nombre": "semilla",
+      "valor": 42,
+      "origen": "parametros.md; ningún paso usa azar"
+    },
+    {
+      "nombre": "drop de las codificaciones",
+      "valor": null,
+      "origen": "matriz aprobada"
+    }
+  ],
+  "validacion_usada": "la validación con retardos reales de hechos_modelo_validacion solo se transforma para comprobar; no mide el modelo (planteamientos §2, decisión 2)"
+}

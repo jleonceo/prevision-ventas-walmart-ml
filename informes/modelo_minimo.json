@@ -1,0 +1,3105 @@
+{
+  "metodo": "aprendizaje-automatico",
+  "version_metodo": "20/11/2026",
+  "script": "scripts/14_modelo_minimo.py",
+  "fecha_datos": "2015-05-22",
+  "fecha_ejecucion": "2026-11-24T17:22:38",
+  "entorno": {
+    "python": "3.13.15",
+    "pandas": "3.0.6",
+    "numpy": "2.5.3",
+    "pyarrow": "24.0.0",
+    "scikit-learn": "1.9.1",
+    "ejecutable": "python"
+  },
+  "entradas": [
+    {
+      "ruta": "data/processed/hechos_modelo_entrenamiento.parquet",
+      "sha256": "7975a014ba29fe5bf19ba18cfd9b53acd69698be70ee329550a510d4b2f91418",
+      "filas": 82250,
+      "columnas": 82
+    }
+  ],
+  "resultado": {
+    "estado": "AVISO",
+    "riesgo": "medio",
+    "resumen": "modelo mínimo en 5 pliegues: unidades 14.3 a un día y 16.2 en recursiva; dólares 15.6 y 17.5; 13 de 13 validaciones en verde; la búsqueda espera al responsable del caso",
+    "artefactos": [
+      "informes/modelo_minimo.json"
+    ],
+    "siguiente": "El responsable del caso aprueba la lista de algoritmos y el nivel (informes/modelado_propuesta.md); después, la búsqueda"
+  },
+  "pendientes": [
+    {
+      "id": "P-01",
+      "tabla": "modelado",
+      "columna": "lista de algoritmos y nivel de búsqueda",
+      "pregunta": "¿Qué algoritmos entran en la búsqueda y con qué nivel? Puerta del responsable del caso (método, apartado 5)",
+      "opciones": [
+        "la propuesta de informes/modelado_propuesta.md",
+        "otra lista o nivel"
+      ]
+    }
+  ],
+  "tabla": {
+    "filas": 82250,
+    "series": 70,
+    "dias_por_serie_min": 1175,
+    "dias_por_serie_max": 1175,
+    "desde": "2011-03-05",
+    "hasta": "2014-05-22"
+  },
+  "rama": "prevision",
+  "hace_falta_modelar": {
+    "respuesta": true,
+    "por_que": "las preguntas 1 y 2 de la ficha piden cuántas unidades y dólares venderá cada departamento en cada tienda cada día y si la previsión se equivoca menos que las tres reglas: es una previsión, no una pregunta descriptiva, y el exploratorio no la contesta. La ficha da las dos por contestables con la construcción (prueba rápida con un modelo para las 70 series), y los planteamientos §1 y §2 fijan el modelo y su referencia de suavizado exponencial"
+  },
+  "puerta_contestable": {
+    "aplica": false,
+    "por_que": "la previsión informa y decide una persona; no decide sobre personas (ficha, «Las seis comprobaciones»)"
+  },
+  "aprobado_antes": {
+    "medida_principal": "error de la previsión: unidades (o dólares) que falla por cada 100 vendidas, de las 70 series juntas y todos los días del periodo, sin el 25 de diciembre, con el sesgo al lado",
+    "por_que": "reglas, apartado 6: el error de las 70 juntas decide; el sesgo, porque el error puede bajar mientras la previsión se queda corta",
+    "referencias": [
+      "las tres reglas sencillas (reglas, apartado 7)",
+      "el trivial, DummyRegressor con la mediana (método, apartado 6)",
+      "el suavizado exponencial (planteamientos §1), que se mide con la validación"
+    ],
+    "se_da_por_bueno": "reglas, apartado 7, «Qué cuenta como mejora»: menos error que la regla que menos falla en al menos el 75 % de los orígenes y el intervalo del 95 % de la ventaja por encima de cero; se decide en la validación",
+    "minimo_de_casos": null,
+    "fuente": "config/negocio/reglas-negocio.md §6 y §7; config/metodo/04_planteamientos.md"
+  },
+  "validacion_cruzada": {
+    "tipo": "TimeSeriesSplit sobre los días, sin barajar, ventana creciente",
+    "pliegues": 5,
+    "semilla": 42,
+    "grupo": null,
+    "test_size": {
+      "unidades": 10,
+      "dolares": 28
+    },
+    "gap": null,
+    "gap_por_que": "la venta de la víspera se conoce al prever (reglas, apartado 5)",
+    "objetivo_sin_conocer": [
+      {
+        "objetivo": "unidades",
+        "entrenamiento": "pliegue que mide desde 2014-04-03",
+        "conocido_desde": "2014-04-03",
+        "filas_quitadas": 0,
+        "eventos_quitados": null
+      },
+      {
+        "objetivo": "unidades",
+        "entrenamiento": "pliegue que mide desde 2014-04-13",
+        "conocido_desde": "2014-04-13",
+        "filas_quitadas": 0,
+        "eventos_quitados": null
+      },
+      {
+        "objetivo": "unidades",
+        "entrenamiento": "pliegue que mide desde 2014-04-23",
+        "conocido_desde": "2014-04-23",
+        "filas_quitadas": 0,
+        "eventos_quitados": null
+      },
+      {
+        "objetivo": "unidades",
+        "entrenamiento": "pliegue que mide desde 2014-05-03",
+        "conocido_desde": "2014-05-03",
+        "filas_quitadas": 0,
+        "eventos_quitados": null
+      },
+      {
+        "objetivo": "unidades",
+        "entrenamiento": "pliegue que mide desde 2014-05-13",
+        "conocido_desde": "2014-05-13",
+        "filas_quitadas": 0,
+        "eventos_quitados": null
+      },
+      {
+        "objetivo": "dolares",
+        "entrenamiento": "pliegue que mide desde 2014-01-03",
+        "conocido_desde": "2014-01-03",
+        "filas_quitadas": 0,
+        "eventos_quitados": null
+      },
+      {
+        "objetivo": "dolares",
+        "entrenamiento": "pliegue que mide desde 2014-01-31",
+        "conocido_desde": "2014-01-31",
+        "filas_quitadas": 0,
+        "eventos_quitados": null
+      },
+      {
+        "objetivo": "dolares",
+        "entrenamiento": "pliegue que mide desde 2014-02-28",
+        "conocido_desde": "2014-02-28",
+        "filas_quitadas": 0,
+        "eventos_quitados": null
+      },
+      {
+        "objetivo": "dolares",
+        "entrenamiento": "pliegue que mide desde 2014-03-28",
+        "conocido_desde": "2014-03-28",
+        "filas_quitadas": 0,
+        "eventos_quitados": null
+      },
+      {
+        "objetivo": "dolares",
+        "entrenamiento": "pliegue que mide desde 2014-04-25",
+        "conocido_desde": "2014-04-25",
+        "filas_quitadas": 0,
+        "eventos_quitados": null
+      }
+    ]
+  },
+  "desequilibrio": {
+    "regla": null,
+    "por_que": "no aplica: los dos objetivos son cantidades"
+  },
+  "busqueda": null,
+  "teoria_aplicada": [
+    {
+      "apartado": "32.13",
+      "por_que": "los pasos de todo modelo supervisado: aquí llegan hasta el 7, sin buscar"
+    },
+    {
+      "apartado": "31.6",
+      "por_que": "validación cruzada temporal, ventana creciente y test_size igual al horizonte"
+    },
+    {
+      "apartado": "20.3",
+      "por_que": "TimeSeriesSplit sobre los días ordenados; cada bloque se lee con el trivial y la referencia al lado"
+    },
+    {
+      "apartado": "31.7",
+      "por_que": "previsión recursiva: el error crece con el horizonte y se mide aparte; nunca por debajo de cero"
+    },
+    {
+      "apartado": "31.9",
+      "por_que": "WAPE con el sesgo aparte, la referencia ingenua en los mismos días y el error en entrenamiento al lado para ver el sobreajuste"
+    },
+    {
+      "apartado": "32.7",
+      "por_que": "búsqueda aleatoria: el coste lo mandan candidatos por pliegues"
+    }
+  ],
+  "modelo_minimo": {
+    "unidades": {
+      "horizonte": 10,
+      "receta": {
+        "algoritmo": "HistGradientBoostingRegressor",
+        "hiperparametros": {
+          "categorical_features": "from_dtype",
+          "early_stopping": false,
+          "interaction_cst": null,
+          "l2_regularization": 0.0,
+          "learning_rate": 0.1,
+          "loss": "squared_error",
+          "max_bins": 255,
+          "max_depth": null,
+          "max_features": 1.0,
+          "max_iter": 100,
+          "max_leaf_nodes": 31,
+          "min_samples_leaf": 20,
+          "monotonic_cst": null,
+          "n_iter_no_change": 10,
+          "quantile": null,
+          "random_state": 42,
+          "scoring": "loss",
+          "tol": 1e-07,
+          "validation_fraction": 0.1,
+          "verbose": 0,
+          "warm_start": false
+        },
+        "semilla": 42,
+        "columnas": [
+          "store_id_ohe_CA_1",
+          "store_id_ohe_CA_2",
+          "store_id_ohe_CA_3",
+          "store_id_ohe_CA_4",
+          "store_id_ohe_TX_1",
+          "store_id_ohe_TX_2",
+          "store_id_ohe_TX_3",
+          "store_id_ohe_WI_1",
+          "store_id_ohe_WI_2",
+          "store_id_ohe_WI_3",
+          "dept_id_ohe_FOODS_1",
+          "dept_id_ohe_FOODS_2",
+          "dept_id_ohe_FOODS_3",
+          "dept_id_ohe_HOBBIES_1",
+          "dept_id_ohe_HOBBIES_2",
+          "dept_id_ohe_HOUSEHOLD_1",
+          "dept_id_ohe_HOUSEHOLD_2",
+          "weekday_ohe_Friday",
+          "weekday_ohe_Monday",
+          "weekday_ohe_Saturday",
+          "weekday_ohe_Sunday",
+          "weekday_ohe_Thursday",
+          "weekday_ohe_Tuesday",
+          "weekday_ohe_Wednesday",
+          "month_ohe_1",
+          "month_ohe_2",
+          "month_ohe_3",
+          "month_ohe_4",
+          "month_ohe_5",
+          "month_ohe_6",
+          "month_ohe_7",
+          "month_ohe_8",
+          "month_ohe_9",
+          "month_ohe_10",
+          "month_ohe_11",
+          "month_ohe_12",
+          "snap",
+          "evento_Chanukah End",
+          "evento_Christmas",
+          "evento_Cinco De Mayo",
+          "evento_ColumbusDay",
+          "evento_Easter",
+          "evento_Eid al-Fitr",
+          "evento_EidAlAdha",
+          "evento_Father's day",
+          "evento_Halloween",
+          "evento_IndependenceDay",
+          "evento_LaborDay",
+          "evento_LentStart",
+          "evento_LentWeek2",
+          "evento_MartinLutherKingDay",
+          "evento_MemorialDay",
+          "evento_Mother's day",
+          "evento_NBAFinalsEnd",
+          "evento_NBAFinalsStart",
+          "evento_NewYear",
+          "evento_OrthodoxChristmas",
+          "evento_OrthodoxEaster",
+          "evento_Pesach End",
+          "evento_PresidentsDay",
+          "evento_Purim End",
+          "evento_Ramadan starts",
+          "evento_StPatricksDay",
+          "evento_SuperBowl",
+          "evento_Thanksgiving",
+          "evento_ValentinesDay",
+          "evento_VeteransDay",
+          "precio_medio_semana_anterior_ss",
+          "productos_con_precio_semana_anterior_ss",
+          "dia_del_mes_ss",
+          "unidades_lag_1_rs",
+          "unidades_lag_2_rs",
+          "unidades_lag_3_rs",
+          "unidades_lag_4_rs",
+          "unidades_lag_5_rs",
+          "unidades_lag_6_rs",
+          "unidades_lag_7_rs",
+          "unidades_lag_14_rs",
+          "unidades_lag_21_rs",
+          "unidades_lag_28_rs",
+          "unidades_media_7_rs",
+          "unidades_media_28_rs"
+        ],
+        "n_columnas": 82,
+        "preprocesador": "scripts/preparacion_prevision.py, ajustado dentro de cada pliegue"
+      },
+      "pliegues": [
+        {
+          "pliegue": 1,
+          "origen": "2014-04-02",
+          "dias_prueba": {
+            "desde": "2014-04-03",
+            "hasta": "2014-04-12",
+            "dias": 10
+          },
+          "filas_ajuste": 78750,
+          "filas_prueba": 700,
+          "filas_medidas": 700,
+          "filas_fuera_del_error": 0,
+          "a_un_dia": {
+            "modelo": {
+              "error": 13.94875909581385,
+              "sesgo": -2.986747087956174,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 1, a un día con los retardos reales"
+            },
+            "entrenamiento": {
+              "error": 14.978291408204557,
+              "sesgo": -0.004865229311149525,
+              "filas": "entrenamiento"
+            }
+          },
+          "recursiva": {
+            "modelo": {
+              "error": 15.99894862075644,
+              "sesgo": -4.915197963644412,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 1, recursiva desde el origen"
+            }
+          },
+          "referencias": {
+            "trivial_mediana": {
+              "error": 74.71156240489168,
+              "sesgo": -50.61284342749634,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 1"
+            },
+            "repetir_semana_anterior": {
+              "error": 24.635475749107712,
+              "sesgo": -14.074647926292782,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 1"
+            },
+            "media_28_dias": {
+              "error": 22.161967739257946,
+              "sesgo": -11.946988351824697,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 1"
+            },
+            "media_mismo_dia_4_semanas": {
+              "error": 19.872451097031238,
+              "sesgo": -11.727028746921949,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 1"
+            }
+          },
+          "regla_que_menos_falla": "media_mismo_dia_4_semanas",
+          "ventaja_recursiva_frente_a_esa_regla": 3.8735024762747976,
+          "recursiva_gana_a_esa_regla": true,
+          "recursiva_a_un_dia_igual": true,
+          "diferencia_maxima_dia_1": 0.0,
+          "segundos": {
+            "ajuste": 1.3584021999995457,
+            "recursion": 1.4145960000023479
+          }
+        },
+        {
+          "pliegue": 2,
+          "origen": "2014-04-12",
+          "dias_prueba": {
+            "desde": "2014-04-13",
+            "hasta": "2014-04-22",
+            "dias": 10
+          },
+          "filas_ajuste": 79450,
+          "filas_prueba": 700,
+          "filas_medidas": 700,
+          "filas_fuera_del_error": 0,
+          "a_un_dia": {
+            "modelo": {
+              "error": 14.661455272128835,
+              "sesgo": -3.373692253438345,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 2, a un día con los retardos reales"
+            },
+            "entrenamiento": {
+              "error": 14.936985316585277,
+              "sesgo": -0.005054714629482587,
+              "filas": "entrenamiento"
+            }
+          },
+          "recursiva": {
+            "modelo": {
+              "error": 16.091160220994475,
+              "sesgo": -5.088456565181615,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 2, recursiva desde el origen"
+            }
+          },
+          "referencias": {
+            "trivial_mediana": {
+              "error": 73.88621135535442,
+              "sesgo": -47.543199717879396,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 2"
+            },
+            "repetir_semana_anterior": {
+              "error": 23.43070412601387,
+              "sesgo": 6.136123192664864,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 2"
+            },
+            "media_28_dias": {
+              "error": 20.371458798636418,
+              "sesgo": -4.5491947807687785,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 2"
+            },
+            "media_mismo_dia_4_semanas": {
+              "error": 18.478899729634417,
+              "sesgo": -4.146585165158105,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 2"
+            }
+          },
+          "regla_que_menos_falla": "media_mismo_dia_4_semanas",
+          "ventaja_recursiva_frente_a_esa_regla": 2.3877395086399424,
+          "recursiva_gana_a_esa_regla": true,
+          "recursiva_a_un_dia_igual": true,
+          "diferencia_maxima_dia_1": 0.0,
+          "segundos": {
+            "ajuste": 1.2940209999942454,
+            "recursion": 1.7705814000073588
+          }
+        },
+        {
+          "pliegue": 3,
+          "origen": "2014-04-22",
+          "dias_prueba": {
+            "desde": "2014-04-23",
+            "hasta": "2014-05-02",
+            "dias": 10
+          },
+          "filas_ajuste": 80150,
+          "filas_prueba": 700,
+          "filas_medidas": 700,
+          "filas_fuera_del_error": 0,
+          "a_un_dia": {
+            "modelo": {
+              "error": 14.58688524590164,
+              "sesgo": 2.9836065573770494,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 3, a un día con los retardos reales"
+            },
+            "entrenamiento": {
+              "error": 14.916965458802743,
+              "sesgo": -0.01069717163476671,
+              "filas": "entrenamiento"
+            }
+          },
+          "recursiva": {
+            "modelo": {
+              "error": 16.755737704918033,
+              "sesgo": 5.634426229508197,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 3, recursiva desde el origen"
+            }
+          },
+          "referencias": {
+            "trivial_mediana": {
+              "error": 73.18032786885246,
+              "sesgo": -41.47540983606557,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 3"
+            },
+            "repetir_semana_anterior": {
+              "error": 23.49344262295082,
+              "sesgo": 8.188524590163935,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 3"
+            },
+            "media_28_dias": {
+              "error": 23.121311475409836,
+              "sesgo": 10.524590163934427,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 3"
+            },
+            "media_mismo_dia_4_semanas": {
+              "error": 19.104918032786884,
+              "sesgo": 8.226229508196722,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 3"
+            }
+          },
+          "regla_que_menos_falla": "media_mismo_dia_4_semanas",
+          "ventaja_recursiva_frente_a_esa_regla": 2.349180327868851,
+          "recursiva_gana_a_esa_regla": true,
+          "recursiva_a_un_dia_igual": true,
+          "diferencia_maxima_dia_1": 0.0,
+          "segundos": {
+            "ajuste": 1.2073125000024447,
+            "recursion": 1.25595869999961
+          }
+        },
+        {
+          "pliegue": 4,
+          "origen": "2014-05-02",
+          "dias_prueba": {
+            "desde": "2014-05-03",
+            "hasta": "2014-05-12",
+            "dias": 10
+          },
+          "filas_ajuste": 80850,
+          "filas_prueba": 700,
+          "filas_medidas": 700,
+          "filas_fuera_del_error": 0,
+          "a_un_dia": {
+            "modelo": {
+              "error": 14.382058634209141,
+              "sesgo": 4.223477090526069,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 4, a un día con los retardos reales"
+            },
+            "entrenamiento": {
+              "error": 14.934572384998285,
+              "sesgo": -0.003751694403648076,
+              "filas": "entrenamiento"
+            }
+          },
+          "recursiva": {
+            "modelo": {
+              "error": 16.661302592310843,
+              "sesgo": 8.348937913277547,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 4, recursiva desde el origen"
+            }
+          },
+          "referencias": {
+            "trivial_mediana": {
+              "error": 74.64158230440634,
+              "sesgo": -47.773421499210016,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 4"
+            },
+            "repetir_semana_anterior": {
+              "error": 19.78173093803031,
+              "sesgo": -6.103341330680554,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 4"
+            },
+            "media_28_dias": {
+              "error": 18.751828661712214,
+              "sesgo": -1.7935514073380536,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 4"
+            },
+            "media_mismo_dia_4_semanas": {
+              "error": 15.41196091052724,
+              "sesgo": 1.3180993621627948,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 4"
+            }
+          },
+          "regla_que_menos_falla": "media_mismo_dia_4_semanas",
+          "ventaja_recursiva_frente_a_esa_regla": -1.2493416817836032,
+          "recursiva_gana_a_esa_regla": false,
+          "recursiva_a_un_dia_igual": true,
+          "diferencia_maxima_dia_1": 0.0,
+          "segundos": {
+            "ajuste": 1.1575363000010839,
+            "recursion": 1.262490200009779
+          }
+        },
+        {
+          "pliegue": 5,
+          "origen": "2014-05-12",
+          "dias_prueba": {
+            "desde": "2014-05-13",
+            "hasta": "2014-05-22",
+            "dias": 10
+          },
+          "filas_ajuste": 81550,
+          "filas_prueba": 700,
+          "filas_medidas": 700,
+          "filas_fuera_del_error": 0,
+          "a_un_dia": {
+            "modelo": {
+              "error": 13.948828351411775,
+              "sesgo": 0.7402500621015152,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 5, a un día con los retardos reales"
+            },
+            "entrenamiento": {
+              "error": 14.921416392827988,
+              "sesgo": -0.009874256501645242,
+              "filas": "entrenamiento"
+            }
+          },
+          "recursiva": {
+            "modelo": {
+              "error": 15.376335182578455,
+              "sesgo": 2.6082636416328557,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 5, recursiva desde el origen"
+            }
+          },
+          "referencias": {
+            "trivial_mediana": {
+              "error": 72.0493500041401,
+              "sesgo": -40.879357456321934,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 5"
+            },
+            "repetir_semana_anterior": {
+              "error": 21.303303800612735,
+              "sesgo": 3.5306781485468246,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 5"
+            },
+            "media_28_dias": {
+              "error": 20.606110789103255,
+              "sesgo": 7.907592945267864,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 5"
+            },
+            "media_mismo_dia_4_semanas": {
+              "error": 16.911484640225222,
+              "sesgo": 4.504429908089757,
+              "filas": "fuera de pliegue: 700 filas de prueba del pliegue 5"
+            }
+          },
+          "regla_que_menos_falla": "media_mismo_dia_4_semanas",
+          "ventaja_recursiva_frente_a_esa_regla": 1.5351494576467672,
+          "recursiva_gana_a_esa_regla": true,
+          "recursiva_a_un_dia_igual": true,
+          "diferencia_maxima_dia_1": 0.0,
+          "segundos": {
+            "ajuste": 1.110983299993677,
+            "recursion": 1.2376292000117246
+          }
+        }
+      ],
+      "resumen": {
+        "a_un_dia": {
+          "error": 14.305597319893048,
+          "error_desviacion": 0.30535937094177873,
+          "sesgo": 0.3173788737220229,
+          "sesgo_desviacion": 3.0687602649526884,
+          "filas": "fuera de pliegue: los 5 pliegues"
+        },
+        "recursiva": {
+          "error": 16.17669686431165,
+          "error_desviacion": 0.49992415099162696,
+          "sesgo": 1.3175946511185146,
+          "sesgo_desviacion": 5.470390211933159,
+          "filas": "fuera de pliegue: los 5 pliegues"
+        },
+        "entrenamiento": {
+          "error": 14.93764619228377,
+          "error_desviacion": 0.02169339877867338,
+          "sesgo": -0.006848613296138428,
+          "sesgo_desviacion": 0.0028533737637280736,
+          "filas": "entrenamiento"
+        },
+        "trivial_mediana": {
+          "error": 73.69380678752898,
+          "error_desviacion": 0.9938836106048337,
+          "sesgo": -45.65684638739465,
+          "sesgo_desviacion": 3.8186106864197855,
+          "filas": "fuera de pliegue: los 5 pliegues"
+        },
+        "repetir_semana_anterior": {
+          "error": 22.52893144734309,
+          "error_desviacion": 1.7452953007422247,
+          "sesgo": -0.46453266511954255,
+          "sesgo_desviacion": 8.383760106908845,
+          "filas": "fuera de pliegue: los 5 pliegues"
+        },
+        "media_28_dias": {
+          "error": 21.00253549282393,
+          "error_desviacion": 1.5135776410698931,
+          "sesgo": 0.02848971385415222,
+          "sesgo_desviacion": 8.245428993941202,
+          "filas": "fuera de pliegue: los 5 pliegues"
+        },
+        "media_mismo_dia_4_semanas": {
+          "error": 17.955942882041,
+          "error_desviacion": 1.6018344976860364,
+          "sesgo": -0.3649710267261558,
+          "sesgo_desviacion": 6.982112562229991,
+          "filas": "fuera de pliegue: los 5 pliegues"
+        }
+      },
+      "pliegues_que_gana_la_recursiva": 4,
+      "importancias": {
+        "metodo": "permutacion por variable de origen",
+        "repeticiones": 10,
+        "puntuacion": "menos el error de reglas, apartado 6, con la previsión acotada y redondeada",
+        "filas": "fuera de pliegue: las filas de prueba de los 5 pliegues, a un día",
+        "valores": [
+          {
+            "columna": "unidades_media_7",
+            "importancia": 29.075102123168243,
+            "desviacion": 1.3449351093705133,
+            "por_pliegue": [
+              29.96998035580887,
+              30.710003526507585,
+              29.59229508196721,
+              26.976710164433264,
+              28.126521487124286
+            ]
+          },
+          {
+            "columna": "unidades_lag_1",
+            "importancia": 13.442153003188338,
+            "desviacion": 0.732479135961825,
+            "por_pliegue": [
+              14.475002075090611,
+              13.676384154225932,
+              12.994426229508196,
+              13.748317631224765,
+              12.316634925892192
+            ]
+          },
+          {
+            "columna": "unidades_media_28",
+            "importancia": 4.087416986584271,
+            "desviacion": 0.6526459897746935,
+            "por_pliegue": [
+              5.181086240765846,
+              3.8092159398142704,
+              4.217540983606558,
+              3.1717771665983965,
+              4.057464602136291
+            ]
+          },
+          {
+            "columna": "unidades_lag_7",
+            "importancia": 3.4604989511466244,
+            "desviacion": 1.031585621781077,
+            "por_pliegue": [
+              3.8481863708048585,
+              4.472052427412718,
+              2.895081967213115,
+              1.7245011410849078,
+              4.36267284921752
+            ]
+          },
+          {
+            "columna": "unidades_lag_28",
+            "importancia": 2.571457698734915,
+            "desviacion": 0.6778194701008399,
+            "por_pliegue": [
+              3.710815372271256,
+              2.6911660985071117,
+              2.6485245901639347,
+              1.6958277254374152,
+              2.1109547072948573
+            ]
+          },
+          {
+            "columna": "weekday",
+            "importancia": 1.907310637314459,
+            "desviacion": 0.3127835879671084,
+            "por_pliegue": [
+              1.3406468749135383,
+              2.2694545668273185,
+              2.055901639344262,
+              1.8538240973725781,
+              2.016726008114598
+            ]
+          },
+          {
+            "columna": "unidades_lag_21",
+            "importancia": 1.607921625817852,
+            "desviacion": 0.4825117511361023,
+            "por_pliegue": [
+              2.1006833965083147,
+              1.8018984365816386,
+              1.9277049180327872,
+              1.4753642694130717,
+              0.7339571085534479
+            ]
+          },
+          {
+            "columna": "snap",
+            "importancia": 1.0074501430797849,
+            "desviacion": 0.20217684724639504,
+            "por_pliegue": [
+              1.254046426693966,
+              1.141706829669684,
+              1.106065573770492,
+              0.7468254432675984,
+              0.788606441997184
+            ]
+          },
+          {
+            "columna": "unidades_lag_2",
+            "importancia": 0.8061046927250146,
+            "desviacion": 0.24872585774244527,
+            "por_pliegue": [
+              0.9335140967822264,
+              1.1447925238039265,
+              0.5624590163934429,
+              0.9119901691146344,
+              0.4777676575308433
+            ]
+          },
+          {
+            "columna": "unidades_lag_6",
+            "importancia": 0.7155914990387927,
+            "desviacion": 0.26573256884097946,
+            "por_pliegue": [
+              0.568021470270869,
+              0.9390795815211002,
+              1.0778688524590163,
+              0.660951489262098,
+              0.3320361016808803
+            ]
+          },
+          {
+            "columna": "unidades_lag_14",
+            "importancia": 0.6161649974928792,
+            "desviacion": 0.18448518970768757,
+            "por_pliegue": [
+              0.6738510914976624,
+              0.8832432114729045,
+              0.6044262295081971,
+              0.611943355374802,
+              0.30736109961082986
+            ]
+          },
+          {
+            "columna": "dept_id",
+            "importancia": 0.4252227622699679,
+            "desviacion": 0.13224807985454648,
+            "por_pliegue": [
+              0.538831862324655,
+              0.5214823086869635,
+              0.17344262295081983,
+              0.46857627713733907,
+              0.4237807402500618
+            ]
+          },
+          {
+            "columna": "store_id",
+            "importancia": 0.38992075906368784,
+            "desviacion": 0.14902598113272794,
+            "por_pliegue": [
+              0.5207094043106553,
+              0.40966263077465614,
+              0.5759016393442623,
+              0.2558663467727772,
+              0.187463774116088
+            ]
+          },
+          {
+            "columna": "dia_del_mes",
+            "importancia": 0.18380541816622387,
+            "desviacion": 0.23752818021924907,
+            "por_pliegue": [
+              0.14940652408488547,
+              -0.05201598683437183,
+              0.6273770491803283,
+              0.17935514073380468,
+              0.014904363666472697
+            ]
+          },
+          {
+            "columna": "unidades_lag_5",
+            "importancia": 0.1534002243434899,
+            "desviacion": 0.2725825951296737,
+            "por_pliegue": [
+              0.6338710123675406,
+              0.2696308922064185,
+              0.007049180327869209,
+              -0.025308678097021975,
+              -0.11824128508735683
+            ]
+          },
+          {
+            "columna": "evento_Mother's day",
+            "importancia": 0.12566563286324528,
+            "desviacion": 0.25133126572649056,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.6283281643162264,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Easter",
+            "importancia": 0.11828494181262487,
+            "desviacion": 0.23656988362524978,
+            "por_pliegue": [
+              0.0,
+              0.5914247090631244,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "unidades_lag_3",
+            "importancia": 0.060031180203692955,
+            "desviacion": 0.07484863424989494,
+            "por_pliegue": [
+              0.14110616163572515,
+              0.12078288468320206,
+              0.007213114754098448,
+              0.08967757036690216,
+              -0.05862383042146302
+            ]
+          },
+          {
+            "columna": "productos_con_precio_semana_anterior",
+            "importancia": 0.048841229499097895,
+            "desviacion": 0.1254229492962587,
+            "por_pliegue": [
+              -0.01881415488476268,
+              0.26375337956976586,
+              -0.06278688524590166,
+              0.11703434958160167,
+              -0.05498054152521377
+            ]
+          },
+          {
+            "columna": "unidades_lag_4",
+            "importancia": 0.027180203472165265,
+            "desviacion": 0.04767918272617244,
+            "por_pliegue": [
+              0.09171900506322128,
+              0.03732220524274084,
+              -0.007868852459016296,
+              0.05778571010591556,
+              -0.04305705059203504
+            ]
+          },
+          {
+            "columna": "precio_medio_semana_anterior",
+            "importancia": 0.0033778025619790237,
+            "desviacion": 0.020563781256994866,
+            "por_pliegue": [
+              5.329070518200751e-16,
+              0.025273304337604507,
+              -0.034426229508196474,
+              0.010971970273274855,
+              0.015069967707211696
+            ]
+          },
+          {
+            "columna": "month",
+            "importancia": 0.0002950819672131999,
+            "desviacion": 0.0005901639344263997,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0014754098360659994,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Chanukah End",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Christmas",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Cinco De Mayo",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_ColumbusDay",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Eid al-Fitr",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_EidAlAdha",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Father's day",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Halloween",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_IndependenceDay",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_LaborDay",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_LentStart",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_LentWeek2",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_MartinLutherKingDay",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_MemorialDay",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_NBAFinalsEnd",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_NBAFinalsStart",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_NewYear",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_OrthodoxChristmas",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_OrthodoxEaster",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Pesach End",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_PresidentsDay",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Purim End",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Ramadan starts",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_StPatricksDay",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_SuperBowl",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Thanksgiving",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_ValentinesDay",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_VeteransDay",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "peso_de_las_dos_primeras": 0.6989153424049246
+      }
+    },
+    "dolares": {
+      "horizonte": 28,
+      "receta": {
+        "algoritmo": "HistGradientBoostingRegressor",
+        "hiperparametros": {
+          "categorical_features": "from_dtype",
+          "early_stopping": false,
+          "interaction_cst": null,
+          "l2_regularization": 0.0,
+          "learning_rate": 0.1,
+          "loss": "squared_error",
+          "max_bins": 255,
+          "max_depth": null,
+          "max_features": 1.0,
+          "max_iter": 100,
+          "max_leaf_nodes": 31,
+          "min_samples_leaf": 20,
+          "monotonic_cst": null,
+          "n_iter_no_change": 10,
+          "quantile": null,
+          "random_state": 42,
+          "scoring": "loss",
+          "tol": 1e-07,
+          "validation_fraction": 0.1,
+          "verbose": 0,
+          "warm_start": false
+        },
+        "semilla": 42,
+        "columnas": [
+          "store_id_ohe_CA_1",
+          "store_id_ohe_CA_2",
+          "store_id_ohe_CA_3",
+          "store_id_ohe_CA_4",
+          "store_id_ohe_TX_1",
+          "store_id_ohe_TX_2",
+          "store_id_ohe_TX_3",
+          "store_id_ohe_WI_1",
+          "store_id_ohe_WI_2",
+          "store_id_ohe_WI_3",
+          "dept_id_ohe_FOODS_1",
+          "dept_id_ohe_FOODS_2",
+          "dept_id_ohe_FOODS_3",
+          "dept_id_ohe_HOBBIES_1",
+          "dept_id_ohe_HOBBIES_2",
+          "dept_id_ohe_HOUSEHOLD_1",
+          "dept_id_ohe_HOUSEHOLD_2",
+          "weekday_ohe_Friday",
+          "weekday_ohe_Monday",
+          "weekday_ohe_Saturday",
+          "weekday_ohe_Sunday",
+          "weekday_ohe_Thursday",
+          "weekday_ohe_Tuesday",
+          "weekday_ohe_Wednesday",
+          "month_ohe_1",
+          "month_ohe_2",
+          "month_ohe_3",
+          "month_ohe_4",
+          "month_ohe_5",
+          "month_ohe_6",
+          "month_ohe_7",
+          "month_ohe_8",
+          "month_ohe_9",
+          "month_ohe_10",
+          "month_ohe_11",
+          "month_ohe_12",
+          "snap",
+          "evento_Chanukah End",
+          "evento_Christmas",
+          "evento_Cinco De Mayo",
+          "evento_ColumbusDay",
+          "evento_Easter",
+          "evento_Eid al-Fitr",
+          "evento_EidAlAdha",
+          "evento_Father's day",
+          "evento_Halloween",
+          "evento_IndependenceDay",
+          "evento_LaborDay",
+          "evento_LentStart",
+          "evento_LentWeek2",
+          "evento_MartinLutherKingDay",
+          "evento_MemorialDay",
+          "evento_Mother's day",
+          "evento_NBAFinalsEnd",
+          "evento_NBAFinalsStart",
+          "evento_NewYear",
+          "evento_OrthodoxChristmas",
+          "evento_OrthodoxEaster",
+          "evento_Pesach End",
+          "evento_PresidentsDay",
+          "evento_Purim End",
+          "evento_Ramadan starts",
+          "evento_StPatricksDay",
+          "evento_SuperBowl",
+          "evento_Thanksgiving",
+          "evento_ValentinesDay",
+          "evento_VeteransDay",
+          "precio_medio_semana_anterior_ss",
+          "productos_con_precio_semana_anterior_ss",
+          "dia_del_mes_ss",
+          "dolares_lag_1_rs",
+          "dolares_lag_2_rs",
+          "dolares_lag_3_rs",
+          "dolares_lag_4_rs",
+          "dolares_lag_5_rs",
+          "dolares_lag_6_rs",
+          "dolares_lag_7_rs",
+          "dolares_lag_14_rs",
+          "dolares_lag_21_rs",
+          "dolares_lag_28_rs",
+          "dolares_media_7_rs",
+          "dolares_media_28_rs"
+        ],
+        "n_columnas": 82,
+        "preprocesador": "scripts/preparacion_prevision.py, ajustado dentro de cada pliegue"
+      },
+      "pliegues": [
+        {
+          "pliegue": 1,
+          "origen": "2014-01-02",
+          "dias_prueba": {
+            "desde": "2014-01-03",
+            "hasta": "2014-01-30",
+            "dias": 28
+          },
+          "filas_ajuste": 72450,
+          "filas_prueba": 1960,
+          "filas_medidas": 1960,
+          "filas_fuera_del_error": 0,
+          "a_un_dia": {
+            "modelo": {
+              "error": 16.482387168803555,
+              "sesgo": 0.727687028211907,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 1, a un día con los retardos reales"
+            },
+            "entrenamiento": {
+              "error": 15.41480211106968,
+              "sesgo": -0.00850516624937727,
+              "filas": "entrenamiento"
+            }
+          },
+          "recursiva": {
+            "modelo": {
+              "error": 19.29534957043979,
+              "sesgo": 2.9174453059616683,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 1, recursiva desde el origen"
+            }
+          },
+          "referencias": {
+            "trivial_mediana": {
+              "error": 69.94649101988136,
+              "sesgo": -37.90677997516767,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 1"
+            },
+            "repetir_semana_anterior": {
+              "error": 27.065637846845917,
+              "sesgo": -4.756804589547489,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 1"
+            },
+            "media_28_dias": {
+              "error": 25.473118472306965,
+              "sesgo": -0.7714439689980115,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 1"
+            },
+            "media_mismo_dia_4_semanas": {
+              "error": 23.736891363227333,
+              "sesgo": -0.7714439689980137,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 1"
+            }
+          },
+          "regla_que_menos_falla": "media_mismo_dia_4_semanas",
+          "ventaja_recursiva_frente_a_esa_regla": 4.441541792787543,
+          "recursiva_gana_a_esa_regla": true,
+          "recursiva_a_un_dia_igual": true,
+          "diferencia_maxima_dia_1": 0.0,
+          "segundos": {
+            "ajuste": 1.0707646000082605,
+            "recursion": 3.4900025999959325
+          }
+        },
+        {
+          "pliegue": 2,
+          "origen": "2014-01-30",
+          "dias_prueba": {
+            "desde": "2014-01-31",
+            "hasta": "2014-02-27",
+            "dias": 28
+          },
+          "filas_ajuste": 74410,
+          "filas_prueba": 1960,
+          "filas_medidas": 1960,
+          "filas_fuera_del_error": 0,
+          "a_un_dia": {
+            "modelo": {
+              "error": 16.16751014016573,
+              "sesgo": -1.330409153301027,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 2, a un día con los retardos reales"
+            },
+            "entrenamiento": {
+              "error": 15.433120369556688,
+              "sesgo": -0.010136827184753106,
+              "filas": "entrenamiento"
+            }
+          },
+          "recursiva": {
+            "modelo": {
+              "error": 16.957253277122142,
+              "sesgo": -2.4976522309700724,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 2, recursiva desde el origen"
+            }
+          },
+          "referencias": {
+            "trivial_mediana": {
+              "error": 69.46343064457777,
+              "sesgo": -43.077039177272155,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 2"
+            },
+            "repetir_semana_anterior": {
+              "error": 24.818225598059993,
+              "sesgo": -15.473999872253948,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 2"
+            },
+            "media_28_dias": {
+              "error": 23.5861834557513,
+              "sesgo": -8.42723434549604,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 2"
+            },
+            "media_mismo_dia_4_semanas": {
+              "error": 19.128275970422727,
+              "sesgo": -8.427234345496036,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 2"
+            }
+          },
+          "regla_que_menos_falla": "media_mismo_dia_4_semanas",
+          "ventaja_recursiva_frente_a_esa_regla": 2.1710226933005856,
+          "recursiva_gana_a_esa_regla": true,
+          "recursiva_a_un_dia_igual": true,
+          "diferencia_maxima_dia_1": 0.0,
+          "segundos": {
+            "ajuste": 1.0867868000059389,
+            "recursion": 3.4930564999958733
+          }
+        },
+        {
+          "pliegue": 3,
+          "origen": "2014-02-27",
+          "dias_prueba": {
+            "desde": "2014-02-28",
+            "hasta": "2014-03-27",
+            "dias": 28
+          },
+          "filas_ajuste": 76370,
+          "filas_prueba": 1960,
+          "filas_medidas": 1960,
+          "filas_fuera_del_error": 0,
+          "a_un_dia": {
+            "modelo": {
+              "error": 15.425992643161651,
+              "sesgo": 1.5850225466817516,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 3, a un día con los retardos reales"
+            },
+            "entrenamiento": {
+              "error": 15.419240547207272,
+              "sesgo": -0.009242621019870917,
+              "filas": "entrenamiento"
+            }
+          },
+          "recursiva": {
+            "modelo": {
+              "error": 16.634147465655452,
+              "sesgo": 4.717863326728888,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 3, recursiva desde el origen"
+            }
+          },
+          "referencias": {
+            "trivial_mediana": {
+              "error": 69.1635830630267,
+              "sesgo": -41.558268159394956,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 3"
+            },
+            "repetir_semana_anterior": {
+              "error": 21.16614849063471,
+              "sesgo": -4.658670220174712,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 3"
+            },
+            "media_28_dias": {
+              "error": 22.860212287035306,
+              "sesgo": 2.2294657752980265,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 3"
+            },
+            "media_mismo_dia_4_semanas": {
+              "error": 17.754020943565727,
+              "sesgo": 2.229465775298026,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 3"
+            }
+          },
+          "regla_que_menos_falla": "media_mismo_dia_4_semanas",
+          "ventaja_recursiva_frente_a_esa_regla": 1.119873477910275,
+          "recursiva_gana_a_esa_regla": true,
+          "recursiva_a_un_dia_igual": true,
+          "diferencia_maxima_dia_1": 0.0,
+          "segundos": {
+            "ajuste": 1.1274119000008795,
+            "recursion": 3.521270800003549
+          }
+        },
+        {
+          "pliegue": 4,
+          "origen": "2014-03-27",
+          "dias_prueba": {
+            "desde": "2014-03-28",
+            "hasta": "2014-04-24",
+            "dias": 28
+          },
+          "filas_ajuste": 78330,
+          "filas_prueba": 1960,
+          "filas_medidas": 1960,
+          "filas_fuera_del_error": 0,
+          "a_un_dia": {
+            "modelo": {
+              "error": 14.656883001008646,
+              "sesgo": -0.4960210023248506,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 4, a un día con los retardos reales"
+            },
+            "entrenamiento": {
+              "error": 15.426828944239134,
+              "sesgo": -0.00907273876792802,
+              "filas": "entrenamiento"
+            }
+          },
+          "recursiva": {
+            "modelo": {
+              "error": 16.115642202672685,
+              "sesgo": 0.43107816989834385,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 4, recursiva desde el origen"
+            }
+          },
+          "referencias": {
+            "trivial_mediana": {
+              "error": 69.17829168514605,
+              "sesgo": -42.15691725870238,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 4"
+            },
+            "repetir_semana_anterior": {
+              "error": 23.56227521080147,
+              "sesgo": -7.914841376489946,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 4"
+            },
+            "media_28_dias": {
+              "error": 21.598437176794114,
+              "sesgo": -1.2891676863960058,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 4"
+            },
+            "media_mismo_dia_4_semanas": {
+              "error": 19.621190598312527,
+              "sesgo": -1.2891676863960073,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 4"
+            }
+          },
+          "regla_que_menos_falla": "media_mismo_dia_4_semanas",
+          "ventaja_recursiva_frente_a_esa_regla": 3.505548395639842,
+          "recursiva_gana_a_esa_regla": true,
+          "recursiva_a_un_dia_igual": true,
+          "diferencia_maxima_dia_1": 0.0,
+          "segundos": {
+            "ajuste": 1.1454392000014195,
+            "recursion": 3.5194565999991028
+          }
+        },
+        {
+          "pliegue": 5,
+          "origen": "2014-04-24",
+          "dias_prueba": {
+            "desde": "2014-04-25",
+            "hasta": "2014-05-22",
+            "dias": 28
+          },
+          "filas_ajuste": 80290,
+          "filas_prueba": 1960,
+          "filas_medidas": 1960,
+          "filas_fuera_del_error": 0,
+          "a_un_dia": {
+            "modelo": {
+              "error": 15.272444447427374,
+              "sesgo": 1.7328972967995921,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 5, a un día con los retardos reales"
+            },
+            "entrenamiento": {
+              "error": 15.390943188161739,
+              "sesgo": -0.008693051711758501,
+              "filas": "entrenamiento"
+            }
+          },
+          "recursiva": {
+            "modelo": {
+              "error": 18.612176577034813,
+              "sesgo": 5.55641534809134,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 5, recursiva desde el origen"
+            }
+          },
+          "referencias": {
+            "trivial_mediana": {
+              "error": 69.74858823900054,
+              "sesgo": -40.164833504465626,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 5"
+            },
+            "repetir_semana_anterior": {
+              "error": 22.640620750491692,
+              "sesgo": -1.731139175234533,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 5"
+            },
+            "media_28_dias": {
+              "error": 21.14276264619227,
+              "sesgo": 3.0558766741656265,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 5"
+            },
+            "media_mismo_dia_4_semanas": {
+              "error": 17.694809917785772,
+              "sesgo": 3.055876674165625,
+              "filas": "fuera de pliegue: 1960 filas de prueba del pliegue 5"
+            }
+          },
+          "regla_que_menos_falla": "media_mismo_dia_4_semanas",
+          "ventaja_recursiva_frente_a_esa_regla": -0.9173666592490406,
+          "recursiva_gana_a_esa_regla": false,
+          "recursiva_a_un_dia_igual": true,
+          "diferencia_maxima_dia_1": 0.0,
+          "segundos": {
+            "ajuste": 1.1765780999994604,
+            "recursion": 3.460067499996512
+          }
+        }
+      ],
+      "resumen": {
+        "a_un_dia": {
+          "error": 15.60104348011339,
+          "error_desviacion": 0.6523358497963808,
+          "sesgo": 0.4438353432134747,
+          "sesgo_desviacion": 1.1896078527212324,
+          "filas": "fuera de pliegue: los 5 pliegues"
+        },
+        "recursiva": {
+          "error": 17.522913818584975,
+          "error_desviacion": 1.2180568731072412,
+          "sesgo": 2.2250299839420338,
+          "sesgo_desviacion": 2.9432558812207748,
+          "filas": "fuera de pliegue: los 5 pliegues"
+        },
+        "entrenamiento": {
+          "error": 15.416987032046901,
+          "error_desviacion": 0.014458781617921674,
+          "sesgo": -0.009130080986737562,
+          "sesgo_desviacion": 0.0005676273975933891,
+          "filas": "entrenamiento"
+        },
+        "trivial_mediana": {
+          "error": 69.50007693032649,
+          "error_desviacion": 0.3095675134433112,
+          "sesgo": -40.97276761500056,
+          "sesgo_desviacion": 1.8014448539172176,
+          "filas": "fuera de pliegue: los 5 pliegues"
+        },
+        "repetir_semana_anterior": {
+          "error": 23.850581579366757,
+          "error_desviacion": 2.0013109966927494,
+          "sesgo": -6.907091046740126,
+          "sesgo_desviacion": 4.709078325728696,
+          "filas": "fuera de pliegue: los 5 pliegues"
+        },
+        "media_28_dias": {
+          "error": 22.932142807615993,
+          "error_desviacion": 1.5407889258129264,
+          "sesgo": -1.040500710285281,
+          "sesgo_desviacion": 4.053912902006481,
+          "filas": "fuera de pliegue: los 5 pliegues"
+        },
+        "media_mismo_dia_4_semanas": {
+          "error": 19.58703775866282,
+          "error_desviacion": 2.2078673230219867,
+          "sesgo": -1.0405007102852812,
+          "sesgo_desviacion": 4.053912902006479,
+          "filas": "fuera de pliegue: los 5 pliegues"
+        }
+      },
+      "pliegues_que_gana_la_recursiva": 4,
+      "importancias": {
+        "metodo": "permutacion por variable de origen",
+        "repeticiones": 10,
+        "puntuacion": "menos el error de reglas, apartado 6, con la previsión acotada",
+        "filas": "fuera de pliegue: las filas de prueba de los 5 pliegues, a un día",
+        "valores": [
+          {
+            "columna": "dolares_media_7",
+            "importancia": 22.52202897161971,
+            "desviacion": 0.8193096337093407,
+            "por_pliegue": [
+              22.7343362827671,
+              23.91117337596834,
+              21.94578525169904,
+              22.521265899853553,
+              21.49758404781053
+            ]
+          },
+          {
+            "columna": "dolares_lag_1",
+            "importancia": 8.602936200390767,
+            "desviacion": 0.9915307502092301,
+            "por_pliegue": [
+              8.429790798741529,
+              9.863936881428444,
+              8.354569873867376,
+              9.3835057270884,
+              6.982877720828087
+            ]
+          },
+          {
+            "columna": "dolares_lag_7",
+            "importancia": 4.615673479724527,
+            "desviacion": 0.27740454310083695,
+            "por_pliegue": [
+              4.418963772543608,
+              4.7883483555192665,
+              4.767249514311857,
+              4.929491548184887,
+              4.174314208063017
+            ]
+          },
+          {
+            "columna": "dolares_lag_28",
+            "importancia": 3.29826740875468,
+            "desviacion": 0.31647621655627634,
+            "por_pliegue": [
+              3.3023894857430323,
+              2.894463330374571,
+              3.0143592216445754,
+              3.7483667535630496,
+              3.5317582524481717
+            ]
+          },
+          {
+            "columna": "dolares_media_28",
+            "importancia": 2.800342464571848,
+            "desviacion": 0.265083566501951,
+            "por_pliegue": [
+              2.8178262717263385,
+              2.6213486589785098,
+              2.8828204311352783,
+              2.44674502729665,
+              3.2329719337224647
+            ]
+          },
+          {
+            "columna": "weekday",
+            "importancia": 2.2081247069685834,
+            "desviacion": 0.4096419557812456,
+            "por_pliegue": [
+              2.9888703278874145,
+              2.227407935667317,
+              1.8458060137978136,
+              1.9574328085590564,
+              2.0211064489313153
+            ]
+          },
+          {
+            "columna": "dolares_lag_21",
+            "importancia": 1.2505236425983008,
+            "desviacion": 0.22859611877287195,
+            "por_pliegue": [
+              1.5074179992466479,
+              1.29089900252897,
+              1.1270224898826577,
+              1.4493890376630583,
+              0.8778896836701712
+            ]
+          },
+          {
+            "columna": "snap",
+            "importancia": 1.1557090454581918,
+            "desviacion": 0.24980355797449033,
+            "por_pliegue": [
+              1.126937954289121,
+              1.0937263696894426,
+              1.1427613854979648,
+              1.596014920561858,
+              0.8191045972525732
+            ]
+          },
+          {
+            "columna": "dolares_lag_6",
+            "importancia": 1.0130718538944756,
+            "desviacion": 0.18991109653770277,
+            "por_pliegue": [
+              1.143845191826652,
+              0.9621158335184973,
+              1.1367878082183502,
+              1.1609193274103276,
+              0.6616911084985512
+            ]
+          },
+          {
+            "columna": "dolares_lag_2",
+            "importancia": 0.5954224878051695,
+            "desviacion": 0.22225939707229073,
+            "por_pliegue": [
+              0.6899499028620759,
+              0.3327912107274365,
+              0.8069324173250276,
+              0.822121431105464,
+              0.3253174770058438
+            ]
+          },
+          {
+            "columna": "dept_id",
+            "importancia": 0.4902239044340092,
+            "desviacion": 0.11616141662446693,
+            "por_pliegue": [
+              0.6037982334244998,
+              0.45322536737552815,
+              0.30010709615205633,
+              0.6198270001735493,
+              0.47416182504441284
+            ]
+          },
+          {
+            "columna": "dolares_lag_14",
+            "importancia": 0.4292008382193385,
+            "desviacion": 0.10082918989400574,
+            "por_pliegue": [
+              0.48044555488707064,
+              0.5388653403397676,
+              0.5099895287402754,
+              0.32326079807000047,
+              0.29344296905957845
+            ]
+          },
+          {
+            "columna": "store_id",
+            "importancia": 0.4046294876856605,
+            "desviacion": 0.08656291506050569,
+            "por_pliegue": [
+              0.36727688693897775,
+              0.2883742213303105,
+              0.3949109333626188,
+              0.5538314921210528,
+              0.4187539046753427
+            ]
+          },
+          {
+            "columna": "dia_del_mes",
+            "importancia": 0.2944714919418879,
+            "desviacion": 0.17218578647636812,
+            "por_pliegue": [
+              0.14314206348988848,
+              0.5923947843362349,
+              0.1055652916798282,
+              0.3158744959430891,
+              0.31538082426039865
+            ]
+          },
+          {
+            "columna": "productos_con_precio_semana_anterior",
+            "importancia": 0.14848181564457336,
+            "desviacion": 0.10777935878890808,
+            "por_pliegue": [
+              0.08820927679651795,
+              0.10725177001879019,
+              0.12054776470243667,
+              0.3608348562454232,
+              0.06556541045969873
+            ]
+          },
+          {
+            "columna": "dolares_lag_5",
+            "importancia": 0.12972693232722698,
+            "desviacion": 0.10643291937071987,
+            "por_pliegue": [
+              0.12125996265742814,
+              0.10967125584333175,
+              0.17554090007767248,
+              0.28527246701742615,
+              -0.043109923959723594
+            ]
+          },
+          {
+            "columna": "dolares_lag_3",
+            "importancia": 0.09228256558278689,
+            "desviacion": 0.09336850209008915,
+            "por_pliegue": [
+              0.27130231238989994,
+              0.08304336421436567,
+              0.03865175519274722,
+              0.0644840008784664,
+              0.00393139523845516
+            ]
+          },
+          {
+            "columna": "evento_Easter",
+            "importancia": 0.06489502640150263,
+            "desviacion": 0.12979005280300526,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.32447513200751316,
+              0.0
+            ]
+          },
+          {
+            "columna": "dolares_lag_4",
+            "importancia": 0.060356859213999026,
+            "desviacion": 0.028264287123275958,
+            "por_pliegue": [
+              0.018143606597871197,
+              0.10204107527420199,
+              0.06969069783189533,
+              0.06916305869419599,
+              0.04274585767183066
+            ]
+          },
+          {
+            "columna": "evento_Mother's day",
+            "importancia": 0.04337622494384224,
+            "desviacion": 0.08675244988768448,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.2168811247192112
+            ]
+          },
+          {
+            "columna": "precio_medio_semana_anterior",
+            "importancia": 0.03651554438208567,
+            "desviacion": 0.04630922914011998,
+            "por_pliegue": [
+              0.041860702202398056,
+              0.11293202197797499,
+              0.04517682548205393,
+              0.009898508023266573,
+              -0.027290335775265184
+            ]
+          },
+          {
+            "columna": "evento_ValentinesDay",
+            "importancia": 0.020541790776250794,
+            "desviacion": 0.04108358155250159,
+            "por_pliegue": [
+              0.0,
+              0.10270895388125396,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Cinco De Mayo",
+            "importancia": 0.0025313180759006216,
+            "desviacion": 0.005062636151801243,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.012656590379503108
+            ]
+          },
+          {
+            "columna": "evento_SuperBowl",
+            "importancia": 0.0011224538672415462,
+            "desviacion": 0.0022449077344830924,
+            "por_pliegue": [
+              0.0,
+              0.005612269336207731,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_LentStart",
+            "importancia": 1.1056326735712219e-05,
+            "desviacion": 2.2112653471424438e-05,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              5.5281633678561096e-05,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Chanukah End",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Christmas",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_ColumbusDay",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Eid al-Fitr",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_EidAlAdha",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Father's day",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Halloween",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_IndependenceDay",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_LaborDay",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_LentWeek2",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_MemorialDay",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_NBAFinalsEnd",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_NBAFinalsStart",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_NewYear",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_OrthodoxChristmas",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_OrthodoxEaster",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Pesach End",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Purim End",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Ramadan starts",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_StPatricksDay",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_Thanksgiving",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_VeteransDay",
+            "importancia": 0.0,
+            "desviacion": 0.0,
+            "por_pliegue": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_PresidentsDay",
+            "importancia": -0.00016246578042490966,
+            "desviacion": 0.0003249315608498193,
+            "por_pliegue": [
+              0.0,
+              -0.0008123289021245483,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "evento_MartinLutherKingDay",
+            "importancia": -0.00030904643504058526,
+            "desviacion": 0.0006180928700811705,
+            "por_pliegue": [
+              -0.0015452321752029263,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "columna": "month",
+            "importancia": -0.00039186610608243796,
+            "desviacion": 0.02782172355440437,
+            "por_pliegue": [
+              0.0,
+              0.004943519223400372,
+              0.03852967570210595,
+              -0.048503641678145824,
+              0.0030711162222273104
+            ]
+          }
+        ],
+        "peso_de_las_dos_primeras": 0.6190269636550693
+      }
+    }
+  },
+  "coste": {
+    "hoja": 822,
+    "filas": 82250,
+    "rejillas": {
+      "HistGradientBoosting": {
+        "learning_rate": [
+          0.05,
+          0.1
+        ],
+        "max_depth": [
+          3,
+          5,
+          null
+        ],
+        "max_iter": [
+          100,
+          200,
+          500
+        ],
+        "min_samples_leaf": [
+          205,
+          822
+        ],
+        "l2_regularization": [
+          0,
+          1
+        ]
+      },
+      "bosque": {
+        "max_depth": [
+          5,
+          10,
+          15
+        ],
+        "n_estimators": [
+          100,
+          300,
+          500
+        ],
+        "min_samples_leaf": [
+          205,
+          822
+        ],
+        "max_features": [
+          0.3,
+          0.5,
+          1.0
+        ]
+      },
+      "Ridge": {
+        "alpha": [
+          82.25,
+          260.0973375488492,
+          822.5,
+          2600.973375488492,
+          8225.0,
+          26009.73375488492,
+          82250.0,
+          260097.3375488492,
+          822500.0,
+          2600973.3754884917,
+          8225000.0,
+          26009733.75488492,
+          82250000.0
+        ]
+      }
+    },
+    "combinaciones": {
+      "HistGradientBoosting": 72,
+      "bosque": 54,
+      "Ridge": 13
+    },
+    "algoritmos": [
+      {
+        "objetivo": "unidades",
+        "algoritmo": "HistGradientBoosting",
+        "columnas": "HistGradientBoosting",
+        "n_columnas": 82,
+        "candidato": {
+          "categorical_features": "from_dtype",
+          "early_stopping": false,
+          "interaction_cst": null,
+          "l2_regularization": 0,
+          "learning_rate": 0.1,
+          "loss": "squared_error",
+          "max_bins": 255,
+          "max_depth": 5,
+          "max_features": 1.0,
+          "max_iter": 200,
+          "max_leaf_nodes": 31,
+          "min_samples_leaf": 822,
+          "monotonic_cst": null,
+          "n_iter_no_change": 10,
+          "quantile": null,
+          "random_state": 42,
+          "scoring": "loss",
+          "tol": 1e-07,
+          "validation_fraction": 0.1,
+          "verbose": 0,
+          "warm_start": false
+        },
+        "filas_ajuste": 82250,
+        "segundos_ajuste": 1.358466400008183,
+        "segundos_recursion": 1.235125799998059,
+        "horizonte": 10
+      },
+      {
+        "objetivo": "unidades",
+        "algoritmo": "bosque",
+        "columnas": "HistGradientBoosting",
+        "n_columnas": 82,
+        "candidato": {
+          "bootstrap": true,
+          "ccp_alpha": 0.0,
+          "criterion": "squared_error",
+          "max_depth": 10,
+          "max_features": 0.5,
+          "max_leaf_nodes": null,
+          "max_samples": null,
+          "min_impurity_decrease": 0.0,
+          "min_samples_leaf": 822,
+          "min_samples_split": 2,
+          "min_weight_fraction_leaf": 0.0,
+          "monotonic_cst": null,
+          "n_estimators": 300,
+          "n_jobs": -1,
+          "oob_score": false,
+          "random_state": 42,
+          "verbose": 0,
+          "warm_start": false
+        },
+        "filas_ajuste": 82250,
+        "segundos_ajuste": 6.135150500005693,
+        "segundos_recursion": 1.471079599999939,
+        "horizonte": 10
+      },
+      {
+        "objetivo": "unidades",
+        "algoritmo": "Ridge",
+        "columnas": "Ridge",
+        "n_columnas": 69,
+        "candidato": {
+          "alpha": 82250.0,
+          "copy_X": true,
+          "fit_intercept": true,
+          "max_iter": null,
+          "positive": false,
+          "random_state": 42,
+          "solver": "auto",
+          "tol": 0.0001
+        },
+        "filas_ajuste": 82250,
+        "segundos_ajuste": 0.31633200000214856,
+        "segundos_recursion": 1.1000488999998197,
+        "horizonte": 10
+      },
+      {
+        "objetivo": "dolares",
+        "algoritmo": "HistGradientBoosting",
+        "columnas": "HistGradientBoosting",
+        "n_columnas": 82,
+        "candidato": {
+          "categorical_features": "from_dtype",
+          "early_stopping": false,
+          "interaction_cst": null,
+          "l2_regularization": 0,
+          "learning_rate": 0.1,
+          "loss": "squared_error",
+          "max_bins": 255,
+          "max_depth": 5,
+          "max_features": 1.0,
+          "max_iter": 200,
+          "max_leaf_nodes": 31,
+          "min_samples_leaf": 822,
+          "monotonic_cst": null,
+          "n_iter_no_change": 10,
+          "quantile": null,
+          "random_state": 42,
+          "scoring": "loss",
+          "tol": 1e-07,
+          "validation_fraction": 0.1,
+          "verbose": 0,
+          "warm_start": false
+        },
+        "filas_ajuste": 82250,
+        "segundos_ajuste": 1.3835346999985632,
+        "segundos_recursion": 3.4969974999985425,
+        "horizonte": 28
+      },
+      {
+        "objetivo": "dolares",
+        "algoritmo": "bosque",
+        "columnas": "HistGradientBoosting",
+        "n_columnas": 82,
+        "candidato": {
+          "bootstrap": true,
+          "ccp_alpha": 0.0,
+          "criterion": "squared_error",
+          "max_depth": 10,
+          "max_features": 0.5,
+          "max_leaf_nodes": null,
+          "max_samples": null,
+          "min_impurity_decrease": 0.0,
+          "min_samples_leaf": 822,
+          "min_samples_split": 2,
+          "min_weight_fraction_leaf": 0.0,
+          "monotonic_cst": null,
+          "n_estimators": 300,
+          "n_jobs": -1,
+          "oob_score": false,
+          "random_state": 42,
+          "verbose": 0,
+          "warm_start": false
+        },
+        "filas_ajuste": 82250,
+        "segundos_ajuste": 8.084328700002516,
+        "segundos_recursion": 4.157217500003753,
+        "horizonte": 28
+      },
+      {
+        "objetivo": "dolares",
+        "algoritmo": "Ridge",
+        "columnas": "Ridge",
+        "n_columnas": 69,
+        "candidato": {
+          "alpha": 82250.0,
+          "copy_X": true,
+          "fit_intercept": true,
+          "max_iter": null,
+          "positive": false,
+          "random_state": 42,
+          "solver": "auto",
+          "tol": 0.0001
+        },
+        "filas_ajuste": 82250,
+        "segundos_ajuste": 0.2977504000009503,
+        "segundos_recursion": 3.016395900005591,
+        "horizonte": 28
+      }
+    ],
+    "niveles": [
+      {
+        "nivel": "rapido",
+        "candidatos": 5,
+        "pliegues": 3,
+        "por_algoritmo": [
+          {
+            "algoritmo": "HistGradientBoosting",
+            "objetivo": "unidades",
+            "combinaciones": 72,
+            "candidatos": 5,
+            "parte_del_espacio": 0.06944444444444445,
+            "tipo": "aleatoria",
+            "pliegues": 3,
+            "modelos": 16,
+            "segundos_a_un_dia": 21.735462400130928,
+            "segundos_recursiva": 40.26234940010181
+          },
+          {
+            "algoritmo": "HistGradientBoosting",
+            "objetivo": "dolares",
+            "combinaciones": 72,
+            "candidatos": 5,
+            "parte_del_espacio": 0.06944444444444445,
+            "tipo": "aleatoria",
+            "pliegues": 3,
+            "modelos": 16,
+            "segundos_a_un_dia": 22.13655519997701,
+            "segundos_recursiva": 74.59151769995515
+          },
+          {
+            "algoritmo": "bosque",
+            "objetivo": "unidades",
+            "combinaciones": 54,
+            "candidatos": 5,
+            "parte_del_espacio": 0.09259259259259259,
+            "tipo": "aleatoria",
+            "pliegues": 3,
+            "modelos": 16,
+            "segundos_a_un_dia": 98.16240800009109,
+            "segundos_recursiva": 120.22860200009018
+          },
+          {
+            "algoritmo": "bosque",
+            "objetivo": "dolares",
+            "combinaciones": 54,
+            "candidatos": 5,
+            "parte_del_espacio": 0.09259259259259259,
+            "tipo": "aleatoria",
+            "pliegues": 3,
+            "modelos": 16,
+            "segundos_a_un_dia": 129.34925920004025,
+            "segundos_recursiva": 191.70752170009655
+          },
+          {
+            "algoritmo": "Ridge",
+            "objetivo": "unidades",
+            "combinaciones": 13,
+            "candidatos": 5,
+            "parte_del_espacio": 0.38461538461538464,
+            "tipo": "aleatoria",
+            "pliegues": 3,
+            "modelos": 16,
+            "segundos_a_un_dia": 5.061312000034377,
+            "segundos_recursiva": 21.562045500031672
+          },
+          {
+            "algoritmo": "Ridge",
+            "objetivo": "dolares",
+            "combinaciones": 13,
+            "candidatos": 5,
+            "parte_del_espacio": 0.38461538461538464,
+            "tipo": "aleatoria",
+            "pliegues": 3,
+            "modelos": 16,
+            "segundos_a_un_dia": 4.764006400015205,
+            "segundos_recursiva": 50.00994490009907
+          }
+        ],
+        "totales": {
+          "los_tres": {
+            "modelos": 96,
+            "minutos_a_un_dia": 4.686816720004814,
+            "minutos_recursiva": 8.306033020006241
+          },
+          "sin_bosque": {
+            "modelos": 64,
+            "minutos_a_un_dia": 0.8949556000026253,
+            "minutos_recursiva": 3.1070976250031284
+          }
+        }
+      },
+      {
+        "nivel": "equilibrado",
+        "candidatos": 15,
+        "pliegues": 5,
+        "por_algoritmo": [
+          {
+            "algoritmo": "HistGradientBoosting",
+            "objetivo": "unidades",
+            "combinaciones": 72,
+            "candidatos": 15,
+            "parte_del_espacio": 0.20833333333333334,
+            "tipo": "aleatoria",
+            "pliegues": 5,
+            "modelos": 76,
+            "segundos_a_un_dia": 103.2434464006219,
+            "segundos_recursiva": 195.87788140047633
+          },
+          {
+            "algoritmo": "HistGradientBoosting",
+            "objetivo": "dolares",
+            "combinaciones": 72,
+            "candidatos": 15,
+            "parte_del_espacio": 0.20833333333333334,
+            "tipo": "aleatoria",
+            "pliegues": 5,
+            "modelos": 76,
+            "segundos_a_un_dia": 105.1486371998908,
+            "segundos_recursiva": 367.4234496997815
+          },
+          {
+            "algoritmo": "bosque",
+            "objetivo": "unidades",
+            "combinaciones": 54,
+            "candidatos": 15,
+            "parte_del_espacio": 0.2777777777777778,
+            "tipo": "aleatoria",
+            "pliegues": 5,
+            "modelos": 76,
+            "segundos_a_un_dia": 466.2714380004327,
+            "segundos_recursiva": 576.6024080004281
+          },
+          {
+            "algoritmo": "bosque",
+            "objetivo": "dolares",
+            "combinaciones": 54,
+            "candidatos": 15,
+            "parte_del_espacio": 0.2777777777777778,
+            "tipo": "aleatoria",
+            "pliegues": 5,
+            "modelos": 76,
+            "segundos_a_un_dia": 614.4089812001912,
+            "segundos_recursiva": 926.2002937004727
+          },
+          {
+            "algoritmo": "Ridge",
+            "objetivo": "unidades",
+            "combinaciones": 13,
+            "candidatos": 13,
+            "parte_del_espacio": 1.0,
+            "tipo": "rejilla",
+            "pliegues": 5,
+            "modelos": 66,
+            "segundos_a_un_dia": 20.877912000141805,
+            "segundos_recursiva": 92.38109050013009
+          },
+          {
+            "algoritmo": "Ridge",
+            "objetivo": "dolares",
+            "combinaciones": 13,
+            "candidatos": 13,
+            "parte_del_espacio": 1.0,
+            "tipo": "rejilla",
+            "pliegues": 5,
+            "modelos": 66,
+            "segundos_a_un_dia": 19.65152640006272,
+            "segundos_recursiva": 215.71725990042614
+          }
+        ],
+        "totales": {
+          "los_tres": {
+            "modelos": 436,
+            "minutos_a_un_dia": 22.160032353355685,
+            "minutos_recursiva": 39.57003972002858
+          },
+          "sin_bosque": {
+            "modelos": 284,
+            "minutos_a_un_dia": 4.148692033345287,
+            "minutos_recursiva": 14.523328025013567
+          }
+        }
+      },
+      {
+        "nivel": "exhaustivo",
+        "candidatos": 40,
+        "pliegues": 5,
+        "por_algoritmo": [
+          {
+            "algoritmo": "HistGradientBoosting",
+            "objetivo": "unidades",
+            "combinaciones": 72,
+            "candidatos": 40,
+            "parte_del_espacio": 0.5555555555555556,
+            "tipo": "aleatoria",
+            "pliegues": 5,
+            "modelos": 201,
+            "segundos_a_un_dia": 273.0517464016448,
+            "segundos_recursiva": 520.0769064012566
+          },
+          {
+            "algoritmo": "HistGradientBoosting",
+            "objetivo": "dolares",
+            "combinaciones": 72,
+            "candidatos": 40,
+            "parte_del_espacio": 0.5555555555555556,
+            "tipo": "aleatoria",
+            "pliegues": 5,
+            "modelos": 201,
+            "segundos_a_un_dia": 278.0904746997112,
+            "segundos_recursiva": 977.4899746994197
+          },
+          {
+            "algoritmo": "bosque",
+            "objetivo": "unidades",
+            "combinaciones": 54,
+            "candidatos": 40,
+            "parte_del_espacio": 0.7407407407407407,
+            "tipo": "aleatoria",
+            "pliegues": 5,
+            "modelos": 201,
+            "segundos_a_un_dia": 1233.1652505011443,
+            "segundos_recursiva": 1527.3811705011321
+          },
+          {
+            "algoritmo": "bosque",
+            "objetivo": "dolares",
+            "combinaciones": 54,
+            "candidatos": 40,
+            "parte_del_espacio": 0.7407407407407407,
+            "tipo": "aleatoria",
+            "pliegues": 5,
+            "modelos": 201,
+            "segundos_a_un_dia": 1624.9500687005057,
+            "segundos_recursiva": 2456.3935687012563
+          },
+          {
+            "algoritmo": "Ridge",
+            "objetivo": "unidades",
+            "combinaciones": 13,
+            "candidatos": 13,
+            "parte_del_espacio": 1.0,
+            "tipo": "rejilla",
+            "pliegues": 5,
+            "modelos": 66,
+            "segundos_a_un_dia": 20.877912000141805,
+            "segundos_recursiva": 92.38109050013009
+          },
+          {
+            "algoritmo": "Ridge",
+            "objetivo": "dolares",
+            "combinaciones": 13,
+            "candidatos": 13,
+            "parte_del_espacio": 1.0,
+            "tipo": "rejilla",
+            "pliegues": 5,
+            "modelos": 66,
+            "segundos_a_un_dia": 19.65152640006272,
+            "segundos_recursiva": 215.71725990042614
+          }
+        ],
+        "totales": {
+          "los_tres": {
+            "modelos": 936,
+            "minutos_a_un_dia": 57.49644964505351,
+            "minutos_recursiva": 96.49066617839368
+          },
+          "sin_bosque": {
+            "modelos": 534,
+            "minutos_a_un_dia": 9.861194325026009,
+            "minutos_recursiva": 30.094420525020542
+          }
+        }
+      }
+    ],
+    "como_se_estima": "modelos = candidatos × pliegues + 1 reajuste, por algoritmo y objetivo; el tiempo, modelos por el ajuste medido del candidato central, y en la recursiva además una previsión recursiva por cada ajuste de pliegue",
+    "limites": [
+      "el ajuste del candidato central no es la media de la rejilla: un candidato con max_iter o n_estimators de 500 tarda más y uno de 100 menos",
+      "cada pliegue entrena con menos filas que la tabla entera: la estimación queda por arriba",
+      "en el exhaustivo, repetir TimeSeriesSplit da los mismos pliegues: se cuentan 5",
+      "la previsión recursiva del tiempo usa un modelo ajustado con la tabla entera: solo mide tiempo, ninguna cifra de error sale de ahí",
+      "Ridge con 13 combinaciones va en rejilla entera cuando el nivel pide más candidatos que combinaciones: RandomizedSearchCV avisa y con -W error se para"
+    ],
+    "segundos_modelo_minimo_dos_objetivos": 76.7735326999973,
+    "segundos_tabla_de_coste": 32.063815900008194
+  },
+  "validaciones": {
+    "sin_filas_de_ajuste": true,
+    "semillas": true,
+    "validacion_sin_abrir": true,
+    "columnas_de_preseleccion": true,
+    "citas_existen": true,
+    "reproducible": true,
+    "sin_identificadores_ni_posteriores": true,
+    "sin_resultados_escritos": true,
+    "objetivo_conocido_al_entrenar": true,
+    "pliegues_por_fecha": true,
+    "recursiva_completa_sin_negativas": true,
+    "recursiva_a_un_dia_igual": true,
+    "entrada_sin_cambiar": true,
+    "con_probabilidad": null,
+    "recalibrado_si_hace_falta": null,
+    "canario_objetivo_barajado": null,
+    "probabilidad_media_cerca_de_la_tasa": null,
+    "intervalo_por_entidad": null
+  },
+  "validaciones_nulas": {
+    "con_probabilidad": "no aplica: objetivo de cantidad",
+    "recalibrado_si_hace_falta": "no aplica: sin equilibrar",
+    "canario_objetivo_barajado": "va con la búsqueda y el ganador",
+    "probabilidad_media_cerca_de_la_tasa": "no aplica: objetivo de cantidad",
+    "intervalo_por_entidad": "va con la validación (planteamientos §2, 3)"
+  },
+  "detalle_pliegues": {
+    "unidades": [
+      {
+        "bien": true,
+        "dias_ajuste": 1125,
+        "dias_prueba": 10,
+        "dias_compartidos": 0,
+        "prueba_seguida": true,
+        "ajuste_hasta": "2014-04-02",
+        "prueba_desde": "2014-04-03",
+        "prueba_hasta": "2014-04-12"
+      },
+      {
+        "bien": true,
+        "dias_ajuste": 1135,
+        "dias_prueba": 10,
+        "dias_compartidos": 0,
+        "prueba_seguida": true,
+        "ajuste_hasta": "2014-04-12",
+        "prueba_desde": "2014-04-13",
+        "prueba_hasta": "2014-04-22"
+      },
+      {
+        "bien": true,
+        "dias_ajuste": 1145,
+        "dias_prueba": 10,
+        "dias_compartidos": 0,
+        "prueba_seguida": true,
+        "ajuste_hasta": "2014-04-22",
+        "prueba_desde": "2014-04-23",
+        "prueba_hasta": "2014-05-02"
+      },
+      {
+        "bien": true,
+        "dias_ajuste": 1155,
+        "dias_prueba": 10,
+        "dias_compartidos": 0,
+        "prueba_seguida": true,
+        "ajuste_hasta": "2014-05-02",
+        "prueba_desde": "2014-05-03",
+        "prueba_hasta": "2014-05-12"
+      },
+      {
+        "bien": true,
+        "dias_ajuste": 1165,
+        "dias_prueba": 10,
+        "dias_compartidos": 0,
+        "prueba_seguida": true,
+        "ajuste_hasta": "2014-05-12",
+        "prueba_desde": "2014-05-13",
+        "prueba_hasta": "2014-05-22"
+      }
+    ],
+    "dolares": [
+      {
+        "bien": true,
+        "dias_ajuste": 1035,
+        "dias_prueba": 28,
+        "dias_compartidos": 0,
+        "prueba_seguida": true,
+        "ajuste_hasta": "2014-01-02",
+        "prueba_desde": "2014-01-03",
+        "prueba_hasta": "2014-01-30"
+      },
+      {
+        "bien": true,
+        "dias_ajuste": 1063,
+        "dias_prueba": 28,
+        "dias_compartidos": 0,
+        "prueba_seguida": true,
+        "ajuste_hasta": "2014-01-30",
+        "prueba_desde": "2014-01-31",
+        "prueba_hasta": "2014-02-27"
+      },
+      {
+        "bien": true,
+        "dias_ajuste": 1091,
+        "dias_prueba": 28,
+        "dias_compartidos": 0,
+        "prueba_seguida": true,
+        "ajuste_hasta": "2014-02-27",
+        "prueba_desde": "2014-02-28",
+        "prueba_hasta": "2014-03-27"
+      },
+      {
+        "bien": true,
+        "dias_ajuste": 1119,
+        "dias_prueba": 28,
+        "dias_compartidos": 0,
+        "prueba_seguida": true,
+        "ajuste_hasta": "2014-03-27",
+        "prueba_desde": "2014-03-28",
+        "prueba_hasta": "2014-04-24"
+      },
+      {
+        "bien": true,
+        "dias_ajuste": 1147,
+        "dias_prueba": 28,
+        "dias_compartidos": 0,
+        "prueba_seguida": true,
+        "ajuste_hasta": "2014-04-24",
+        "prueba_desde": "2014-04-25",
+        "prueba_hasta": "2014-05-22"
+      }
+    ]
+  },
+  "tablas_abiertas": [
+    "data/processed/hechos_modelo_entrenamiento.parquet"
+  ],
+  "huella_entrada_despues": "7975a014ba29fe5bf19ba18cfd9b53acd69698be70ee329550a510d4b2f91418",
+  "fichas": {
+    "HistGradientBoosting": {
+      "ruta": "assets/fichas_de_algoritmos/histgradientboosting/01_ficha.md",
+      "existe": true
+    },
+    "Ridge": {
+      "ruta": "assets/fichas_de_algoritmos/regresion_lineal_y_regularizadas/01_ficha.md",
+      "existe": true
+    },
+    "bosque": {
+      "ruta": "assets/fichas_de_algoritmos/bosque_aleatorio/01_ficha.md",
+      "existe": false
+    }
+  },
+  "parametros": [
+    {
+      "nombre": "semilla",
+      "valor": 42,
+      "origen": "preparacion-modelo; parametros.md"
+    },
+    {
+      "nombre": "pliegues",
+      "valor": "TimeSeriesSplit(5) sobre los días, test_size 10 y 28",
+      "origen": "parametros.md; método, apartado 3, previsión"
+    },
+    {
+      "nombre": "repeticiones de la permutación",
+      "valor": 10,
+      "origen": "parametros.md"
+    },
+    {
+      "nombre": "parada temprana",
+      "valor": false,
+      "origen": "método, apartado 5: con fecha, early_stopping=False"
+    },
+    {
+      "nombre": "hoja mínima de la rejilla",
+      "valor": 822,
+      "origen": "algoritmos.md: max(20, 1 % de las filas de entrenamiento)"
+    },
+    {
+      "nombre": "niveles de la búsqueda",
+      "valor": {
+        "rapido": {
+          "candidatos": 5,
+          "pliegues": 3
+        },
+        "equilibrado": {
+          "candidatos": 15,
+          "pliegues": 5
+        },
+        "exhaustivo": {
+          "candidatos": 40,
+          "pliegues": 5
+        }
+      },
+      "origen": "algoritmos.md, «El coste»"
+    },
+    {
+      "nombre": "días fuera del error",
+      "valor": "fuera de las cifras; dentro del ajuste",
+      "origen": "reglas, apartado 6 para las cifras; el ajuste con la tabla entera, como pide la petición; para la búsqueda no está fijado (matriz, «Límites y preguntas abiertas»)"
+    }
+  ]
+}

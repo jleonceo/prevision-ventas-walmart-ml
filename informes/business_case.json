@@ -1,0 +1,274 @@
+{
+  "script": "scripts/09_business_case.py",
+  "fecha_datos": "2015-05-22",
+  "fecha_ejecucion": "2026-11-24T14:02:15",
+  "estado": "OK",
+  "entradas": {
+    "informes/consultas-informe-ejecutivo.json": "c8f54993681d50e4c62eea77fc25071b6e891ffa9b5d10ea16457fadff2e1b62",
+    "assets/plantilla_business_case.xlsx": "b2c09c338c629c5c56b594df4684103d933ea741d08875003ecd3e8274ed5f63"
+  },
+  "linea_de_hoy": {
+    "venta_2013": 6094766.85,
+    "venta_mes": 507897.2375,
+    "origen": "datos: venta de 2013 del recorte, 500 productos en 10 tiendas"
+  },
+  "combinacion": "Las dos palancas se suman: el coste de mantener la mercancía y la venta perdida por estante vacío no comparten base.",
+  "rampa": [
+    0.0,
+    0.0,
+    0.0,
+    0.5,
+    0.5,
+    0.5,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "supuestos": [
+    {
+      "nombre": "margen bruto sobre ventas",
+      "valor": 24.3,
+      "origen": "fuente pública",
+      "fuente": "Walmart, informe anual 10-K del año fiscal 2014 (SEC): 24,3 % de las ventas netas"
+    },
+    {
+      "nombre": "productos que faltan en el estante",
+      "valor": 8.0,
+      "origen": "fuente pública",
+      "fuente": "Corsten y Gruen, estudio mundial de roturas de estante (2002): alrededor del 8 %"
+    },
+    {
+      "nombre": "días de inventario",
+      "valor": "40 y 45",
+      "origen": "fuente pública",
+      "fuente": "unos 45 días en 2013 (Spiceland, Intermediate Accounting); mediana de 42,8 (GuruFocus)"
+    },
+    {
+      "nombre": "coste anual de mantener la mercancía",
+      "valor": "20, 25 y 30 %",
+      "origen": "fuente pública",
+      "fuente": "regla general del sector, entre el 20 % y el 30 % del valor de la mercancía (Shopify, NetSuite)"
+    },
+    {
+      "nombre": "parte de la venta del estante vacío que se pierde",
+      "valor": "25, 40 y 50 %",
+      "origen": "decidido por el equipo de análisis a petición del responsable del caso, 24/11/2026",
+      "fuente": "(supuesto) sin cifra comprobada; el estudio de Corsten y Gruen describe las reacciones del cliente"
+    },
+    {
+      "nombre": "mejora de las dos palancas",
+      "valor": "5, 10 y 15 %",
+      "origen": "decidido por el equipo de análisis a petición del responsable del caso, 24/11/2026",
+      "fuente": "(supuesto)"
+    },
+    {
+      "nombre": "puesta en marcha y coste mensual",
+      "valor": "40.000/2.000, 20.000/1.000 y 10.000/500 dólares",
+      "origen": "decidido por el equipo de análisis a petición del responsable del caso, 24/11/2026",
+      "fuente": "(supuesto)"
+    },
+    {
+      "nombre": "rampa y horizonte",
+      "valor": "3 años",
+      "origen": "decidido por el equipo de análisis a petición del responsable del caso, 24/11/2026",
+      "fuente": "(supuesto) guía del business case: nada los meses 1 a 3, la mitad del 4 al 6, entera desde el 7"
+    }
+  ],
+  "escenarios": {
+    "bajo": {
+      "parametros": {
+        "venta_mes": 507897.2375,
+        "dias_inventario": 40,
+        "mantener_pct": 20.0,
+        "perdida_pct": 25.0,
+        "mercancia_en_almacen": 505615.17867945204,
+        "base_ahorro": 8426.919644657535,
+        "base_venta_perdida": 10157.94475,
+        "margen_pct": 24.3,
+        "mejora_pct": 5.0,
+        "puesta_en_marcha": 40000.0,
+        "meses_puesta_en_marcha": 3,
+        "coste_mes": 2000.0
+      },
+      "por_anio": [
+        {
+          "anio": 1,
+          "ahorro": 3160.094866746576,
+          "venta_recuperada": 3809.2292812500004,
+          "margen_venta": 925.6427153437502,
+          "resultado": 4085.737582090326,
+          "coste": 64000.0,
+          "beneficio": -59914.262417909675
+        },
+        {
+          "anio": 2,
+          "ahorro": 5056.151786794521,
+          "venta_recuperada": 6094.766850000001,
+          "margen_venta": 1481.0283445500004,
+          "resultado": 6537.180131344522,
+          "coste": 24000.0,
+          "beneficio": -17462.81986865548
+        },
+        {
+          "anio": 3,
+          "ahorro": 5056.151786794521,
+          "venta_recuperada": 6094.766850000001,
+          "margen_venta": 1481.0283445500004,
+          "resultado": 6537.180131344522,
+          "coste": 24000.0,
+          "beneficio": -17462.81986865548
+        }
+      ],
+      "total": {
+        "ahorro": 13272.398440335619,
+        "venta_recuperada": 15998.762981250002,
+        "margen_venta": 3887.6994044437506,
+        "resultado": 17160.09784477937,
+        "coste": 112000.0,
+        "beneficio": -94839.90215522062,
+        "roi_pct": -84.67848406716128
+      },
+      "primer_mes_con_beneficio": null,
+      "mes_recupera_inversion": null
+    },
+    "central": {
+      "parametros": {
+        "venta_mes": 507897.2375,
+        "dias_inventario": 45,
+        "mantener_pct": 25.0,
+        "perdida_pct": 40.0,
+        "mercancia_en_almacen": 568817.0760143836,
+        "base_ahorro": 11850.355750299657,
+        "base_venta_perdida": 16252.711600000002,
+        "margen_pct": 24.3,
+        "mejora_pct": 10.0,
+        "puesta_en_marcha": 20000.0,
+        "meses_puesta_en_marcha": 3,
+        "coste_mes": 1000.0
+      },
+      "por_anio": [
+        {
+          "anio": 1,
+          "ahorro": 8887.766812724743,
+          "venta_recuperada": 12189.533700000004,
+          "margen_venta": 2962.056689100001,
+          "resultado": 11849.823501824743,
+          "coste": 32000.0,
+          "beneficio": -20150.176498175257
+        },
+        {
+          "anio": 2,
+          "ahorro": 14220.426900359587,
+          "venta_recuperada": 19503.253920000006,
+          "margen_venta": 4739.290702560002,
+          "resultado": 18959.71760291959,
+          "coste": 12000.0,
+          "beneficio": 6959.717602919591
+        },
+        {
+          "anio": 3,
+          "ahorro": 14220.426900359587,
+          "venta_recuperada": 19503.253920000006,
+          "margen_venta": 4739.290702560002,
+          "resultado": 18959.71760291959,
+          "coste": 12000.0,
+          "beneficio": 6959.717602919591
+        }
+      ],
+      "total": {
+        "ahorro": 37328.62061344392,
+        "venta_recuperada": 51196.04154000001,
+        "margen_venta": 12440.638094220005,
+        "resultado": 49769.258707663925,
+        "coste": 56000.0,
+        "beneficio": -6230.741292336075,
+        "roi_pct": -11.12632373631442
+      },
+      "primer_mes_con_beneficio": 7,
+      "mes_recupera_inversion": null
+    },
+    "alto": {
+      "parametros": {
+        "venta_mes": 507897.2375,
+        "dias_inventario": 45,
+        "mantener_pct": 30.0,
+        "perdida_pct": 50.0,
+        "mercancia_en_almacen": 568817.0760143836,
+        "base_ahorro": 14220.426900359591,
+        "base_venta_perdida": 20315.8895,
+        "margen_pct": 24.3,
+        "mejora_pct": 15.0,
+        "puesta_en_marcha": 10000.0,
+        "meses_puesta_en_marcha": 3,
+        "coste_mes": 500.0
+      },
+      "por_anio": [
+        {
+          "anio": 1,
+          "ahorro": 15997.980262904537,
+          "venta_recuperada": 22855.375687500004,
+          "margen_venta": 5553.856292062502,
+          "resultado": 21551.836554967038,
+          "coste": 16000.0,
+          "beneficio": 5551.836554967037
+        },
+        {
+          "anio": 2,
+          "ahorro": 25596.768420647262,
+          "venta_recuperada": 36568.60110000001,
+          "margen_venta": 8886.170067300001,
+          "resultado": 34482.938487947264,
+          "coste": 6000.0,
+          "beneficio": 28482.93848794726
+        },
+        {
+          "anio": 3,
+          "ahorro": 25596.768420647262,
+          "venta_recuperada": 36568.60110000001,
+          "margen_venta": 8886.170067300001,
+          "resultado": 34482.938487947264,
+          "coste": 6000.0,
+          "beneficio": 28482.93848794726
+        }
+      ],
+      "total": {
+        "ahorro": 67191.51710419905,
+        "venta_recuperada": 95992.57788750001,
+        "margen_venta": 23326.196426662507,
+        "resultado": 90517.71353086155,
+        "coste": 28000.0,
+        "beneficio": 62517.713530861554,
+        "roi_pct": 223.27754832450557
+      },
+      "primer_mes_con_beneficio": 4,
+      "mes_recupera_inversion": 10
+    }
+  }
+}

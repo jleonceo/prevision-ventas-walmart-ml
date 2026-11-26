@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La previsión del modelo falla menos que las reglas sencillas en casi todas las tiendas y departamentos</title>
+<style>
+/* Hoja de estilos de los informes de los casos de uso. Valores de reglas_de_salida.md §7 (E1 a E8).
+   informe.py la mete dentro del HTML: el informe no carga nada de fuera.
+   Plantilla copiada el 04/10/2026 de fuentes con licencia abierta: la ficha de gráficos de la ONS (título, subtítulo,
+   dibujo y fuente en su propia línea debajo), la escala de espacios de GOV.UK (30 px entre bloques), los huecos del CSS
+   de Observable Framework (4 px bajo el título, 16 antes del dibujo) y las tablas del Gobierno británico (sin rayas
+   entre filas). */
+
+/* E1: fondo siempre blanco. E3: texto #0b0b0b. */
+html, body { margin: 0; background: #ffffff; color: #0b0b0b; }
+
+/* E4: letra. E5: texto a 15 px con interlineado 1,5. TB2: cifras de ancho fijo. */
+body { font-family: "Segoe UI", system-ui, sans-serif; font-size: 15px; line-height: 1.5; font-variant-numeric: tabular-nums; }
+
+/* S1: panel fijo a la izquierda con la lista de páginas; compacto para que quepa entero en 650 px. */
+nav { position: fixed; top: 0; left: 0; bottom: 0; width: 240px; box-sizing: border-box; padding: 24px 16px; border-right: 1px solid #e1e0d9; overflow-y: auto; background: #ffffff; }
+.informe-titulo { font-size: 16px; font-weight: 700; margin: 0 0 4px; }
+.informe-fecha { font-size: 13px; color: #52514e; margin: 0 0 12px; }
+nav button { display: block; width: 100%; text-align: left; font: 15px "Segoe UI", system-ui, sans-serif; line-height: 1.3; color: #0b0b0b; background: #ffffff; border: 0; padding: 3px 0; cursor: pointer; }
+nav button[aria-current="page"] { font-weight: 700; text-decoration: underline; }
+/* S2: las páginas de cada pregunta, los límites y la decisión van juntas bajo su rótulo, sin número delante. */
+nav .grupo { font-size: 13px; font-weight: 700; color: #52514e; margin: 8px 0 0; }
+nav button.sub { padding-left: 12px; }
+
+/* Zona de las páginas. */
+main { margin-left: 240px; padding: 24px 40px 0; max-width: 1100px; }
+/* Un solo ancho para todo lo de la página, el de dos gráficos en fila. */
+.pagina { max-width: 1024px; }
+/* El documento acaba donde acaba el contenido: sin margen debajo del último bloque, la página no se desplaza. */
+.pagina > :last-child { margin-bottom: 0; }
+
+/* E5: título de página 28 px y sección 20 px, en negrita. */
+h1 { font-size: 28px; font-weight: 700; line-height: 1.25; margin: 0 0 12px; }
+h2 { font-size: 20px; font-weight: 700; line-height: 1.3; margin: 20px 0 8px; }
+
+/* T2: párrafos cortos, unos 75 caracteres por línea. */
+.pagina p { max-width: 75ch; margin: 0 0 12px; }
+
+/* S2: la pregunta que contesta la página, debajo del título, en negro y seminegrita para que se vea. */
+.pagina p.pregunta { color: #0b0b0b; font-weight: 600; }
+
+/* C1 y C2: cifras clave en fila, sin icono, borde ni fondo. E5: número a 28 px en negrita, etiqueta a 13.
+   Cuatro casillas iguales: con dos o tres cifras quedan juntas a la izquierda. */
+.cifras { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; margin: 15px 0 30px; }
+.cifra-clave p { margin: 0; }
+.cifra-clave .numero { font-size: 28px; font-weight: 700; line-height: 1.2; white-space: nowrap; }
+.cifra-clave .etiqueta { font-size: 13px; }
+.cifra-clave .contexto { font-size: 13px; color: #52514e; }
+
+/* G1 y G2, como la ficha de gráficos de la ONS: título que dice la conclusión a 20 px, subtítulo con la medida a 16,
+   el dibujo y la fuente en su propia línea debajo, a 13. 30 px entre bloques (GOV.UK). G7: el SVG va dentro. */
+.grafico { margin: 30px 0; }
+.g-titulo { font-size: 20px; font-weight: 700; line-height: 1.3; margin: 0 0 4px; }
+.g-subtitulo { font-size: 16px; color: #52514e; line-height: 1.5; margin: 0 0 16px; }
+.g-fuente { font-size: 13px; color: #52514e; line-height: 1.5; margin: 8px 0 0; }
+.grafico svg { display: block; max-width: 100%; height: auto; }
+
+/* S3: dos gráficos lado a lado, de 500 px cada uno; con el mismo subtítulo y la misma fuente, van una vez. */
+.fila-bloque { margin: 30px 0; }
+.fila { display: grid; grid-template-columns: repeat(2, minmax(0, 500px)); gap: 24px; }
+.fila .grafico { margin: 0; }
+
+/* Texto con un solo gráfico o una sola tabla: el texto a la izquierda y lo otro a la derecha, con el ancho que le
+   pone informe.py en --ancho-otro. */
+.lado { display: grid; grid-template-columns: minmax(0, 1fr) var(--ancho-otro); gap: 32px; align-items: start; margin: 30px 0; }
+.lado .grafico { margin: 0; }
+.lado table { margin-top: 0; }
+.lado .fuente { margin-bottom: 0; }
+/* Un apartado que abre la columna de texto empieza a la altura del gráfico o de la tabla de al lado. */
+.lado-texto > h2:first-child { margin-top: 0; }
+
+/* TB2 y TB4, como las tablas del Gobierno británico: números y sus cabeceras a la derecha, una línea bajo la cabecera
+   y sobre el total, sin rayas entre filas, total en negrita. E5: tabla a 13 px. */
+table { border-collapse: collapse; font-size: 13px; margin: 30px 0 0; }
+th { text-align: left; font-weight: 700; padding: 6px 16px 6px 0; border-bottom: 1px solid #0b0b0b; vertical-align: bottom; }
+td { text-align: left; padding: 6px 16px 6px 0; vertical-align: top; }
+th.num, td.num { text-align: right; }
+tr.total td { font-weight: 700; border-top: 1px solid #0b0b0b; }
+/* Una tabla sin cifras es texto para leer: a 15 px y a todo el ancho. */
+table.texto { font-size: 15px; width: 100%; }
+table.texto td:first-child { font-weight: 600; }
+
+/* F1: la fuente debajo de la tabla, a 13 px. */
+.fuente { font-size: 13px; color: #52514e; margin: 8px 0 30px; }
+
+/* G20: la etiqueta de cada valor al pasar el ratón o con el tabulador. Fondo blanco, borde fino, sin sombra (E6, E8).
+   Los valores reciben el ratón aunque su marca no se vea (los puntos de una línea). */
+svg g.dato { pointer-events: all; }
+svg g.dato:focus { outline: 2px solid #0b0b0b; }
+.etiqueta-dato { position: fixed; z-index: 10; max-width: 320px; padding: 4px 8px; font-size: 13px; line-height: 1.4; color: #0b0b0b; background: #ffffff; border: 1px solid #0b0b0b; pointer-events: none; }
+.etiqueta-dato[hidden] { display: none; }
+
+/* En una ventana estrecha, lo lado a lado y los gráficos en fila van uno debajo de otro, y las cifras, de dos en dos. */
+@media (max-width: 1180px) {
+  .lado { grid-template-columns: 1fr; }
+  .fila { grid-template-columns: 1fr; }
+  .cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Al imprimir, sin panel, con todas las páginas y cada una en su hoja. */
+@media print {
+  nav { display: none; }
+  .etiqueta-dato { display: none; }
+  main { margin-left: 0; }
+  section[hidden] { display: block; }
+  section + section { break-before: page; }
+}
+</style>
+</head>
+<body>
+<nav><p class="informe-titulo">La previsión del modelo falla menos que las reglas sencillas en casi todas las tiendas y departamentos</p><p class="informe-fecha">Para la Dirección de Operaciones de Tiendas. Venta diaria de 70 combinaciones de departamento y tienda de Walmart, comprobada en dos años seguidos, del 23/05/2014 al 22/05/2016.</p><button data-pagina="p1" aria-current="page">1. Resumen</button><button data-pagina="p2">2. Resumen, las cuatro preguntas</button><button data-pagina="p3">3. Qué se prevé</button><button data-pagina="p4">4. El modelo frente a las reglas</button><button data-pagina="p5">5. El modelo frente a las reglas, gráfico</button><button data-pagina="p6">6. La previsión sumada</button><button data-pagina="p7">7. La previsión sumada, gráfico</button><button data-pagina="p8">8. La previsión sumada, análisis</button><button data-pagina="p9">9. Dónde gana y dónde no</button><button data-pagina="p10">10. Qué usar en cada departamento</button><button data-pagina="p11">11. El exceso</button><button data-pagina="p12">12. Los días que cambian</button><button data-pagina="p13">13. El dinero</button><button data-pagina="p14">14. Límites</button><button data-pagina="p15">15. Decisiones propuestas</button><p class="grupo">Anexo</p><button data-pagina="p16" class="sub">Las decisiones y el informe ejecutivo</button><button data-pagina="p17" class="sub">Método, fuentes y datos</button><button data-pagina="p18" class="sub">El modelo</button><button data-pagina="p19" class="sub">Tabla de cifras</button><button data-pagina="p20" class="sub">Los otros cuatro departamentos</button><button data-pagina="p21" class="sub">Las diez tiendas</button><button data-pagina="p22" class="sub">Datos personales</button></nav>
+<main>
+<section id="p1" class="pagina"><h1>Pedir con la previsión del modelo en seis de los siete departamentos</h1><div class="cifras"><div class="cifra-clave"><p class="numero">14,5</p><p class="etiqueta">Unidades que falla la previsión por cada 100 vendidas, a 10 días, el plazo del pedido</p><p class="contexto">Un 14,2 % menos que la media del mismo día de las 4 semanas anteriores, que falla 16,9</p></div><div class="cifra-clave"><p class="numero">16,2</p><p class="etiqueta">Dólares que falla por cada 100 vendidos, a 28 días, el mes de finanzas</p><p class="contexto">Un 12,9 % menos que la misma regla, que falla 18,6</p></div><div class="cifra-clave"><p class="numero">+0,3</p><p class="etiqueta">Unidades de más que prevé por cada 100 vendidas</p><p class="contexto">La regla, también +0,3</p></div></div><h2>Análisis ejecutivo</h2><p>Pedir con la previsión del modelo reduce el error frente a la regla sencilla de hoy. Se comprobó en el último año guardado, con 13 pruebas, una cada 28 días. El modelo en uso falla menos que la regla en 12 de 13 pruebas en unidades y en 13 de 13 en dólares. En HOBBIES_2, de venta intermitente, falla menos la media de los últimos 28 días.</p><p>Es el modelo del año de comprobación, ajustado con un año más de datos. Tal como salió de ese año, en unidades ganó en 9 de 13 pruebas, una menos de las 10 que hacían falta. Con el año más, la previsión casi no se pasa.</p><p>El dinero no está medido: depende de cuánto bajen la mercancía parada y la venta perdida al pedir con el modelo. Con supuestos sin fuente, el resultado a tres años va de −94.840 $ a +62.518 $.</p></section><section id="p2" class="pagina" hidden><h1>Pedir con la previsión del modelo en seis de los siete departamentos</h1><table class="texto"><thead><tr><th>Pregunta</th><th>Respuesta</th><th>Qué se recomienda</th></tr></thead><tbody><tr><td>1. Cuánto venderá cada combinación cada día</td><td>Una previsión diaria, a 10 días en unidades y a 28 en dólares</td><td>Pedir con la previsión del modelo</td></tr><tr><td>2. Si se equivoca menos que las reglas</td><td>Sí, en 12 de 13 pruebas en unidades y en 13 de 13 en dólares. En HOBBIES_2, de venta intermitente, falla menos la media de los últimos 28 días</td><td>Pedir el departamento de ocio HOBBIES_2 con la media de los últimos 28 días</td></tr><tr><td>3. Cuánto venderá cada tienda y categoría</td><td>Al sumar, falla 4,2 unidades por cada 100 en la cadena; en dólares falla menos que la media del mismo día de las 4 semanas anteriores en 9 de 10 tiendas y en CA_4 empatan</td><td>Planificar el mes de finanzas con la suma en dólares</td></tr><tr><td>4. Qué días cambia la venta</td><td>Festivos, días de cobro de la ayuda alimentaria (SNAP) y fin de semana</td><td>Pedir también los festivos grandes con la previsión: en las tres vísperas falló menos que la regla que menos falla en cada una</td></tr></tbody></table><div class="fuente">Fuente: venta diaria de las 70 combinaciones, del 23/05/2014 al 22/05/2016; el detalle, en las páginas 3 a 15</div><h2>Próximo paso</h2><p>Aprueba las cuatro decisiones de la página 15, empezando por pedir con la previsión del modelo.</p></section><section id="p3" class="pagina" hidden><h1>Cada tienda pide con lo que espera vender cada departamento en los próximos días</h1><div class="cifras"><div class="cifra-clave"><p class="numero">70</p><p class="etiqueta">Combinaciones de departamento y tienda</p><p class="contexto">Tres de alimentación, dos de ocio y dos de hogar, en 10 tiendas de California, Texas y Wisconsin</p></div><div class="cifra-clave"><p class="numero">10 días</p><p class="etiqueta">Horizonte de la previsión en unidades</p><p class="contexto">El pedido semanal y lo que tarda en llegar</p></div><div class="cifra-clave"><p class="numero">28 días</p><p class="etiqueta">Horizonte de la previsión en dólares</p><p class="contexto">El mes de finanzas</p></div></div><h2>Análisis ejecutivo</h2><p>El caso usa 500 de los 3.049 productos del concurso público de Walmart (M5), elegidos al azar y sumados por departamento en cada tienda. Cada día se prevé la venta de los días siguientes con lo vendido hasta ayer, el calendario y el precio de la semana anterior. Si la previsión se queda corta, el estante se vacía; si se pasa, la mercancía queda parada en el almacén.</p><h2>Próximo paso</h2><p>Confirma con compras que 10 días cubren el pedido semanal y lo que tarda en llegar: es un supuesto del caso.</p></section><section id="p4" class="pagina" hidden><h1>La previsión del modelo falla menos que las tres reglas y el suavizado en el último año guardado</h1><h2>Métricas clave</h2><table><thead><tr><th>Previsión</th><th class="num">Unidades, por cada 100</th><th class="num">Dólares, por cada 100</th><th class="num">Se pasa (+) o se queda corta (−), unidades por cada 100</th><th class="num">Se pasa (+) o se queda corta (−), dólares por cada 100</th></tr></thead><tbody><tr><td>Modelo</td><td class="num">14,5</td><td class="num">16,2</td><td class="num">0,3</td><td class="num">−0,5</td></tr><tr><td>La media del mismo día de las 4 semanas anteriores</td><td class="num">16,9</td><td class="num">18,6</td><td class="num">0,3</td><td class="num">−1,4</td></tr><tr><td>La media de los últimos 28 días</td><td class="num">21,1</td><td class="num">21,3</td><td class="num">−3,3</td><td class="num">−1,5</td></tr><tr><td>Repetir la semana anterior</td><td class="num">21,7</td><td class="num">23,1</td><td class="num">−0,3</td><td class="num">−1,8</td></tr><tr><td>Suavizado exponencial (método estadístico sencillo)</td><td class="num">16,1</td><td class="num">18,0</td><td class="num">0,0</td><td class="num">−1,7</td></tr></tbody></table><div class="fuente">Fuente: venta diaria de las 70 combinaciones, del 23/05/2015 al 22/05/2016, 13 pruebas cada 28 días. Unidades a 10 días; dólares a 28.</div><h2>Análisis ejecutivo</h2><p>Cada prueba prevé desde un día de partida, uno cada 28 días: los 10 días siguientes en unidades y los 28 siguientes en dólares. Frente a la regla que menos falla, el modelo falla 2,40 unidades menos por cada 100, un 14,2 % menos. En dólares falla 2,41 menos, un 12,9 % menos. Con un 95 % de confianza, la ventaja va de 1,41 a 3,54 unidades por cada 100 y de 1,46 a 3,55 dólares. Al suavizado exponencial, que no es una de las tres reglas, el modelo en uso le gana en 11 de 13 pruebas en unidades y en 12 de 13 en dólares.</p></section><section id="p5" class="pagina" hidden><h1>La previsión del modelo falla menos que las tres reglas y el suavizado en el último año guardado</h1><div class="fila-bloque"><div class="g-subtitulo">Unidades o dólares que falla cada previsión por cada 100 vendidos, del 23/05/2015 al 22/05/2016.</div><div class="fila"><div class="grafico"><div class="g-titulo">En unidades, a 10 días</div><svg role="img" aria-label="En unidades, a 10 días" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="220" viewBox="0 0 500 220" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="g2af310_figure_1">
+  <g id="g2af310_patch_1">
+   <path d="M 0 220 
+L 500 220 
+L 500 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="g2af310_axes_1">
+   <g id="g2af310_patch_2">
+    <path d="M 147.5 216 
+L 496 216 
+L 496 4 
+L 147.5 4 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="g2af310_dato0" class="dato" tabindex="0"><title>Modelo · unidades que falla por cada 100 vendidos: 14,5</title>
+    <path d="M 147.5 206.363636 
+L 329.916606 206.363636 
+L 329.916606 176.964561 
+L 147.5 176.964561 
+z
+" clip-path="url(#g2af310_pf83b642db7)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g2af310_dato1" class="dato" tabindex="0"><title>La media del mismo día
+de las 4 semanas
+anteriores · unidades que falla por cada 100 vendidos: 16,9</title>
+    <path d="M 147.5 124.699538 
+L 360.377194 124.699538 
+L 360.377194 95.300462 
+L 147.5 95.300462 
+z
+" clip-path="url(#g2af310_pf83b642db7)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g2af310_dato2" class="dato" tabindex="0"><title>La media de los
+últimos 28 días · unidades que falla por cada 100 vendidos: 21,1</title>
+    <path d="M 147.5 83.867488 
+L 412.461414 83.867488 
+L 412.461414 54.468413 
+L 147.5 54.468413 
+z
+" clip-path="url(#g2af310_pf83b642db7)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g2af310_dato3" class="dato" tabindex="0"><title>Repetir la
+semana anterior · unidades que falla por cada 100 vendidos: 21,7</title>
+    <path d="M 147.5 43.035439 
+L 420.519166 43.035439 
+L 420.519166 13.636364 
+L 147.5 13.636364 
+z
+" clip-path="url(#g2af310_pf83b642db7)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g2af310_dato4" class="dato" tabindex="0"><title>Suavizado
+exponencial · unidades que falla por cada 100 vendidos: 16,1</title>
+    <path d="M 147.5 165.531587 
+L 350.19246 165.531587 
+L 350.19246 136.132512 
+L 147.5 136.132512 
+z
+" clip-path="url(#g2af310_pf83b642db7)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g2af310_matplotlib.axis_1">
+    <g id="g2af310_ytick_1">
+     <g id="g2af310_line2d_1"/>
+     <g id="g2af310_text_1">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="144" y="196.47613" transform="rotate(-0 144 196.47613)">Modelo</text>
+     </g>
+    </g>
+    <g id="g2af310_ytick_2">
+     <g id="g2af310_line2d_2"/>
+     <g id="g2af310_text_2">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(7.908281 101.32688)">La media del mismo día</text>
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(46.961094 115.394302)">de las 4 semanas</text>
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(86.704531 129.339849)">anteriores</text>
+     </g>
+    </g>
+    <g id="g2af310_ytick_3">
+     <g id="g2af310_line2d_3"/>
+     <g id="g2af310_text_3">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(54.432031 67.278698)">La media de los</text>
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(57.535781 81.535026)">últimos 28 días</text>
+     </g>
+    </g>
+    <g id="g2af310_ytick_4">
+     <g id="g2af310_line2d_4"/>
+     <g id="g2af310_text_4">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(89.966719 26.474959)">Repetir la</text>
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(51.360781 40.674666)">semana anterior</text>
+     </g>
+    </g>
+    <g id="g2af310_ytick_5">
+     <g id="g2af310_line2d_5"/>
+     <g id="g2af310_text_5">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(85.981406 149.03725)">Suavizado</text>
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(75.544844 163.104671)">exponencial</text>
+     </g>
+    </g>
+   </g>
+   <g id="g2af310_patch_3">
+    <path d="M 147.5 216 
+L 147.5 4 
+" style="fill: none; stroke: #898781; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="g2af310_text_6">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="332.820772" y="195.028356" transform="rotate(-0 332.820772 195.028356)">14,5</text>
+   </g>
+   <g id="g2af310_text_7">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="363.281361" y="113.364258" transform="rotate(-0 363.281361 113.364258)">16,9</text>
+   </g>
+   <g id="g2af310_text_8">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="415.365581" y="72.532209" transform="rotate(-0 415.365581 72.532209)">21,1</text>
+   </g>
+   <g id="g2af310_text_9">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="423.423333" y="31.700159" transform="rotate(-0 423.423333 31.700159)">21,7</text>
+   </g>
+   <g id="g2af310_text_10">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="353.096626" y="154.196307" transform="rotate(-0 353.096626 154.196307)">16,1</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="g2af310_pf83b642db7">
+   <rect x="147.5" y="4" width="348.5" height="212"/>
+  </clipPath>
+ </defs>
+</svg>
+</div><div class="grafico"><div class="g-titulo">En dólares, a 28 días</div><svg role="img" aria-label="En dólares, a 28 días" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="220" viewBox="0 0 500 220" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="gd3a3f6_figure_1">
+  <g id="gd3a3f6_patch_1">
+   <path d="M 0 220 
+L 500 220 
+L 500 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="gd3a3f6_axes_1">
+   <g id="gd3a3f6_patch_2">
+    <path d="M 147.5 216 
+L 496 216 
+L 496 4 
+L 147.5 4 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="gd3a3f6_dato0" class="dato" tabindex="0"><title>Modelo · dólares que falla por cada 100 vendidos: 16,2</title>
+    <path d="M 147.5 206.363636 
+L 351.379914 206.363636 
+L 351.379914 176.964561 
+L 147.5 176.964561 
+z
+" clip-path="url(#gd3a3f6_pf83b642db7)" style="fill: #2a78d6"/>
+   </g>
+   <g id="gd3a3f6_dato1" class="dato" tabindex="0"><title>La media del mismo día
+de las 4 semanas
+anteriores · dólares que falla por cada 100 vendidos: 18,6</title>
+    <path d="M 147.5 124.699538 
+L 381.638526 124.699538 
+L 381.638526 95.300462 
+L 147.5 95.300462 
+z
+" clip-path="url(#gd3a3f6_pf83b642db7)" style="fill: #2a78d6"/>
+   </g>
+   <g id="gd3a3f6_dato2" class="dato" tabindex="0"><title>La media de los
+últimos 28 días · dólares que falla por cada 100 vendidos: 21,3</title>
+    <path d="M 147.5 83.867488 
+L 415.307031 83.867488 
+L 415.307031 54.468413 
+L 147.5 54.468413 
+z
+" clip-path="url(#gd3a3f6_pf83b642db7)" style="fill: #2a78d6"/>
+   </g>
+   <g id="gd3a3f6_dato3" class="dato" tabindex="0"><title>Repetir la
+semana anterior · dólares que falla por cada 100 vendidos: 23,1</title>
+    <path d="M 147.5 43.035439 
+L 437.916667 43.035439 
+L 437.916667 13.636364 
+L 147.5 13.636364 
+z
+" clip-path="url(#gd3a3f6_pf83b642db7)" style="fill: #2a78d6"/>
+   </g>
+   <g id="gd3a3f6_dato4" class="dato" tabindex="0"><title>Suavizado
+exponencial · dólares que falla por cada 100 vendidos: 18,0</title>
+    <path d="M 147.5 165.531587 
+L 374.407114 165.531587 
+L 374.407114 136.132512 
+L 147.5 136.132512 
+z
+" clip-path="url(#gd3a3f6_pf83b642db7)" style="fill: #2a78d6"/>
+   </g>
+   <g id="gd3a3f6_matplotlib.axis_1">
+    <g id="gd3a3f6_ytick_1">
+     <g id="gd3a3f6_line2d_1"/>
+     <g id="gd3a3f6_text_1">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="144" y="196.47613" transform="rotate(-0 144 196.47613)">Modelo</text>
+     </g>
+    </g>
+    <g id="gd3a3f6_ytick_2">
+     <g id="gd3a3f6_line2d_2"/>
+     <g id="gd3a3f6_text_2">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(7.908281 101.32688)">La media del mismo día</text>
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(46.961094 115.394302)">de las 4 semanas</text>
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(86.704531 129.339849)">anteriores</text>
+     </g>
+    </g>
+    <g id="gd3a3f6_ytick_3">
+     <g id="gd3a3f6_line2d_3"/>
+     <g id="gd3a3f6_text_3">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(54.432031 67.278698)">La media de los</text>
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(57.535781 81.535026)">últimos 28 días</text>
+     </g>
+    </g>
+    <g id="gd3a3f6_ytick_4">
+     <g id="gd3a3f6_line2d_4"/>
+     <g id="gd3a3f6_text_4">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(89.966719 26.474959)">Repetir la</text>
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(51.360781 40.674666)">semana anterior</text>
+     </g>
+    </g>
+    <g id="gd3a3f6_ytick_5">
+     <g id="gd3a3f6_line2d_5"/>
+     <g id="gd3a3f6_text_5">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(85.981406 149.03725)">Suavizado</text>
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; fill: #52514e" transform="translate(75.544844 163.104671)">exponencial</text>
+     </g>
+    </g>
+   </g>
+   <g id="gd3a3f6_patch_3">
+    <path d="M 147.5 216 
+L 147.5 4 
+" style="fill: none; stroke: #898781; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="gd3a3f6_text_6">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="354.284081" y="195.028356" transform="rotate(-0 354.284081 195.028356)">16,2</text>
+   </g>
+   <g id="gd3a3f6_text_7">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="384.542693" y="113.364258" transform="rotate(-0 384.542693 113.364258)">18,6</text>
+   </g>
+   <g id="gd3a3f6_text_8">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="418.211198" y="72.532209" transform="rotate(-0 418.211198 72.532209)">21,3</text>
+   </g>
+   <g id="gd3a3f6_text_9">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="440.820833" y="31.700159" transform="rotate(-0 440.820833 31.700159)">23,1</text>
+   </g>
+   <g id="gd3a3f6_text_10">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="377.311281" y="154.196307" transform="rotate(-0 377.311281 154.196307)">18,0</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="gd3a3f6_pf83b642db7">
+   <rect x="147.5" y="4" width="348.5" height="212"/>
+  </clipPath>
+ </defs>
+</svg>
+</div></div><div class="g-fuente">Fuente: venta diaria de las 70 combinaciones</div></div><p>Las barras son del modelo en uso. Tal como salió del año de comprobación, sin el año más de datos, el modelo falló 15,3 unidades por cada 100 en este año y ganó en 9 de las 13 pruebas. Hacían falta 10, así que en unidades no se confirmó. En dólares sí, con 12 de 13.</p><h2>Próximo paso</h2><p>Pide con la previsión del modelo en lugar de con la media del mismo día de las 4 semanas anteriores.</p></section><section id="p6" class="pagina" hidden><h1>Sumada por estado, categoría o cadena, la previsión falla menos que la regla en todos los grupos</h1><div class="cifras"><div class="cifra-clave"><p class="numero">4,2</p><p class="etiqueta">Unidades que falla por cada 100 en la cadena, sumando las 70 combinaciones</p><p class="contexto">Un 27,7 % menos que la media del mismo día de las 4 semanas anteriores, que falla 5,9</p></div><div class="cifra-clave"><p class="numero">4,8</p><p class="etiqueta">Dólares que falla por cada 100 en la cadena</p><p class="contexto">Un 32,2 % menos que la misma regla, que falla 7,2</p></div><div class="cifra-clave"><p class="numero">9 de 10</p><p class="etiqueta">Tiendas en que la suma en dólares falla menos que la regla</p><p class="contexto">En CA_4 empatan</p></div></div><table><thead><tr><th>Estado o categoría</th><th class="num">Unidades: modelo</th><th class="num">Unidades: regla</th><th class="num">Dólares: modelo</th><th class="num">Dólares: regla</th></tr></thead><tbody><tr><td>California</td><td class="num">5,5</td><td class="num">5,7</td><td class="num">5,7</td><td class="num">6,8</td></tr><tr><td>Texas</td><td class="num">5,7</td><td class="num">7,4</td><td class="num">7,3</td><td class="num">9,0</td></tr><tr><td>Wisconsin</td><td class="num">5,9</td><td class="num">11,3</td><td class="num">6,9</td><td class="num">12,0</td></tr><tr><td>Alimentación</td><td class="num">5,1</td><td class="num">7,5</td><td class="num">6,1</td><td class="num">9,3</td></tr><tr><td>Ocio</td><td class="num">7,6</td><td class="num">8,2</td><td class="num">6,8</td><td class="num">8,0</td></tr><tr><td>Hogar</td><td class="num">4,7</td><td class="num">6,3</td><td class="num">6,5</td><td class="num">8,4</td></tr></tbody></table><div class="fuente">Fuente: venta diaria de las 70 combinaciones, sumada por grupo, del 23/05/2015 al 22/05/2016. Error por cada 100 vendidos. La regla es la media del mismo día de las 4 semanas anteriores, la que menos falla en todos los grupos. Unidades a 10 días; dólares a 28.</div></section><section id="p7" class="pagina" hidden><h1>Sumada por estado, categoría o cadena, la previsión falla menos que la regla en todos los grupos</h1><div class="fila-bloque"><div class="g-subtitulo">Dólares que falla cada tienda por cada 100 vendidos, a 28 días, del 23/05/2015 al 22/05/2016. En naranja, CA_4, donde empatan.</div><div class="fila"><div class="grafico"><div class="g-titulo">El modelo</div><svg role="img" aria-label="El modelo" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="410" viewBox="0 0 500 410" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="g7ae2ec_figure_1">
+  <g id="g7ae2ec_patch_1">
+   <path d="M 0 410 
+L 500 410 
+L 500 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="g7ae2ec_axes_1">
+   <g id="g7ae2ec_patch_2">
+    <path d="M 120 406 
+L 496 406 
+L 496 4 
+L 120 4 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="g7ae2ec_dato0" class="dato" tabindex="0"><title>CA_1 · dólares que falla el modelo por cada 100 vendidos: 8,3</title>
+    <path d="M 120 49.343434 
+L 265.553821 49.343434 
+L 265.553821 22.272727 
+L 120 22.272727 
+z
+" clip-path="url(#g7ae2ec_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g7ae2ec_dato1" class="dato" tabindex="0"><title>CA_2 · dólares que falla el modelo por cada 100 vendidos: 10,3</title>
+    <path d="M 120 86.941639 
+L 301.211595 86.941639 
+L 301.211595 59.870932 
+L 120 59.870932 
+z
+" clip-path="url(#g7ae2ec_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g7ae2ec_dato2" class="dato" tabindex="0"><title>CA_3 · dólares que falla el modelo por cada 100 vendidos: 7,2</title>
+    <path d="M 120 124.539843 
+L 245.828912 124.539843 
+L 245.828912 97.469136 
+L 120 97.469136 
+z
+" clip-path="url(#g7ae2ec_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g7ae2ec_dato3" class="dato" tabindex="0"><title>CA_4 · dólares que falla el modelo por cada 100 vendidos: 9,2</title>
+    <path d="M 120 162.138047 
+L 282.478148 162.138047 
+L 282.478148 135.06734 
+L 120 135.06734 
+z
+" clip-path="url(#g7ae2ec_pd24de64719)" style="fill: #eb6834"/>
+   </g>
+   <g id="g7ae2ec_dato4" class="dato" tabindex="0"><title>TX_1 · dólares que falla el modelo por cada 100 vendidos: 8,6</title>
+    <path d="M 120 199.736251 
+L 271.283269 199.736251 
+L 271.283269 172.665544 
+L 120 172.665544 
+z
+" clip-path="url(#g7ae2ec_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g7ae2ec_dato5" class="dato" tabindex="0"><title>TX_2 · dólares que falla el modelo por cada 100 vendidos: 8,9</title>
+    <path d="M 120 237.334456 
+L 276.415032 237.334456 
+L 276.415032 210.263749 
+L 120 210.263749 
+z
+" clip-path="url(#g7ae2ec_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g7ae2ec_dato6" class="dato" tabindex="0"><title>TX_3 · dólares que falla el modelo por cada 100 vendidos: 9,3</title>
+    <path d="M 120 274.93266 
+L 283.769662 274.93266 
+L 283.769662 247.861953 
+L 120 247.861953 
+z
+" clip-path="url(#g7ae2ec_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g7ae2ec_dato7" class="dato" tabindex="0"><title>WI_1 · dólares que falla el modelo por cada 100 vendidos: 8,6</title>
+    <path d="M 120 312.530864 
+L 271.822833 312.530864 
+L 271.822833 285.460157 
+L 120 285.460157 
+z
+" clip-path="url(#g7ae2ec_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g7ae2ec_dato8" class="dato" tabindex="0"><title>WI_2 · dólares que falla el modelo por cada 100 vendidos: 9,5</title>
+    <path d="M 120 350.129068 
+L 287.884956 350.129068 
+L 287.884956 323.058361 
+L 120 323.058361 
+z
+" clip-path="url(#g7ae2ec_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g7ae2ec_dato9" class="dato" tabindex="0"><title>WI_3 · dólares que falla el modelo por cada 100 vendidos: 8,9</title>
+    <path d="M 120 387.727273 
+L 275.895357 387.727273 
+L 275.895357 360.656566 
+L 120 360.656566 
+z
+" clip-path="url(#g7ae2ec_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g7ae2ec_matplotlib.axis_1">
+    <g id="g7ae2ec_ytick_1">
+     <g id="g7ae2ec_line2d_1"/>
+     <g id="g7ae2ec_text_1">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="40.540259" transform="rotate(-0 116.5 40.540259)">CA_1</text>
+     </g>
+    </g>
+    <g id="g7ae2ec_ytick_2">
+     <g id="g7ae2ec_line2d_2"/>
+     <g id="g7ae2ec_text_2">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="78.138463" transform="rotate(-0 116.5 78.138463)">CA_2</text>
+     </g>
+    </g>
+    <g id="g7ae2ec_ytick_3">
+     <g id="g7ae2ec_line2d_3"/>
+     <g id="g7ae2ec_text_3">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="115.736667" transform="rotate(-0 116.5 115.736667)">CA_3</text>
+     </g>
+    </g>
+    <g id="g7ae2ec_ytick_4">
+     <g id="g7ae2ec_line2d_4"/>
+     <g id="g7ae2ec_text_4">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="153.334871" transform="rotate(-0 116.5 153.334871)">CA_4</text>
+     </g>
+    </g>
+    <g id="g7ae2ec_ytick_5">
+     <g id="g7ae2ec_line2d_5"/>
+     <g id="g7ae2ec_text_5">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="190.933076" transform="rotate(-0 116.5 190.933076)">TX_1</text>
+     </g>
+    </g>
+    <g id="g7ae2ec_ytick_6">
+     <g id="g7ae2ec_line2d_6"/>
+     <g id="g7ae2ec_text_6">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="228.53128" transform="rotate(-0 116.5 228.53128)">TX_2</text>
+     </g>
+    </g>
+    <g id="g7ae2ec_ytick_7">
+     <g id="g7ae2ec_line2d_7"/>
+     <g id="g7ae2ec_text_7">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="266.129484" transform="rotate(-0 116.5 266.129484)">TX_3</text>
+     </g>
+    </g>
+    <g id="g7ae2ec_ytick_8">
+     <g id="g7ae2ec_line2d_8"/>
+     <g id="g7ae2ec_text_8">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="303.727688" transform="rotate(-0 116.5 303.727688)">WI_1</text>
+     </g>
+    </g>
+    <g id="g7ae2ec_ytick_9">
+     <g id="g7ae2ec_line2d_9"/>
+     <g id="g7ae2ec_text_9">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="341.325893" transform="rotate(-0 116.5 341.325893)">WI_2</text>
+     </g>
+    </g>
+    <g id="g7ae2ec_ytick_10">
+     <g id="g7ae2ec_line2d_10"/>
+     <g id="g7ae2ec_text_10">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="378.924097" transform="rotate(-0 116.5 378.924097)">WI_3</text>
+     </g>
+    </g>
+   </g>
+   <g id="g7ae2ec_patch_3">
+    <path d="M 120 406 
+L 120 4 
+" style="fill: none; stroke: #898781; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="g7ae2ec_text_11">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="268.687155" y="39.172339" transform="rotate(-0 268.687155 39.172339)">8,3</text>
+   </g>
+   <g id="g7ae2ec_text_12">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="304.344928" y="76.770543" transform="rotate(-0 304.344928 76.770543)">10,3</text>
+   </g>
+   <g id="g7ae2ec_text_13">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="248.962245" y="114.368747" transform="rotate(-0 248.962245 114.368747)">7,2</text>
+   </g>
+   <g id="g7ae2ec_text_14">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="285.611481" y="151.966951" transform="rotate(-0 285.611481 151.966951)">9,2</text>
+   </g>
+   <g id="g7ae2ec_text_15">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="274.416602" y="189.565156" transform="rotate(-0 274.416602 189.565156)">8,6</text>
+   </g>
+   <g id="g7ae2ec_text_16">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="279.548365" y="227.16336" transform="rotate(-0 279.548365 227.16336)">8,9</text>
+   </g>
+   <g id="g7ae2ec_text_17">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="286.902995" y="264.761564" transform="rotate(-0 286.902995 264.761564)">9,3</text>
+   </g>
+   <g id="g7ae2ec_text_18">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="274.956166" y="302.359768" transform="rotate(-0 274.956166 302.359768)">8,6</text>
+   </g>
+   <g id="g7ae2ec_text_19">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="291.01829" y="339.957973" transform="rotate(-0 291.01829 339.957973)">9,5</text>
+   </g>
+   <g id="g7ae2ec_text_20">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="279.02869" y="377.556177" transform="rotate(-0 279.02869 377.556177)">8,9</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="g7ae2ec_pd24de64719">
+   <rect x="120" y="4" width="376" height="402"/>
+  </clipPath>
+ </defs>
+</svg>
+</div><div class="grafico"><div class="g-titulo">La media del mismo día de las 4 semanas anteriores</div><svg role="img" aria-label="La media del mismo día de las 4 semanas anteriores" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="410" viewBox="0 0 500 410" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="g104a81_figure_1">
+  <g id="g104a81_patch_1">
+   <path d="M 0 410 
+L 500 410 
+L 500 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="g104a81_axes_1">
+   <g id="g104a81_patch_2">
+    <path d="M 120 406 
+L 496 406 
+L 496 4 
+L 120 4 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="g104a81_dato0" class="dato" tabindex="0"><title>CA_1 · dólares que falla la regla por cada 100 vendidos: 9,0</title>
+    <path d="M 120 49.343434 
+L 277.959147 49.343434 
+L 277.959147 22.272727 
+L 120 22.272727 
+z
+" clip-path="url(#g104a81_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g104a81_dato1" class="dato" tabindex="0"><title>CA_2 · dólares que falla la regla por cada 100 vendidos: 10,8</title>
+    <path d="M 120 86.941639 
+L 310.02902 86.941639 
+L 310.02902 59.870932 
+L 120 59.870932 
+z
+" clip-path="url(#g104a81_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g104a81_dato2" class="dato" tabindex="0"><title>CA_3 · dólares que falla la regla por cada 100 vendidos: 8,8</title>
+    <path d="M 120 124.539843 
+L 274.049477 124.539843 
+L 274.049477 97.469136 
+L 120 97.469136 
+z
+" clip-path="url(#g104a81_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g104a81_dato3" class="dato" tabindex="0"><title>CA_4 · dólares que falla la regla por cada 100 vendidos: 9,2</title>
+    <path d="M 120 162.138047 
+L 281.921538 162.138047 
+L 281.921538 135.06734 
+L 120 135.06734 
+z
+" clip-path="url(#g104a81_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g104a81_dato4" class="dato" tabindex="0"><title>TX_1 · dólares que falla la regla por cada 100 vendidos: 10,5</title>
+    <path d="M 120 199.736251 
+L 305.407487 199.736251 
+L 305.407487 172.665544 
+L 120 172.665544 
+z
+" clip-path="url(#g104a81_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g104a81_dato5" class="dato" tabindex="0"><title>TX_2 · dólares que falla la regla por cada 100 vendidos: 10,7</title>
+    <path d="M 120 237.334456 
+L 308.681729 237.334456 
+L 308.681729 210.263749 
+L 120 210.263749 
+z
+" clip-path="url(#g104a81_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g104a81_dato6" class="dato" tabindex="0"><title>TX_3 · dólares que falla la regla por cada 100 vendidos: 11,0</title>
+    <path d="M 120 274.93266 
+L 313.49493 274.93266 
+L 313.49493 247.861953 
+L 120 247.861953 
+z
+" clip-path="url(#g104a81_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g104a81_dato7" class="dato" tabindex="0"><title>WI_1 · dólares que falla la regla por cada 100 vendidos: 10,8</title>
+    <path d="M 120 312.530864 
+L 309.963108 312.530864 
+L 309.963108 285.460157 
+L 120 285.460157 
+z
+" clip-path="url(#g104a81_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g104a81_dato8" class="dato" tabindex="0"><title>WI_2 · dólares que falla la regla por cada 100 vendidos: 17,8</title>
+    <path d="M 120 350.129068 
+L 433.333333 350.129068 
+L 433.333333 323.058361 
+L 120 323.058361 
+z
+" clip-path="url(#g104a81_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g104a81_dato9" class="dato" tabindex="0"><title>WI_3 · dólares que falla la regla por cada 100 vendidos: 12,3</title>
+    <path d="M 120 387.727273 
+L 336.617692 387.727273 
+L 336.617692 360.656566 
+L 120 360.656566 
+z
+" clip-path="url(#g104a81_pd24de64719)" style="fill: #2a78d6"/>
+   </g>
+   <g id="g104a81_matplotlib.axis_1">
+    <g id="g104a81_ytick_1">
+     <g id="g104a81_line2d_1"/>
+     <g id="g104a81_text_1">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="40.540259" transform="rotate(-0 116.5 40.540259)">CA_1</text>
+     </g>
+    </g>
+    <g id="g104a81_ytick_2">
+     <g id="g104a81_line2d_2"/>
+     <g id="g104a81_text_2">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="78.138463" transform="rotate(-0 116.5 78.138463)">CA_2</text>
+     </g>
+    </g>
+    <g id="g104a81_ytick_3">
+     <g id="g104a81_line2d_3"/>
+     <g id="g104a81_text_3">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="115.736667" transform="rotate(-0 116.5 115.736667)">CA_3</text>
+     </g>
+    </g>
+    <g id="g104a81_ytick_4">
+     <g id="g104a81_line2d_4"/>
+     <g id="g104a81_text_4">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="153.334871" transform="rotate(-0 116.5 153.334871)">CA_4</text>
+     </g>
+    </g>
+    <g id="g104a81_ytick_5">
+     <g id="g104a81_line2d_5"/>
+     <g id="g104a81_text_5">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="190.933076" transform="rotate(-0 116.5 190.933076)">TX_1</text>
+     </g>
+    </g>
+    <g id="g104a81_ytick_6">
+     <g id="g104a81_line2d_6"/>
+     <g id="g104a81_text_6">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="228.53128" transform="rotate(-0 116.5 228.53128)">TX_2</text>
+     </g>
+    </g>
+    <g id="g104a81_ytick_7">
+     <g id="g104a81_line2d_7"/>
+     <g id="g104a81_text_7">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="266.129484" transform="rotate(-0 116.5 266.129484)">TX_3</text>
+     </g>
+    </g>
+    <g id="g104a81_ytick_8">
+     <g id="g104a81_line2d_8"/>
+     <g id="g104a81_text_8">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="303.727688" transform="rotate(-0 116.5 303.727688)">WI_1</text>
+     </g>
+    </g>
+    <g id="g104a81_ytick_9">
+     <g id="g104a81_line2d_9"/>
+     <g id="g104a81_text_9">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="341.325893" transform="rotate(-0 116.5 341.325893)">WI_2</text>
+     </g>
+    </g>
+    <g id="g104a81_ytick_10">
+     <g id="g104a81_line2d_10"/>
+     <g id="g104a81_text_10">
+      <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: end; fill: #52514e" x="116.5" y="378.924097" transform="rotate(-0 116.5 378.924097)">WI_3</text>
+     </g>
+    </g>
+   </g>
+   <g id="g104a81_patch_3">
+    <path d="M 120 406 
+L 120 4 
+" style="fill: none; stroke: #898781; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="g104a81_text_11">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="281.092481" y="39.172339" transform="rotate(-0 281.092481 39.172339)">9,0</text>
+   </g>
+   <g id="g104a81_text_12">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="313.162353" y="76.770543" transform="rotate(-0 313.162353 76.770543)">10,8</text>
+   </g>
+   <g id="g104a81_text_13">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="277.18281" y="114.368747" transform="rotate(-0 277.18281 114.368747)">8,8</text>
+   </g>
+   <g id="g104a81_text_14">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="285.054871" y="151.966951" transform="rotate(-0 285.054871 151.966951)">9,2</text>
+   </g>
+   <g id="g104a81_text_15">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="308.54082" y="189.565156" transform="rotate(-0 308.54082 189.565156)">10,5</text>
+   </g>
+   <g id="g104a81_text_16">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="311.815062" y="227.16336" transform="rotate(-0 311.815062 227.16336)">10,7</text>
+   </g>
+   <g id="g104a81_text_17">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="316.628264" y="264.761564" transform="rotate(-0 316.628264 264.761564)">11,0</text>
+   </g>
+   <g id="g104a81_text_18">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="313.096442" y="302.359768" transform="rotate(-0 313.096442 302.359768)">10,8</text>
+   </g>
+   <g id="g104a81_text_19">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="436.466667" y="339.957973" transform="rotate(-0 436.466667 339.957973)">17,8</text>
+   </g>
+   <g id="g104a81_text_20">
+    <text style="font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; text-anchor: start; fill: #0b0b0b" x="339.751026" y="377.556177" transform="rotate(-0 339.751026 377.556177)">12,3</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="g104a81_pd24de64719">
+   <rect x="120" y="4" width="376" height="402"/>
+  </clipPath>
+ </defs>
+</svg>
+</div></div><div class="g-fuente">Fuente: venta diaria de las 70 combinaciones, sumada por tienda</div></div></section><section id="p8" class="pagina" hidden><h1>Sumada por estado, categoría o cadena, la previsión falla menos que la regla en todos los grupos</h1><h2>Análisis ejecutivo</h2><p>Al sumar, los errores de los departamentos se compensan y el error baja. En la cadena la previsión se pasa +0,3 unidades y se queda corta 0,5 dólares por cada 100. Por estados, la diferencia es mayor en Wisconsin, con 5,9 frente a 11,3 unidades. En California, en unidades, casi empatan: 5,5 frente a 5,7.</p><p>En dólares, CA_4 empata: la regla falla menos por 0,03. En unidades, la regla falla menos en CA_2, con 8,2 frente a 9,3. En CA_4 también, por 0,06.</p><h2>Próximo paso</h2><p>Planifica el mes de finanzas con la previsión sumada en dólares.</p></section><section id="p9" class="pagina" hidden><h1>Sin dos tiendas de Wisconsin la ventaja del año de comprobación se quedaba en la mitad</h1><div class="cifras"><div class="cifra-clave"><p class="numero">1,20</p><p class="etiqueta">Ventaja en unidades por cada 100 sin las tiendas WI_2 y WI_3</p><p class="contexto">Con ellas, 2,28, en el año de comprobación</p></div><div class="cifra-clave"><p class="numero">0,99</p><p class="etiqueta">Ventaja en dólares por cada 100 sin esas dos tiendas</p><p class="contexto">Con ellas, 2,06, en el año de comprobación</p></div><div class="cifra-clave"><p class="numero">16 de 70</p><p class="etiqueta">Combinaciones en que una regla falla menos que el modelo en el año de comprobación, en unidades</p><p class="contexto">En dólares, 19 de 70</p></div></div><h2>Análisis ejecutivo</h2><p>En el año de comprobación, las tres combinaciones que más aportan son de alimentación en WI_2 y WI_3. Aun sorteando tiendas enteras, la ventaja sigue por encima de cero: de 1,08 a 3,77 unidades por cada 100 y de 0,79 a 3,80 dólares. En el resto de tiendas el modelo gana, pero menos. En el último año, WI_2 sigue siendo la tienda donde más gana: 9,5 dólares por cada 100 frente a 17,8 de la media del mismo día de las 4 semanas anteriores.</p><h2>Próximo paso</h2><p>Pregunta a los jefes de WI_2 y WI_3 qué explica su venta de alimentación. En WI_2 subió de nivel en 2012.</p></section><section id="p10" class="pagina" hidden><h1>En el departamento de ocio HOBBIES_2 la media de los últimos 28 días falla menos que el modelo</h1><h2>Métricas clave</h2><table><thead><tr><th>Departamento</th><th class="num">Unidades: modelo</th><th class="num">Unidades: regla que menos falla</th><th class="num">Dólares: modelo</th><th class="num">Dólares: regla que menos falla</th><th>Se recomienda</th></tr></thead><tbody><tr><td>FOODS_3, alimentación</td><td class="num">10,9</td><td class="num">13,5</td><td class="num">13,2</td><td class="num">15,1</td><td>el modelo</td></tr><tr><td>HOBBIES_2, ocio</td><td class="num">50,2</td><td class="num">50,1</td><td class="num">60,5</td><td class="num">59,8</td><td>la media de los últimos 28 días</td></tr><tr><td>HOUSEHOLD_2, hogar</td><td class="num">20,2</td><td class="num">21,1</td><td class="num">22,3</td><td class="num">24,1</td><td>el modelo</td></tr></tbody></table><div class="fuente">Fuente: venta diaria de cada departamento en las 10 tiendas, del 23/05/2015 al 22/05/2016. Los otros cuatro (FOODS_1, FOODS_2, HOBBIES_1 y HOUSEHOLD_1), en el anexo: el modelo falla menos en todos. Unidades a 10 días; dólares a 28.</div><h2>Análisis ejecutivo</h2><p>Las diez combinaciones de HOBBIES_2 son las únicas de venta intermitente, con días sin venta entre días con venta. Es donde más falla el modelo. En unidades la regla falla menos por solo 0,09; en dólares, por 0,73. En HOUSEHOLD_2 el modelo ya gana en los dos objetivos. En FOODS_3, el departamento que más vende, también.</p><h2>Próximo paso</h2><p>Pide HOBBIES_2 con la media de los últimos 28 días; el resto, con la previsión del modelo.</p></section><section id="p11" class="pagina" hidden><h1>Con un año más de datos, la previsión casi no se pasa</h1><div class="cifras"><div class="cifra-clave"><p class="numero">+0,3</p><p class="etiqueta">Unidades de más que prevé por cada 100 vendidas</p><p class="contexto">En el año de comprobación, el modelo anterior se pasaba +3,2</p></div><div class="cifra-clave"><p class="numero">0,5</p><p class="etiqueta">Dólares que se queda corta por cada 100 vendidos</p><p class="contexto">La media del mismo día de las 4 semanas anteriores, 1,4</p></div><div class="cifra-clave"><p class="numero">+5,1</p><p class="etiqueta">Unidades de más en los 10 días tras la víspera de Acción de Gracias</p><p class="contexto">La media de los últimos 28 días, +11,8</p></div></div><h2>Análisis ejecutivo</h2><p>Prever de más deja mercancía parada en el almacén. El modelo del año de comprobación se pasaba más que todas las reglas. Con la misma receta y un año más de datos, se pasa lo mismo que la media del mismo día de las 4 semanas anteriores en unidades y en dólares se queda algo corto. Por qué bajó el exceso no se puede saber con lo medido.</p><h2>Próximo paso</h2><p>Pide con la previsión sin corregirla: con el modelo en uso ya no se pasa de media.</p></section><section id="p12" class="pagina" hidden><h1>En Acción de Gracias y Año Nuevo la venta cae en todos los departamentos</h1><div class="cifras"><div class="cifra-clave"><p class="numero">−77,8 %</p><p class="etiqueta">Venta de HOBBIES_2 en Año Nuevo frente a un día normal</p><p class="contexto">En Acción de Gracias, −72,2 %</p></div><div class="cifra-clave"><p class="numero">+24,0 %</p><p class="etiqueta">Venta de FOODS_2, alimentación, en los días de cobro de la ayuda alimentaria (SNAP)</p><p class="contexto">FOODS_3, +12,0 %</p></div><div class="cifra-clave"><p class="numero">1,51</p><p class="etiqueta">Veces que vende el día más fuerte frente al más flojo en HOUSEHOLD_1, hogar</p><p class="contexto">En HOBBIES_2, 1,22; siempre es sábado o domingo</p></div></div><h2>Análisis ejecutivo</h2><p>Estas cifras son de 2011 a mayo de 2014, con 3 años de cada festivo. El mes pesa poco y el precio casi no cambia.</p><p>En el último año se midió la previsión en unidades desde la víspera de los tres festivos grandes, a 10 días. En las tres falló menos que la regla que menos falla en cada una. En Acción de Gracias, 18,8 unidades por cada 100 frente a 25,5 de la media de los últimos 28 días. En Navidad, 18,4 frente a 21,2 de la media del mismo día de las 4 semanas anteriores, sin contar el día de cierre. En Año Nuevo, 14,0 frente a 20,5 de esa misma regla.</p><h2>Próximo paso</h2><p>Pide los festivos grandes con la previsión, sabiendo que cada uno se comprobó una sola vez.</p></section><section id="p13" class="pagina" hidden><h1>El retorno depende de supuestos sin fuente y no está medido</h1><div class="cifras"><div class="cifra-clave"><p class="numero">507.897 $</p><p class="etiqueta">Venta media al mes de las 70 combinaciones en 2013</p><p class="contexto">6.094.767 $ en el año</p></div><div class="cifra-clave"><p class="numero">4 de 8</p><p class="etiqueta">Supuestos del cálculo sin fuente</p><p class="contexto">Cuánto bajan la mercancía parada y la venta perdida, qué parte de la venta se pierde, el coste y el calendario</p></div><div class="cifra-clave"><p class="numero">Mes 10</p><p class="etiqueta">Cuándo recupera la inversión el escenario más favorable</p><p class="contexto">Los otros dos no la recuperan en tres años</p></div></div><h2>Análisis ejecutivo</h2><p>El cálculo supone que la mercancía parada y la venta perdida bajan un 5 %, un 10 % o un 15 %, y que el proyecto cuesta de 28.000 $ a 112.000 $ en tres años. Lo medido es otra cosa: en el último año, la previsión falla un 14,2 % menos en unidades. La base es pequeña porque el caso usa 500 de los 3.049 productos: con estos datos no se puede saber si el proyecto sale a cuenta.</p><h2>Próximo paso</h2><p>Pide a finanzas el coste, el margen y las existencias de estos productos para calcular el ahorro real.</p></section><section id="p14" class="pagina" hidden><h1>Lo que puede cambiar estas conclusiones</h1><table class="texto"><thead><tr><th>Decisión a la que afecta</th><th>Límite</th></tr></thead><tbody><tr><td>Pedir con la previsión</td><td>El modelo del año de comprobación no se confirmó en unidades en el último año guardado: ganó en 9 de 13 pruebas. El que queda en uso se eligió después de ver los dos en ese mismo año, lo que lo favorece algo. No hay otro año con venta para confirmarlo. Parte de ese año se miró antes de empezar</td></tr><tr><td>Pedir con la previsión</td><td>El caso no estudia promociones: en estos datos los precios casi no cambian. Con promociones, la previsión no está comprobada</td></tr><tr><td>Pedir en los festivos</td><td>Cada festivo grande se comprobó una sola vez, desde su víspera y a 10 días</td></tr><tr><td>Cuánto se gana en cada tienda</td><td>En el año de comprobación, la mitad de la ventaja salía de WI_2 y WI_3. En el último año no se midió sin ellas</td></tr><tr><td>El dinero</td><td>Sin coste, margen ni existencias, el ahorro no se puede calcular. Los escenarios suponen la mejora, la venta perdida y el coste del proyecto, sin fuente</td></tr><tr><td>Todas</td><td>Son 500 de los 3.049 productos de Walmart y la venta de 2011 a 2016. Antes de pedir de verdad, la previsión se hace y se comprueba con todos los productos. Si cambia la forma de vender, el error sube y hay que volver a medir. Qué parte de la venta de Walmart suman no se puede saber</td></tr></tbody></table><div class="fuente">Fuente: páginas de este informe</div></section><section id="p15" class="pagina" hidden><h1>Se pide a la Dirección que apruebe cuatro decisiones</h1><table class="texto"><thead><tr><th>Decisión</th><th>Quién</th><th>Plazo</th><th>Por qué</th></tr></thead><tbody><tr><td>Pedir con la previsión del modelo, también en los festivos grandes; en HOBBIES_2, con la media de los últimos 28 días</td><td>Aprueba la Dirección de Operaciones; lo aplican compras y jefes de tienda</td><td>Primero</td><td>Falla menos en 12 de 13 pruebas en unidades y en las tres vísperas de festivo (págs. 1, 10 y 12)</td></tr><tr><td>Planificar el mes de finanzas con la previsión del modelo en dólares, sumada por tienda</td><td>Aprueba la Dirección de Operaciones; lo aplica finanzas</td><td>Primero</td><td>Sumada, falla menos que la regla en 9 de 10 tiendas; en CA_4 empatan (págs. 6 a 8)</td></tr><tr><td>Preguntar a los jefes de WI_2 y WI_3 qué explica su venta de alimentación</td><td>Operaciones de tiendas</td><td>Pendiente de la Dirección</td><td>En el año de comprobación, sin esas dos tiendas la ventaja se quedaba en la mitad (pág. 9)</td></tr><tr><td>Pedir el coste, el margen y las existencias de estos productos</td><td>Finanzas</td><td>Pendiente de la Dirección</td><td>Sin ellos el ahorro no se calcula (pág. 13)</td></tr></tbody></table><div class="fuente">Fuente: páginas de este informe</div></section><section id="p16" class="pagina" hidden><h1>Las decisiones y el informe ejecutivo</h1><p>La primera desarrolla las acciones 1 y 2 del informe ejecutivo (construir y medir la previsión; decidir previsión o regla en cada departamento). La tercera es la acción 3 (averiguar los cambios de nivel).</p></section><section id="p17" class="pagina" hidden><h1>Método, fuentes y datos</h1><p>Cómo se mide el error. Lo que falla la previsión, sumado sin signo, entre lo vendido, por 100, con las 70 combinaciones y todos los días juntos. El exceso es la misma cuenta con signo. El 25 de diciembre queda fuera: la tienda cierra.</p><p>Cómo se prevé. Desde cada día de partida, día a día, con lo previsto los días anteriores, como se usaría en la tienda. 13 días de partida en cada año, uno cada 28 días.</p><p>Cuándo gana. Si falla menos que la regla que menos falla en al menos 10 de las 13 pruebas y el intervalo del 95 % de la ventaja queda por encima de cero. Ese mínimo se fijó antes de medir.</p></section><section id="p18" class="pagina" hidden><h1>El modelo</h1><p>El modelo. Un modelo de árboles de decisión por boosting (HistGradientBoosting), uno para unidades y otro para dólares. El del año de comprobación se ajustó con la venta del 05/03/2011 al 22/05/2014. El que queda en uso tiene la misma receta, ajustada con la venta hasta el 22/05/2015. Se comprobó del 23/05/2015 al 22/05/2016.</p><p>Cómo se calcula cuánto menos falla. El 14,2 % y el 12,9 % que la previsión falla menos que la regla son 1 menos el error del modelo entre el de la regla que menos falla, en unidades y en dólares. El 27,7 % y el 32,2 % de la cadena se calculan igual.</p></section><section id="p19" class="pagina" hidden><h1>Tabla de cifras</h1><p>Tabla de cifras. Cada cifra con su fichero de informes. Las tablas largas van en las dos páginas siguientes.</p><table class="texto"><thead><tr><th>Cifra</th><th>Fichero de informes</th></tr></thead><tbody><tr><td>Error, exceso y ventaja del modelo en uso, del modelo del año de comprobación y de las reglas; cuánto menos falla, calculado con las dos cifras del veredicto</td><td>prueba_final.json</td></tr><tr><td>Previsión sumada por tienda, estado, categoría y cadena; qué usar en cada departamento</td><td>prueba_final.json</td></tr><tr><td>Las tres vísperas de festivo</td><td>prueba_final.json</td></tr><tr><td>Lo que matiza la ventaja: las dos tiendas de Wisconsin; el exceso del año de comprobación</td><td>validacion.json</td></tr><tr><td>Días que cambian la venta, venta intermitente, cambios de nivel y productos</td><td>analisis-exploratorio__hechos_series.json</td></tr><tr><td>Fechas de la venta con que se ajustó el modelo del año de comprobación</td><td>busqueda.json</td></tr><tr><td>Días del año de comprobación</td><td>particion.json</td></tr><tr><td>Venta del año, escenarios a tres años y supuestos sin fuente</td><td>business_case.json</td></tr><tr><td>Cifras de los gráficos</td><td>informe_final_graficos.csv</td></tr></tbody></table><div class="fuente">Fuente: carpeta de informes del caso</div></section><section id="p20" class="pagina" hidden><h1>Los otros cuatro departamentos</h1><table><thead><tr><th>Departamento</th><th class="num">Unidades: modelo</th><th class="num">Unidades: regla</th><th class="num">Dólares: modelo</th><th class="num">Dólares: regla</th></tr></thead><tbody><tr><td>FOODS_1</td><td class="num">20,5</td><td class="num">21,7</td><td class="num">21,6</td><td class="num">24,2</td></tr><tr><td>FOODS_2</td><td class="num">17,6</td><td class="num">23,4</td><td class="num">16,9</td><td class="num">22,6</td></tr><tr><td>HOBBIES_1</td><td class="num">20,8</td><td class="num">22,1</td><td class="num">19,2</td><td class="num">21,1</td></tr><tr><td>HOUSEHOLD_1</td><td class="num">12,1</td><td class="num">13,0</td><td class="num">14,5</td><td class="num">15,9</td></tr></tbody></table><div class="fuente">Fuente: venta diaria de cada departamento en las 10 tiendas, del 23/05/2015 al 22/05/2016. Error por cada 100 vendidos; la regla es la que menos falla en cada departamento: la media del mismo día de las 4 semanas anteriores en todos, salvo FOODS_1 en dólares, donde es la media de los últimos 28 días. Unidades a 10 días; dólares a 28.</div></section><section id="p21" class="pagina" hidden><h1>Las diez tiendas</h1><table><thead><tr><th>Tienda</th><th class="num">Unidades: modelo</th><th class="num">Unidades: regla</th><th class="num">Dólares: modelo</th><th class="num">Dólares: regla</th></tr></thead><tbody><tr><td>CA_1</td><td class="num">8,1</td><td class="num">8,7</td><td class="num">8,3</td><td class="num">9,0</td></tr><tr><td>CA_2</td><td class="num">9,3</td><td class="num">8,2</td><td class="num">10,3</td><td class="num">10,8</td></tr><tr><td>CA_3</td><td class="num">7,2</td><td class="num">8,3</td><td class="num">7,2</td><td class="num">8,8</td></tr><tr><td>CA_4</td><td class="num">8,0</td><td class="num">7,9</td><td class="num">9,2</td><td class="num">9,2</td></tr><tr><td>TX_1</td><td class="num">7,8</td><td class="num">9,7</td><td class="num">8,6</td><td class="num">10,5</td></tr><tr><td>TX_2</td><td class="num">6,8</td><td class="num">8,4</td><td class="num">8,9</td><td class="num">10,7</td></tr><tr><td>TX_3</td><td class="num">7,9</td><td class="num">8,9</td><td class="num">9,3</td><td class="num">11,0</td></tr><tr><td>WI_1</td><td class="num">7,5</td><td class="num">8,9</td><td class="num">8,6</td><td class="num">10,8</td></tr><tr><td>WI_2</td><td class="num">9,2</td><td class="num">18,2</td><td class="num">9,5</td><td class="num">17,8</td></tr><tr><td>WI_3</td><td class="num">7,4</td><td class="num">11,6</td><td class="num">8,9</td><td class="num">12,3</td></tr></tbody></table><div class="fuente">Fuente: venta diaria de las 70 combinaciones, sumada por tienda, del 23/05/2015 al 22/05/2016. Error por cada 100 vendidos; la regla es la que menos falla en cada tienda: la media del mismo día de las 4 semanas anteriores en todas, salvo WI_2 en unidades, donde es la media de los últimos 28 días. Unidades a 10 días; dólares a 28.</div></section><section id="p22" class="pagina" hidden><h1>Datos personales</h1><p>Datos personales. El caso no trae datos de personas: son ventas por producto y tienda. No pasaron por la protección de datos porque no hacía falta.</p></section>
+</main>
+<div class="etiqueta-dato" role="tooltip" hidden></div>
+<script>
+function mostrar(id) {
+  var boton = document.querySelector('nav button[data-pagina="' + id + '"]');
+  if (!boton) { return; }
+  document.querySelectorAll('section.pagina').forEach(function (pagina) { pagina.hidden = pagina.id !== id; });
+  document.querySelectorAll('nav button').forEach(function (otro) { otro.removeAttribute('aria-current'); });
+  boton.setAttribute('aria-current', 'page');
+  boton.scrollIntoView({block: 'nearest'});
+}
+document.querySelectorAll('nav button').forEach(function (boton) {
+  boton.addEventListener('click', function () {
+    mostrar(boton.dataset.pagina);
+    history.replaceState(null, '', '#' + boton.dataset.pagina);
+    window.scrollTo(0, 0);
+  });
+});
+if (location.hash) { mostrar(location.hash.slice(1)); }
+
+// G20: cada valor de un gráfico enseña su etiqueta con el ratón y con el tabulador. El texto pasa del <title> a
+// aria-label, para que el navegador no saque además su propia etiqueta y el lector de pantalla lo siga leyendo.
+var caja = document.querySelector('.etiqueta-dato');
+document.querySelectorAll('svg g.dato').forEach(function (dato) {
+  var titulo = dato.querySelector('title');
+  if (!titulo) { return; }
+  dato.dataset.etiqueta = titulo.textContent;
+  dato.setAttribute('aria-label', titulo.textContent);
+  titulo.remove();
+});
+function enseñar(dato, x, y) {
+  caja.textContent = dato.dataset.etiqueta;
+  caja.hidden = false;
+  var ancho = caja.offsetWidth, alto = caja.offsetHeight;
+  // Al lado del ratón; si no cabe a la derecha o abajo, al otro lado
+  var izquierda = x + 12 + ancho > window.innerWidth ? x - 12 - ancho : x + 12;
+  var arriba = y + 12 + alto > window.innerHeight ? y - 12 - alto : y + 12;
+  caja.style.left = Math.max(0, izquierda) + 'px';
+  caja.style.top = Math.max(0, arriba) + 'px';
+}
+function esconder() { caja.hidden = true; }
+document.addEventListener('mouseover', function (e) {
+  var dato = e.target.closest ? e.target.closest('g.dato') : null;
+  if (dato && dato.dataset.etiqueta) { enseñar(dato, e.clientX, e.clientY); } else { esconder(); }
+});
+document.addEventListener('mousemove', function (e) {
+  var dato = e.target.closest ? e.target.closest('g.dato') : null;
+  if (dato && dato.dataset.etiqueta) { enseñar(dato, e.clientX, e.clientY); }
+});
+document.addEventListener('focusin', function (e) {
+  var dato = e.target.closest ? e.target.closest('g.dato') : null;
+  if (!dato || !dato.dataset.etiqueta) { esconder(); return; }
+  var r = dato.getBoundingClientRect();
+  enseñar(dato, r.right, r.top);
+});
+document.addEventListener('focusout', esconder);
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { esconder(); } });
+</script>
+</body>
+</html>

@@ -1,0 +1,1061 @@
+{
+  "metodo": "modelado-datos",
+  "version_metodo": "20/11/2026",
+  "script": "scripts/04_modelado_datos.py",
+  "fecha_datos": "2015-05-22",
+  "fecha_ejecucion": "2026-11-24T11:04:42",
+  "entorno": {
+    "python": "3.13.15",
+    "pandas": "3.0.6",
+    "numpy": "2.5.3",
+    "pyarrow": "24.0.0",
+    "ejecutable": "python"
+  },
+  "diseno": "config/modelo/modelo-datos.md",
+  "entradas": [
+    {
+      "ruta": "data/processed/venta_corregido.parquet",
+      "sha256": "8d54b88b01a9f00c53461cc40dde91d48cb2c97bffaf2c9c569c1449e18304cd",
+      "filas": 5000,
+      "columnas": 1581
+    },
+    {
+      "ruta": "data/processed/precios_corregido.parquet",
+      "sha256": "d9ac5467e59d7f099a0e3ae0358417ef17be8e3c76d6fb59726fa6c70f99c1fa",
+      "filas": 854573,
+      "columnas": 4
+    },
+    {
+      "ruta": "data/processed/calendario_corregido.parquet",
+      "sha256": "1754b2bb702dc7193b81f638906027dccbbbd16a647a2d65cfd3dcb296581d27",
+      "filas": 1969,
+      "columnas": 14
+    }
+  ],
+  "tablas": [
+    {
+      "tabla": "venta",
+      "fichero": "data/processed/venta_corregido.parquet",
+      "grano": "una fila por producto y tienda, con las unidades de cada día en 1.575 columnas (d_1 a d_1575); el hecho es producto, tienda y día, que la transformación pasa a filas",
+      "clave_grano": [
+        "item_id",
+        "store_id"
+      ],
+      "tipo": "hechos",
+      "clave_unica": true,
+      "filas_repetidas": 0,
+      "claves_repetidas": 0,
+      "columnas_que_faltan": [],
+      "clave_alternativa": [
+        "id"
+      ],
+      "clave_alternativa_unica": true
+    },
+    {
+      "tabla": "precios",
+      "fichero": "data/processed/precios_corregido.parquet",
+      "grano": "una fila por producto, tienda y semana de Walmart, con su precio",
+      "clave_grano": [
+        "store_id",
+        "item_id",
+        "wm_yr_wk"
+      ],
+      "tipo": "hechos",
+      "clave_unica": true,
+      "filas_repetidas": 0,
+      "claves_repetidas": 0,
+      "columnas_que_faltan": [],
+      "clave_alternativa": null,
+      "clave_alternativa_unica": null
+    },
+    {
+      "tabla": "calendario",
+      "fichero": "data/processed/calendario_corregido.parquet",
+      "grano": "una fila por día",
+      "clave_grano": [
+        "d"
+      ],
+      "tipo": "dimension",
+      "clave_unica": true,
+      "filas_repetidas": 0,
+      "claves_repetidas": 0,
+      "columnas_que_faltan": [],
+      "clave_alternativa": [
+        "date"
+      ],
+      "clave_alternativa_unica": true
+    },
+    {
+      "tabla": "dim_producto",
+      "fichero": null,
+      "grano": "una fila por producto",
+      "clave_grano": [
+        "item_id"
+      ],
+      "tipo": "dimension",
+      "clave_unica": null,
+      "filas_repetidas": null,
+      "atributos": {
+        "dept_id": "venta.dept_id",
+        "cat_id": "venta.cat_id"
+      },
+      "nota": "no existe todavía: la construye la transformación con el diseño aprobado"
+    },
+    {
+      "tabla": "dim_tienda",
+      "fichero": null,
+      "grano": "una fila por tienda",
+      "clave_grano": [
+        "store_id"
+      ],
+      "tipo": "dimension",
+      "clave_unica": null,
+      "filas_repetidas": null,
+      "atributos": {
+        "state_id": "venta.state_id"
+      },
+      "nota": "no existe todavía: la construye la transformación con el diseño aprobado"
+    },
+    {
+      "tabla": "Calendario",
+      "fichero": "data/processed/calendario.parquet",
+      "grano": "una fila por día",
+      "clave_grano": [
+        "d"
+      ],
+      "tipo": "dimension",
+      "clave_unica": true,
+      "filas_repetidas": 0,
+      "atributos": {
+        "date": "calendario.date",
+        "year": "calendario.year",
+        "month": "calendario.month",
+        "weekday": "calendario.weekday",
+        "wday": "calendario.wday",
+        "wm_yr_wk": "calendario.wm_yr_wk",
+        "wm_yr_wk_anterior": "orden de las semanas del calendario",
+        "event_name_1": "calendario.event_name_1",
+        "event_type_1": "calendario.event_type_1",
+        "event_name_2": "calendario.event_name_2",
+        "event_type_2": "calendario.event_type_2",
+        "snap_ca": "calendario.snap_ca",
+        "snap_tx": "calendario.snap_tx",
+        "snap_wi": "calendario.snap_wi",
+        "periodo": "reglas, apartado 5",
+        "mes_parcial": "reglas, apartado 5",
+        "semana_parcial": "reglas, apartado 5"
+      },
+      "nota": "construido por este script; las demás tablas las construye la transformación"
+    },
+    {
+      "tabla": "hechos_series",
+      "fichero": null,
+      "grano": "una fila por serie (departamento en una tienda) y día",
+      "clave_grano": [
+        "store_id",
+        "dept_id",
+        "d"
+      ],
+      "tipo": "hechos",
+      "clave_unica": null,
+      "filas_repetidas": null,
+      "atributos": {
+        "cat_id": "dim_producto.cat_id",
+        "unidades": "reglas, apartado 5, venta en unidades",
+        "dolares": "reglas, apartado 5, venta en dólares"
+      },
+      "nota": "no existe todavía: la construye la transformación con el diseño aprobado"
+    }
+  ],
+  "jerarquia": {
+    "productos": 500,
+    "tiendas": 10,
+    "series": 70,
+    "productos_con_mas_de_un_departamento": 0,
+    "productos_con_mas_de_una_categoria": 0,
+    "departamentos_con_mas_de_una_categoria": 0,
+    "tiendas_con_mas_de_un_estado": 0,
+    "productos_por_departamento_en_cada_tienda": {
+      "CA_1": {
+        "FOODS_1": 43,
+        "FOODS_2": 61,
+        "FOODS_3": 129,
+        "HOBBIES_1": 73,
+        "HOBBIES_2": 27,
+        "HOUSEHOLD_1": 93,
+        "HOUSEHOLD_2": 74
+      },
+      "CA_2": {
+        "FOODS_1": 43,
+        "FOODS_2": 61,
+        "FOODS_3": 129,
+        "HOBBIES_1": 73,
+        "HOBBIES_2": 27,
+        "HOUSEHOLD_1": 93,
+        "HOUSEHOLD_2": 74
+      },
+      "CA_3": {
+        "FOODS_1": 43,
+        "FOODS_2": 61,
+        "FOODS_3": 129,
+        "HOBBIES_1": 73,
+        "HOBBIES_2": 27,
+        "HOUSEHOLD_1": 93,
+        "HOUSEHOLD_2": 74
+      },
+      "CA_4": {
+        "FOODS_1": 43,
+        "FOODS_2": 61,
+        "FOODS_3": 129,
+        "HOBBIES_1": 73,
+        "HOBBIES_2": 27,
+        "HOUSEHOLD_1": 93,
+        "HOUSEHOLD_2": 74
+      },
+      "TX_1": {
+        "FOODS_1": 43,
+        "FOODS_2": 61,
+        "FOODS_3": 129,
+        "HOBBIES_1": 73,
+        "HOBBIES_2": 27,
+        "HOUSEHOLD_1": 93,
+        "HOUSEHOLD_2": 74
+      },
+      "TX_2": {
+        "FOODS_1": 43,
+        "FOODS_2": 61,
+        "FOODS_3": 129,
+        "HOBBIES_1": 73,
+        "HOBBIES_2": 27,
+        "HOUSEHOLD_1": 93,
+        "HOUSEHOLD_2": 74
+      },
+      "TX_3": {
+        "FOODS_1": 43,
+        "FOODS_2": 61,
+        "FOODS_3": 129,
+        "HOBBIES_1": 73,
+        "HOBBIES_2": 27,
+        "HOUSEHOLD_1": 93,
+        "HOUSEHOLD_2": 74
+      },
+      "WI_1": {
+        "FOODS_1": 43,
+        "FOODS_2": 61,
+        "FOODS_3": 129,
+        "HOBBIES_1": 73,
+        "HOBBIES_2": 27,
+        "HOUSEHOLD_1": 93,
+        "HOUSEHOLD_2": 74
+      },
+      "WI_2": {
+        "FOODS_1": 43,
+        "FOODS_2": 61,
+        "FOODS_3": 129,
+        "HOBBIES_1": 73,
+        "HOBBIES_2": 27,
+        "HOUSEHOLD_1": 93,
+        "HOUSEHOLD_2": 74
+      },
+      "WI_3": {
+        "FOODS_1": 43,
+        "FOODS_2": 61,
+        "FOODS_3": 129,
+        "HOBBIES_1": 73,
+        "HOBBIES_2": 27,
+        "HOUSEHOLD_1": 93,
+        "HOUSEHOLD_2": 74
+      }
+    }
+  },
+  "relaciones": [
+    {
+      "desde": "venta en filas",
+      "hacia": "Calendario",
+      "clave_desde": [
+        "d"
+      ],
+      "clave_hacia": [
+        "d"
+      ],
+      "maestro": "Calendario",
+      "cardinalidad": "N:1",
+      "procedencia": "guía del concurso (d_1 … d_n son los días, d_1 el 29/01/2011); reglas, apartado 5 (cada venta es del día natural de la tienda)",
+      "sin_pareja": "ningún día de la venta queda sin fecha; los días del calendario sin venta no son de ningún periodo (reglas, apartado 5)",
+      "tipos_desde": [
+        "str"
+      ],
+      "tipos_hacia": [
+        "str"
+      ],
+      "mismo_tipo": true
+    },
+    {
+      "desde": "venta en filas",
+      "hacia": "precios",
+      "clave_desde": [
+        "item_id",
+        "store_id",
+        "wm_yr_wk"
+      ],
+      "clave_hacia": [
+        "item_id",
+        "store_id",
+        "wm_yr_wk"
+      ],
+      "maestro": "precios",
+      "cardinalidad": "N:1",
+      "procedencia": "reglas, apartado 5 (el precio es el de un producto en una tienda durante una semana de Walmart y vale para sus siete días; la venta en dólares multiplica las unidades de cada día por ese precio); guía del concurso",
+      "sin_pareja": "una semana sin precio es una semana sin venta (reglas, apartado 5): esos días suman cero dólares; un día con venta y sin precio para el trabajo (reglas, apartado 5)",
+      "tipos_desde": [
+        "str",
+        "str",
+        "int64"
+      ],
+      "tipos_hacia": [
+        "str",
+        "str",
+        "int64"
+      ],
+      "mismo_tipo": true
+    },
+    {
+      "desde": "venta en filas",
+      "hacia": "dim_producto",
+      "clave_desde": [
+        "item_id"
+      ],
+      "clave_hacia": [
+        "item_id"
+      ],
+      "maestro": "dim_producto",
+      "cardinalidad": "N:1",
+      "procedencia": "reglas, apartado 3 (dos productos son distintos por su código) y §4 (producto, departamento y categoría); guía del concurso",
+      "sin_pareja": "no puede haberla: dim_producto sale de la propia venta",
+      "tipos_desde": [
+        "str"
+      ],
+      "tipos_hacia": [
+        "str"
+      ],
+      "mismo_tipo": true
+    },
+    {
+      "desde": "precios",
+      "hacia": "dim_producto",
+      "clave_desde": [
+        "item_id"
+      ],
+      "clave_hacia": [
+        "item_id"
+      ],
+      "maestro": "dim_producto",
+      "cardinalidad": "N:1",
+      "procedencia": "reglas, apartado 4 (cada producto pertenece a un departamento); ficha, pregunta 4 (precio medio del departamento por semana)",
+      "sin_pareja": "pendiente: si apareciera, se cuenta y se para",
+      "tipos_desde": [
+        "str"
+      ],
+      "tipos_hacia": [
+        "str"
+      ],
+      "mismo_tipo": true
+    },
+    {
+      "desde": "hechos_series",
+      "hacia": "dim_tienda",
+      "clave_desde": [
+        "store_id"
+      ],
+      "clave_hacia": [
+        "store_id"
+      ],
+      "maestro": "dim_tienda",
+      "cardinalidad": "N:1",
+      "procedencia": "reglas, apartado 3 (dos tiendas son distintas por su código y pertenecen a un estado) y §4",
+      "sin_pareja": "no puede haberla: dim_tienda sale de la propia venta",
+      "tipos_desde": [
+        "str"
+      ],
+      "tipos_hacia": [
+        "str"
+      ],
+      "mismo_tipo": true
+    },
+    {
+      "desde": "hechos_series",
+      "hacia": "Calendario",
+      "clave_desde": [
+        "d"
+      ],
+      "clave_hacia": [
+        "d"
+      ],
+      "maestro": "Calendario",
+      "cardinalidad": "N:1",
+      "procedencia": "reglas, apartado 3 (la serie es la venta diaria de un departamento en una tienda) y §5",
+      "sin_pareja": "ningún día de la serie queda sin fecha",
+      "tipos_desde": [
+        "str"
+      ],
+      "tipos_hacia": [
+        "str"
+      ],
+      "mismo_tipo": true
+    },
+    {
+      "desde": "hechos_series",
+      "hacia": "precio medio del departamento por semana",
+      "clave_desde": [
+        "store_id",
+        "dept_id",
+        "wm_yr_wk_anterior"
+      ],
+      "clave_hacia": [
+        "store_id",
+        "dept_id",
+        "wm_yr_wk"
+      ],
+      "maestro": "precio medio del departamento por semana",
+      "cardinalidad": "N:1",
+      "procedencia": "reglas, apartado 5, D9 (el precio que entra en la previsión de un día es el de la semana anterior); ficha, pregunta 4",
+      "sin_pareja": "la primera semana no tiene anterior: sus días son de los primeros sin historia (reglas, apartado 7)",
+      "tipos_desde": [
+        "str",
+        "str",
+        "int64"
+      ],
+      "tipos_hacia": [
+        "str",
+        "str",
+        "int64"
+      ],
+      "mismo_tipo": true
+    }
+  ],
+  "calendario": {
+    "periodo": "día",
+    "desde": "2011-01-29",
+    "hasta": "2016-06-19",
+    "dias": 1969,
+    "dias_que_faltan": 0,
+    "fichero": "data/processed/calendario.parquet",
+    "primer_periodo_completo": false,
+    "ultimo_periodo_completo": false,
+    "parciales": {
+      "construccion": {
+        "desde": "2011-01-29",
+        "hasta": "2014-05-22",
+        "dias": 1210,
+        "meses_parciales": [
+          "2011-01",
+          "2014-05"
+        ],
+        "semanas_parciales": [
+          11416
+        ]
+      },
+      "validacion": {
+        "desde": "2014-05-23",
+        "hasta": "2015-05-22",
+        "dias": 365,
+        "meses_parciales": [
+          "2014-05",
+          "2015-05"
+        ],
+        "semanas_parciales": [
+          11416
+        ]
+      },
+      "sin_periodo": {
+        "desde": "2015-05-23",
+        "hasta": "2016-06-19",
+        "dias": 394,
+        "meses_parciales": [
+          "2015-05",
+          "2016-06"
+        ],
+        "semanas_parciales": [
+          11621
+        ]
+      }
+    },
+    "semana_que_cruza": {
+      "semana": 11416,
+      "dias_construccion": 6,
+      "dias_validacion": 1
+    },
+    "saltos_de_codigo": [
+      [
+        11152,
+        11201
+      ],
+      [
+        11252,
+        11301
+      ],
+      [
+        11353,
+        11401
+      ],
+      [
+        11452,
+        11501
+      ],
+      [
+        11552,
+        11601
+      ]
+    ],
+    "orden_por_codigo_igual_que_por_fecha": true,
+    "semanas_del_calendario_incompletas": {
+      "11621": 2
+    },
+    "union_de_cada_hecho": {
+      "venta": "d",
+      "precios": "wm_yr_wk, con la semana del día sacada del Calendario"
+    },
+    "construccion": "construido el 2026-11-24 con el diseño aprobado por el responsable del caso el 2026-11-24",
+    "sha256": "a8478ae161ca3e4c99e5f8fa7530ba2a4f73f7e954bf785decefa975c32fbeda",
+    "filas": 1969,
+    "columnas": [
+      "d",
+      "date",
+      "year",
+      "month",
+      "weekday",
+      "wday",
+      "wm_yr_wk",
+      "wm_yr_wk_anterior",
+      "event_name_1",
+      "event_type_1",
+      "event_name_2",
+      "event_type_2",
+      "snap_ca",
+      "snap_tx",
+      "snap_wi",
+      "periodo",
+      "mes_parcial",
+      "semana_parcial"
+    ],
+    "dias_por_periodo": {
+      "construccion": 1210,
+      "sin_periodo": 394,
+      "validacion": 365
+    },
+    "semanas_sin_anterior": [
+      11101
+    ]
+  },
+  "exclusiones": [
+    {
+      "clase": "25 de diciembre",
+      "que_sale": "los días de serie del 25 de diciembre",
+      "de_que_calculo": "el error, el sesgo y la ventaja del modelo y de las tres reglas (reglas, apartado 6)",
+      "como_se_trata": "se quedan en la tabla de series con su venta; no entran en el error",
+      "por_que": "se sabe de antemano que la tienda cierra (reglas, apartado 6)",
+      "recuperable": "sí: se quedan en la tabla",
+      "recuento": {
+        "construccion": 210,
+        "validacion": 70
+      },
+      "recuento_texto": "210 días de serie en construcción; 70 días de serie en validación"
+    },
+    {
+      "clase": "cierre fuera del 25 de diciembre",
+      "que_sale": "el cierre de toda una tienda fuera del 25 de diciembre",
+      "de_que_calculo": "el error, como un 25 de diciembre (reglas, apartado 5; PC-03)",
+      "como_se_trata": "se queda en la tabla de series a cero; no entra en el error",
+      "por_que": "es un cierre real de la tienda y se trata como el 25 de diciembre (reglas, apartado 5)",
+      "recuperable": "sí: se queda en la tabla",
+      "recuento": [
+        {
+          "tienda": "WI_1",
+          "fecha": "2011-02-02",
+          "periodo": "construccion",
+          "dias_serie": 7
+        }
+      ],
+      "recuento_texto": "WI_1 el 2011-02-02, 7 días de serie en construcción"
+    },
+    {
+      "clase": "productos-tienda sin ningún precio",
+      "que_sale": "nada: suman cero a su departamento",
+      "de_que_calculo": "ninguno; la venta en dólares les da cero",
+      "como_se_trata": "se quedan en la venta en filas con cero unidades",
+      "por_que": "un producto que no se vendía suma cero a su departamento (reglas, apartado 3)",
+      "recuperable": "no hace falta: no salen",
+      "recuento": {
+        "productos_tienda": 53,
+        "unidades": 0
+      },
+      "recuento_texto": "53 productos-tienda con 0 unidades"
+    },
+    {
+      "clase": "días del calendario sin venta",
+      "que_sale": "los días del calendario posteriores a la fecha de referencia",
+      "de_que_calculo": "la tabla de series: no tienen venta en el caso",
+      "como_se_trata": "se quedan en el Calendario sin periodo; la previsión en producción los necesita",
+      "por_que": "no son de ningún periodo (reglas, apartado 5); la prueba final está apartada fuera del caso",
+      "recuperable": "con la prueba final, copiada por la persona responsable",
+      "recuento": {
+        "dias": 394
+      },
+      "recuento_texto": "394 días"
+    },
+    {
+      "clase": "primeros días sin historia",
+      "que_sale": "los primeros días de cada serie sin la historia que piden las variables",
+      "de_que_calculo": "la previsión y la comparación con las reglas (reglas, apartado 7, «Población del análisis»)",
+      "como_se_trata": "se cuentan en el registro de transformaciones",
+      "por_que": "las variables de la previsión necesitan días anteriores",
+      "recuperable": "no: no hay datos antes del 29/01/2011",
+      "recuento": null,
+      "recuento_texto": "pendiente del paso 5, cuando se fijen las variables"
+    }
+  ],
+  "precio_medio_departamento": {
+    "de_que_tablas_sale": "precios (sell_price de cada producto, tienda y semana) con dim_producto (su departamento); la ponderada necesita además las unidades de la venta en filas, sumadas por producto, tienda y semana con la semana del Calendario",
+    "periodo_medido": "construcción",
+    "semanas_medidas": 173,
+    "resumen": {
+      "grupos": 12110,
+      "sin_ponderada": 2,
+      "comparables": 12108,
+      "diferencia_media_dolares": 1.2213,
+      "diferencia_relativa_media_pct": 28.51511959201724,
+      "diferencia_relativa_mediana_pct": 28.038080803974204,
+      "diferencia_relativa_p95_pct": 51.96730346641552,
+      "diferencia_relativa_maxima_pct": 93.38521400778207,
+      "ponderada_por_debajo_pct": 95.01982160555005,
+      "por_departamento_media_pct": {
+        "FOODS_1": 25.243407847666905,
+        "FOODS_2": 36.89899258200216,
+        "FOODS_3": 30.8134485093604,
+        "HOBBIES_1": 43.23003582791162,
+        "HOBBIES_2": 20.1067054525421,
+        "HOUSEHOLD_1": 22.189957508597885,
+        "HOUSEHOLD_2": 21.113568706051748
+      }
+    }
+  },
+  "cifras_de_control": {
+    "filas_venta": 5000,
+    "columnas_venta": 1581,
+    "filas_precios": 854573,
+    "filas_calendario": 1969,
+    "clave_venta_filas_repetidas": 0,
+    "id_unico": true,
+    "clave_precios_filas_repetidas": 0,
+    "clave_calendario_filas_repetidas": 0,
+    "date_unica": true,
+    "productos": 500,
+    "tiendas": 10,
+    "series": 70,
+    "productos_con_mas_de_un_departamento": 0,
+    "productos_con_mas_de_una_categoria": 0,
+    "tiendas_con_mas_de_un_estado": 0,
+    "productos_por_departamento_igual_en_todas_las_tiendas": true,
+    "productos_por_departamento": {
+      "FOODS_1": 43,
+      "FOODS_2": 61,
+      "FOODS_3": 129,
+      "HOBBIES_1": 73,
+      "HOBBIES_2": 27,
+      "HOUSEHOLD_1": 93,
+      "HOUSEHOLD_2": 74
+    },
+    "calendario_desde": "2011-01-29",
+    "calendario_hasta": "2016-06-19",
+    "calendario_dias_que_faltan": 0,
+    "primer_dia_venta": {
+      "d": "d_1",
+      "fecha": "2011-01-29",
+      "dia": "sábado"
+    },
+    "ultimo_dia_venta": {
+      "d": "d_1575",
+      "fecha": "2015-05-22",
+      "dia": "viernes"
+    },
+    "semanas_venta": 225,
+    "semana_minima": 11101,
+    "semana_maxima": 11516,
+    "semanas_venta_incompletas": 0,
+    "semanas_precios": 225,
+    "semanas_precios_iguales_a_venta": true,
+    "fin_construccion": {
+      "fecha": "2014-05-22",
+      "dia": "jueves",
+      "semana": 11416
+    },
+    "productos_tienda_sin_precio": 53,
+    "precios_sin_producto_tienda": 0,
+    "semanas_calendario_sin_precio": 57,
+    "dias_calendario_sin_venta": 394,
+    "unidades": 9327191,
+    "dias_con_venta_y_sin_precio": 0,
+    "dias_sin_precio": 1892989,
+    "dolares": 24982728.54
+  },
+  "comprobaciones": [
+    {
+      "que": "filas de venta, precios y calendario",
+      "resultado": "5.000, 854.573 y 1.969"
+    },
+    {
+      "que": "claves del grano repetidas en venta, precios y calendario",
+      "resultado": "0, 0 y 0 filas"
+    },
+    {
+      "que": "productos, tiendas y series",
+      "resultado": "500, 10 y 70"
+    },
+    {
+      "que": "productos por departamento iguales en las diez tiendas",
+      "resultado": "sí"
+    },
+    {
+      "que": "días de la venta",
+      "resultado": "d_1 es el sábado 2011-01-29; d_1575 es el viernes 2015-05-22"
+    },
+    {
+      "que": "semanas de la venta",
+      "resultado": "225, de la 11101 a la 11516; incompletas 0"
+    },
+    {
+      "que": "semanas de los precios iguales a las de la venta",
+      "resultado": "sí"
+    },
+    {
+      "que": "último día de la construcción",
+      "resultado": "jueves 2014-05-22, semana 11416"
+    },
+    {
+      "que": "productos-tienda sin precio y precios sin producto-tienda",
+      "resultado": "53 y 0"
+    },
+    {
+      "que": "semanas del calendario sin precio y días del calendario sin venta",
+      "resultado": "57 y 394"
+    },
+    {
+      "que": "unidades",
+      "resultado": "9.327.191"
+    },
+    {
+      "que": "días con venta y sin precio; días sin precio",
+      "resultado": "0; 1.892.989"
+    },
+    {
+      "que": "dólares con el precio de su semana",
+      "resultado": "24.982.728,54"
+    }
+  ],
+  "contradicciones": [],
+  "forma_entrega": "tablas_separadas",
+  "entrega": [
+    "hechos_series",
+    "dim_producto",
+    "dim_tienda",
+    "Calendario"
+  ],
+  "plan_cruces": [
+    {
+      "orden": 1,
+      "partida": "venta en filas",
+      "se_une": "Calendario",
+      "clave_partida": [
+        "d"
+      ],
+      "clave_une": [
+        "d"
+      ],
+      "cardinalidad": "N:1",
+      "tipo_cruce": "left",
+      "magnitudes_control": [
+        "unidades"
+      ],
+      "agregar_antes": null,
+      "aporta": [
+        "date",
+        "wm_yr_wk"
+      ]
+    },
+    {
+      "orden": 2,
+      "partida": "venta en filas",
+      "se_une": "precios",
+      "clave_partida": [
+        "item_id",
+        "store_id",
+        "wm_yr_wk"
+      ],
+      "clave_une": [
+        "item_id",
+        "store_id",
+        "wm_yr_wk"
+      ],
+      "cardinalidad": "N:1",
+      "tipo_cruce": "left",
+      "magnitudes_control": [
+        "unidades"
+      ],
+      "agregar_antes": null,
+      "aporta": [
+        "sell_price"
+      ],
+      "nota": "las filas sin precio tienen que tener cero unidades; después del cruce, dólares = unidades × sell_price, con cero dólares en las filas sin precio"
+    },
+    {
+      "orden": 3,
+      "partida": "venta en filas",
+      "se_une": "dim_producto",
+      "clave_partida": [
+        "item_id"
+      ],
+      "clave_une": [
+        "item_id"
+      ],
+      "cardinalidad": "N:1",
+      "tipo_cruce": "left",
+      "magnitudes_control": [
+        "unidades",
+        "dolares"
+      ],
+      "agregar_antes": null,
+      "aporta": [
+        "dept_id",
+        "cat_id"
+      ]
+    },
+    {
+      "orden": 4,
+      "partida": "hechos_series",
+      "se_une": "dim_tienda",
+      "clave_partida": [
+        "store_id"
+      ],
+      "clave_une": [
+        "store_id"
+      ],
+      "cardinalidad": "N:1",
+      "tipo_cruce": "left",
+      "magnitudes_control": [
+        "unidades",
+        "dolares"
+      ],
+      "agregar_antes": {
+        "desde": "venta en filas",
+        "grano": [
+          "store_id",
+          "dept_id",
+          "d"
+        ],
+        "arrastra": [
+          "cat_id"
+        ],
+        "medidas": {
+          "unidades": "suma",
+          "dolares": "suma"
+        }
+      },
+      "aporta": [
+        "state_id"
+      ]
+    },
+    {
+      "orden": 5,
+      "partida": "hechos_series",
+      "se_une": "Calendario",
+      "clave_partida": [
+        "d"
+      ],
+      "clave_une": [
+        "d"
+      ],
+      "cardinalidad": "N:1",
+      "tipo_cruce": "left",
+      "magnitudes_control": [
+        "unidades",
+        "dolares"
+      ],
+      "agregar_antes": null,
+      "aporta": [
+        "date",
+        "year",
+        "month",
+        "weekday",
+        "wday",
+        "wm_yr_wk",
+        "wm_yr_wk_anterior",
+        "event_name_1",
+        "event_type_1",
+        "event_name_2",
+        "event_type_2",
+        "snap del estado de la tienda",
+        "periodo",
+        "mes_parcial",
+        "semana_parcial"
+      ]
+    },
+    {
+      "orden": 6,
+      "partida": "precios",
+      "se_une": "dim_producto",
+      "clave_partida": [
+        "item_id"
+      ],
+      "clave_une": [
+        "item_id"
+      ],
+      "cardinalidad": "N:1",
+      "tipo_cruce": "left",
+      "magnitudes_control": [
+        "filas",
+        "sell_price"
+      ],
+      "agregar_antes": null,
+      "aporta": [
+        "dept_id"
+      ]
+    },
+    {
+      "orden": 7,
+      "partida": "hechos_series",
+      "se_une": "precio medio del departamento por semana",
+      "clave_partida": [
+        "store_id",
+        "dept_id",
+        "wm_yr_wk_anterior"
+      ],
+      "clave_une": [
+        "store_id",
+        "dept_id",
+        "wm_yr_wk"
+      ],
+      "cardinalidad": "N:1",
+      "tipo_cruce": "left",
+      "magnitudes_control": [
+        "unidades",
+        "dolares"
+      ],
+      "agregar_antes": {
+        "desde": "precios con su departamento (cruce 6)",
+        "grano": [
+          "store_id",
+          "dept_id",
+          "wm_yr_wk"
+        ],
+        "medidas": {
+          "precio_medio": "media simple de los precios de los productos con precio esa semana que ya lo tenían cuatro semanas antes (planteamientos; reglas, apartado 5; el responsable del caso, 24/11/2026)"
+        },
+        "nota": "no necesita las unidades de la venta: dentro del horizonte las de la semana anterior todavía no se conocen"
+      },
+      "aporta": [
+        "precio medio del departamento de la semana anterior"
+      ]
+    }
+  ],
+  "quien_cruza": "la transformación, con los controles de integracion-datos en cada cruce: todos parten de la venta en filas o de la tabla de series, que solo existen después de reestructurar la venta (C-01)",
+  "cruces_de_calidad": [
+    {
+      "izquierda": "venta",
+      "derecha": "precios",
+      "clave": [
+        "item_id",
+        "store_id"
+      ],
+      "sin_pareja_izquierda": 53,
+      "sin_pareja_derecha": 0
+    },
+    {
+      "izquierda": "precios",
+      "derecha": "calendario",
+      "clave": [
+        "wm_yr_wk"
+      ],
+      "sin_pareja_izquierda": 0,
+      "sin_pareja_derecha": 57
+    },
+    {
+      "izquierda": "venta (columnas de días)",
+      "derecha": "calendario",
+      "clave": [
+        "d"
+      ],
+      "sin_pareja_izquierda": 0,
+      "sin_pareja_derecha": 394
+    }
+  ],
+  "aprobado": {
+    "aprobado": true,
+    "fecha": "2026-11-24",
+    "quien": "el responsable del caso"
+  },
+  "pendientes": [
+    {
+      "id": "minimo_de_la_pregunta_4",
+      "tabla": null,
+      "columna": null,
+      "pregunta": "¿Cuántos días de cada evento hacen falta para dar su efecto en la pregunta 4? Es de método y va a los planteamientos con la fórmula de cada efecto.",
+      "opciones": [
+        "un mínimo fijado en los planteamientos",
+        "dar todos los efectos marcando los de pocos días"
+      ]
+    }
+  ],
+  "teoria_aplicada": [
+    {
+      "apartado": "12.5 y 12.6",
+      "por_que": "el grano de cada tabla y el paso de producto a serie: las unidades y los dólares son flujos y se suman; el precio es un nivel y no se suma"
+    },
+    {
+      "apartado": "9.5",
+      "por_que": "cada relación con su fila, su clave, su maestro y su cardinalidad sacada de las reglas y de la guía; dos hechos de grano distinto no se unen fila a fila"
+    },
+    {
+      "apartado": "14.9",
+      "por_que": "la serie diaria es un flujo: un día sin venta es un cero válido (reglas, apartado 5) y el precio, un nivel que vale para los siete días de su semana"
+    }
+  ],
+  "datos_personales": [],
+  "datos_personales_nota": "No existe config/fuentes/proteccion-datos.json: los datos no pasaron por la protección. Las reglas de negocio §9 dicen que los datos son de productos, tiendas, precios y calendario y no traen nada de personas. Este método no usa ni deja ninguna columna de datos personales.",
+  "limites": [
+    "El script comprueba el grano y los tipos de las claves. Si las claves casan entre tablas lo mide integracion-datos, salvo los recuentos que pide el registro de exclusiones.",
+    "En pandas, a diferencia de SQL, las claves vacías se emparejan entre sí al cruzar. El diccionario y la corrección cuentan cero vacíos en las claves de las tres tablas; si apareciera uno, el cruce para antes de unir.",
+    "Un maestro que cambia con el tiempo se modela con la versión que hay. Aquí no cambia: el departamento de un producto y el estado de una tienda son fijos en los datos.",
+    "Los dólares se calculan solo para contar y sumar, con el precio buscado por índice de semana. La única tabla que se guarda es el Calendario.",
+    "La diferencia entre la media simple y la ponderada del precio del departamento se mide en la construcción. La semana 11416 entra con sus días de la construcción."
+  ],
+  "resultado": {
+    "estado": "OK",
+    "riesgo": "bajo",
+    "resumen": "Diseño comprobado sobre las tres tablas corregidas: 0 contradicciones con los datos. Cuatro tablas de entrega (la de series, dos dimensiones y el Calendario) y 7 cruces en el plan, todos muchos a uno.",
+    "artefactos": [
+      "informes/modelado-datos.json",
+      "informes/modelado-datos.md",
+      "data/processed/calendario.parquet"
+    ],
+    "siguiente": "las reglas de transformación y transformacion-datos, con el plan de cruces."
+  },
+  "huellas_despues": {
+    "data/processed/venta_corregido.parquet": "8d54b88b01a9f00c53461cc40dde91d48cb2c97bffaf2c9c569c1449e18304cd",
+    "data/processed/precios_corregido.parquet": "d9ac5467e59d7f099a0e3ae0358417ef17be8e3c76d6fb59726fa6c70f99c1fa",
+    "data/processed/calendario_corregido.parquet": "1754b2bb702dc7193b81f638906027dccbbbd16a647a2d65cfd3dcb296581d27"
+  },
+  "validacion": {
+    "huellas_iguales_antes_y_despues": true,
+    "tablas_cambiadas": []
+  },
+  "duracion_por_parte": {
+    "lectura": 0.21,
+    "grano_y_relaciones": 0.11,
+    "calendario": 0.04,
+    "dolares": 0.31,
+    "exclusiones": 0.06,
+    "precio_medio": 1.54,
+    "calendario_construido": 0.04
+  },
+  "duracion_segundos": 2.33
+}

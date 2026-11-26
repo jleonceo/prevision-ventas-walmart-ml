@@ -1,0 +1,1686 @@
+{
+  "metodo": "transformacion-datos",
+  "version_metodo": "20/11/2026",
+  "script": "scripts/05_transformacion_datos.py",
+  "fecha_datos": "2015-05-22",
+  "fecha_ejecucion": "2026-11-24T11:04:45",
+  "entorno": {
+    "python": "3.13.15",
+    "pandas": "3.0.6",
+    "numpy": "2.5.3",
+    "ejecutable": "python"
+  },
+  "entradas": [
+    {
+      "ruta": "data/processed/venta_corregido.parquet",
+      "sha256": "8d54b88b01a9f00c53461cc40dde91d48cb2c97bffaf2c9c569c1449e18304cd",
+      "filas": 5000,
+      "columnas": 1581
+    },
+    {
+      "ruta": "data/processed/precios_corregido.parquet",
+      "sha256": "d9ac5467e59d7f099a0e3ae0358417ef17be8e3c76d6fb59726fa6c70f99c1fa",
+      "filas": 854573,
+      "columnas": 4
+    },
+    {
+      "ruta": "data/processed/calendario.parquet",
+      "sha256": "a8478ae161ca3e4c99e5f8fa7530ba2a4f73f7e954bf785decefa975c32fbeda",
+      "filas": 1969,
+      "columnas": 18
+    }
+  ],
+  "resultado": {
+    "estado": "OK",
+    "riesgo": "bajo",
+    "resumen": "Tabla de series con 110.250 filas de 70 series, 9.327.191 unidades y 24.982.728,54 dólares, los de la venta en filas; dim_producto con 500 productos y dim_tienda con 10 tiendas. Los 7 cruces del plan sin filas de más y 24 validaciones en verde.",
+    "artefactos": [
+      "informes/transformacion-datos.json",
+      "informes/transformacion-datos.md",
+      "data/processed/hechos_series.parquet",
+      "data/processed/dim_producto.parquet",
+      "data/processed/dim_tienda.parquet"
+    ],
+    "siguiente": "la sesión principal rehace las cifras; después, el auditor del paso 3 y analisis-exploratorio"
+  },
+  "pendientes": [],
+  "salidas": [
+    {
+      "tabla": "hechos_series",
+      "ruta": "data/processed/hechos_series.parquet",
+      "sha256": "31a6a1fbac4f87437ebdd70ca6ab06f55c189fcc87e8150c5d5d319056abf165",
+      "filas": 110250,
+      "columnas": 26,
+      "que_es_una_fila": "un departamento en una tienda un día"
+    },
+    {
+      "tabla": "dim_producto",
+      "ruta": "data/processed/dim_producto.parquet",
+      "sha256": "5aa2ad7d0fc32f190175caa7ce67f64aaafd407c6105618ead65bb86b336c1e7",
+      "filas": 500,
+      "columnas": 3,
+      "que_es_una_fila": "un producto"
+    },
+    {
+      "tabla": "dim_tienda",
+      "ruta": "data/processed/dim_tienda.parquet",
+      "sha256": "744be76903218a6be24190f316231c569387936f0212b43068aed1715ef3571c",
+      "filas": 10,
+      "columnas": 2,
+      "que_es_una_fila": "una tienda"
+    }
+  ],
+  "transformaciones": [
+    {
+      "id": "T-01",
+      "transformacion": "tabla de series con la venta en dólares, cruces 1 a 5",
+      "columnas": [
+        "store_id",
+        "dept_id",
+        "d",
+        "cat_id",
+        "state_id",
+        "unidades",
+        "dolares",
+        "snap",
+        "columnas del Calendario"
+      ],
+      "regla": "reglas-transformacion §1",
+      "ficha": "R-004",
+      "resultado": "110.250 filas con 9.327.191 unidades y 24.982.728,54 dólares, los de la venta en filas."
+    },
+    {
+      "id": "T-02",
+      "transformacion": "marcas de cierre, del error y de los ceros",
+      "columnas": [
+        "cierre_tienda",
+        "fuera_del_error",
+        "clase_cero"
+      ],
+      "regla": "reglas-transformacion §1",
+      "ficha": "R-005",
+      "resultado": "cierre_tienda en 175 y 56 días de serie de construcción y validación."
+    },
+    {
+      "id": "T-03",
+      "transformacion": "precio medio del departamento de la semana anterior, cruces 6 y 7",
+      "columnas": [
+        "precio_medio_semana_anterior"
+      ],
+      "regla": "reglas-transformacion §1",
+      "ficha": "R-009",
+      "resultado": "15.750 grupos con precio; 2.450 filas vacías, sin semana anterior o sin ningún producto con cuatro semanas de precio."
+    },
+    {
+      "id": "T-04",
+      "transformacion": "dimensión de producto",
+      "columnas": [
+        "item_id",
+        "dept_id",
+        "cat_id"
+      ],
+      "regla": "reglas-transformacion §2",
+      "ficha": "R-007",
+      "resultado": "500 productos con la clave sin repetir."
+    },
+    {
+      "id": "T-05",
+      "transformacion": "dimensión de tienda",
+      "columnas": [
+        "store_id",
+        "state_id"
+      ],
+      "regla": "reglas-transformacion §3",
+      "ficha": "R-008",
+      "resultado": "10 tiendas con la clave sin repetir."
+    }
+  ],
+  "variables_generadas": [
+    {
+      "columna": "unidades",
+      "formula": "suma de las unidades de los productos del departamento en la tienda ese día",
+      "columnas_origen": [
+        "d_1 a d_n de la venta"
+      ],
+      "unidad": "unidades",
+      "informacion_posterior": true,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false,
+      "nota": "es el objetivo en unidades"
+    },
+    {
+      "columna": "dolares",
+      "formula": "suma de unidades × sell_price de su semana, producto a producto, en céntimos",
+      "columnas_origen": [
+        "unidades",
+        "sell_price",
+        "wm_yr_wk"
+      ],
+      "unidad": "dólares",
+      "informacion_posterior": true,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false,
+      "nota": "es el objetivo en dólares"
+    },
+    {
+      "columna": "snap",
+      "formula": "snap_ca, snap_tx o snap_wi según state_id",
+      "columnas_origen": [
+        "state_id",
+        "snap_ca",
+        "snap_tx",
+        "snap_wi"
+      ],
+      "unidad": null,
+      "informacion_posterior": false,
+      "sale_del_objetivo": false,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "cierre_tienda",
+      "formula": "todas las series de la tienda venden cero ese día",
+      "columnas_origen": [
+        "unidades",
+        "store_id",
+        "d"
+      ],
+      "unidad": null,
+      "informacion_posterior": true,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false
+    },
+    {
+      "columna": "fuera_del_error",
+      "formula": "25 de diciembre o cierre_tienda",
+      "columnas_origen": [
+        "date",
+        "cierre_tienda"
+      ],
+      "unidad": null,
+      "informacion_posterior": true,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false,
+      "nota": "sale de cierre_tienda, que sale de las unidades"
+    },
+    {
+      "columna": "clase_cero",
+      "formula": "en los ceros: cierre, 25_diciembre, demanda_intermitente (media del periodo sin cierres < 10) o resto",
+      "columnas_origen": [
+        "unidades",
+        "cierre_tienda",
+        "date",
+        "periodo"
+      ],
+      "unidad": null,
+      "informacion_posterior": true,
+      "sale_del_objetivo": true,
+      "suma_de_otras": false,
+      "nota": "usa la media del periodo entero: solo para describir"
+    },
+    {
+      "columna": "precio_medio_semana_anterior",
+      "formula": "media simple de sell_price de los productos del departamento con precio en la tienda la semana wm_yr_wk_anterior que ya lo tenían cuatro semanas antes",
+      "columnas_origen": [
+        "sell_price",
+        "dept_id",
+        "wm_yr_wk_anterior"
+      ],
+      "unidad": "dólares por unidad",
+      "informacion_posterior": false,
+      "sale_del_objetivo": false,
+      "suma_de_otras": false
+    }
+  ],
+  "cambios_granularidad": [
+    {
+      "antes": "un producto en una tienda, con un día por columna",
+      "despues": "un producto en una tienda y día",
+      "sumas_control": [
+        {
+          "magnitud": "unidades",
+          "antes": 9327191,
+          "despues": 9327191,
+          "coincide": true
+        }
+      ]
+    },
+    {
+      "antes": "un producto en una tienda y día",
+      "despues": "un departamento en una tienda un día",
+      "sumas_control": [
+        {
+          "magnitud": "unidades",
+          "antes": 9327191,
+          "despues": 9327191,
+          "coincide": true
+        },
+        {
+          "magnitud": "dólares (en céntimos)",
+          "antes": 2498272854,
+          "despues": 2498272854,
+          "coincide": true
+        }
+      ]
+    },
+    {
+      "antes": "un producto en una tienda y semana, con su precio",
+      "despues": "un departamento en una tienda y semana, con la media simple de sus precios con cuatro semanas de precio",
+      "sumas_control": [
+        {
+          "magnitud": "precios que entran en la media",
+          "antes": 854573,
+          "despues": 854573,
+          "coincide": true
+        }
+      ]
+    }
+  ],
+  "cruces": [
+    {
+      "orden": 1,
+      "partida": "venta en filas",
+      "se_une": "Calendario",
+      "clave": {
+        "partida": [
+          "d"
+        ],
+        "se_une": [
+          "d"
+        ]
+      },
+      "tipo_cruce": "left",
+      "cardinalidad_esperada": "N:1",
+      "repetidas_maestro": {
+        "claves": 0,
+        "filas": 0
+      },
+      "claves_nulas": {
+        "partida": 0,
+        "se_une": 0
+      },
+      "tipos": {
+        "partida": [
+          "texto"
+        ],
+        "se_une": [
+          "texto"
+        ]
+      },
+      "espacios_en_la_clave": 0,
+      "formato_igual": true,
+      "huerfanas_partida": {
+        "claves": 0,
+        "filas": 0,
+        "peso": [
+          {
+            "magnitud": "unidades",
+            "pct": 0.0
+          }
+        ]
+      },
+      "huerfanas_maestro": {
+        "claves": 394
+      },
+      "cardinalidad_observada": "N:1",
+      "filas_antes": 7875000,
+      "resultado_indicator": {
+        "con_pareja": 7875000,
+        "solo_partida": 0,
+        "solo_maestro": 0
+      },
+      "filas_despues": 7875000,
+      "columnas_antes": 4,
+      "columnas_despues": 6,
+      "nulos_nuevos": [
+        {
+          "columna": "date",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        },
+        {
+          "columna": "wm_yr_wk",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        }
+      ],
+      "huerfanas_cuadran": true,
+      "sumas_control": [
+        {
+          "magnitud": "unidades",
+          "antes": 9327191,
+          "despues": 9327191,
+          "coincide": true
+        }
+      ],
+      "motivo_parada": null,
+      "hecho": true
+    },
+    {
+      "orden": 2,
+      "partida": "venta en filas",
+      "se_une": "precios",
+      "clave": {
+        "partida": [
+          "item_id",
+          "store_id",
+          "wm_yr_wk"
+        ],
+        "se_une": [
+          "item_id",
+          "store_id",
+          "wm_yr_wk"
+        ]
+      },
+      "tipo_cruce": "left",
+      "cardinalidad_esperada": "N:1",
+      "repetidas_maestro": {
+        "claves": 0,
+        "filas": 0
+      },
+      "claves_nulas": {
+        "partida": 0,
+        "se_une": 0
+      },
+      "tipos": {
+        "partida": [
+          "texto",
+          "texto",
+          "entero"
+        ],
+        "se_une": [
+          "texto",
+          "texto",
+          "entero"
+        ]
+      },
+      "espacios_en_la_clave": 0,
+      "formato_igual": true,
+      "huerfanas_partida": {
+        "claves": 270427,
+        "filas": 1892989,
+        "peso": [
+          {
+            "magnitud": "unidades",
+            "pct": 0.0
+          }
+        ]
+      },
+      "huerfanas_maestro": {
+        "claves": 0
+      },
+      "cardinalidad_observada": "N:1",
+      "filas_antes": 7875000,
+      "resultado_indicator": {
+        "con_pareja": 5982011,
+        "solo_partida": 1892989,
+        "solo_maestro": 0
+      },
+      "filas_despues": 7875000,
+      "columnas_antes": 6,
+      "columnas_despues": 7,
+      "nulos_nuevos": [
+        {
+          "columna": "sell_price",
+          "de_huerfanas": 1892989,
+          "vacios_del_maestro": 0
+        }
+      ],
+      "huerfanas_cuadran": true,
+      "sumas_control": [
+        {
+          "magnitud": "unidades",
+          "antes": 9327191,
+          "despues": 9327191,
+          "coincide": true
+        }
+      ],
+      "motivo_parada": null,
+      "hecho": true
+    },
+    {
+      "orden": 3,
+      "partida": "venta en filas",
+      "se_une": "dim_producto",
+      "clave": {
+        "partida": [
+          "item_id"
+        ],
+        "se_une": [
+          "item_id"
+        ]
+      },
+      "tipo_cruce": "left",
+      "cardinalidad_esperada": "N:1",
+      "repetidas_maestro": {
+        "claves": 0,
+        "filas": 0
+      },
+      "claves_nulas": {
+        "partida": 0,
+        "se_une": 0
+      },
+      "tipos": {
+        "partida": [
+          "texto"
+        ],
+        "se_une": [
+          "texto"
+        ]
+      },
+      "espacios_en_la_clave": 0,
+      "formato_igual": true,
+      "huerfanas_partida": {
+        "claves": 0,
+        "filas": 0,
+        "peso": [
+          {
+            "magnitud": "unidades",
+            "pct": 0.0
+          },
+          {
+            "magnitud": "dólares (en céntimos)",
+            "pct": 0.0
+          }
+        ]
+      },
+      "huerfanas_maestro": {
+        "claves": 0
+      },
+      "cardinalidad_observada": "N:1",
+      "filas_antes": 7875000,
+      "resultado_indicator": {
+        "con_pareja": 7875000,
+        "solo_partida": 0,
+        "solo_maestro": 0
+      },
+      "filas_despues": 7875000,
+      "columnas_antes": 8,
+      "columnas_despues": 10,
+      "nulos_nuevos": [
+        {
+          "columna": "dept_id",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        },
+        {
+          "columna": "cat_id",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        }
+      ],
+      "huerfanas_cuadran": true,
+      "sumas_control": [
+        {
+          "magnitud": "unidades",
+          "antes": 9327191,
+          "despues": 9327191,
+          "coincide": true
+        },
+        {
+          "magnitud": "dólares (en céntimos)",
+          "antes": 2498272854,
+          "despues": 2498272854,
+          "coincide": true
+        }
+      ],
+      "motivo_parada": null,
+      "hecho": true
+    },
+    {
+      "orden": 4,
+      "partida": "hechos_series",
+      "se_une": "dim_tienda",
+      "clave": {
+        "partida": [
+          "store_id"
+        ],
+        "se_une": [
+          "store_id"
+        ]
+      },
+      "tipo_cruce": "left",
+      "cardinalidad_esperada": "N:1",
+      "repetidas_maestro": {
+        "claves": 0,
+        "filas": 0
+      },
+      "claves_nulas": {
+        "partida": 0,
+        "se_une": 0
+      },
+      "tipos": {
+        "partida": [
+          "texto"
+        ],
+        "se_une": [
+          "texto"
+        ]
+      },
+      "espacios_en_la_clave": 0,
+      "formato_igual": true,
+      "huerfanas_partida": {
+        "claves": 0,
+        "filas": 0,
+        "peso": [
+          {
+            "magnitud": "unidades",
+            "pct": 0.0
+          },
+          {
+            "magnitud": "dólares (en céntimos)",
+            "pct": 0.0
+          }
+        ]
+      },
+      "huerfanas_maestro": {
+        "claves": 0
+      },
+      "cardinalidad_observada": "N:1",
+      "filas_antes": 110250,
+      "resultado_indicator": {
+        "con_pareja": 110250,
+        "solo_partida": 0,
+        "solo_maestro": 0
+      },
+      "filas_despues": 110250,
+      "columnas_antes": 6,
+      "columnas_despues": 7,
+      "nulos_nuevos": [
+        {
+          "columna": "state_id",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        }
+      ],
+      "huerfanas_cuadran": true,
+      "sumas_control": [
+        {
+          "magnitud": "unidades",
+          "antes": 9327191,
+          "despues": 9327191,
+          "coincide": true
+        },
+        {
+          "magnitud": "dólares (en céntimos)",
+          "antes": 2498272854,
+          "despues": 2498272854,
+          "coincide": true
+        }
+      ],
+      "motivo_parada": null,
+      "hecho": true
+    },
+    {
+      "orden": 5,
+      "partida": "hechos_series",
+      "se_une": "Calendario",
+      "clave": {
+        "partida": [
+          "d"
+        ],
+        "se_une": [
+          "d"
+        ]
+      },
+      "tipo_cruce": "left",
+      "cardinalidad_esperada": "N:1",
+      "repetidas_maestro": {
+        "claves": 0,
+        "filas": 0
+      },
+      "claves_nulas": {
+        "partida": 0,
+        "se_une": 0
+      },
+      "tipos": {
+        "partida": [
+          "texto"
+        ],
+        "se_une": [
+          "texto"
+        ]
+      },
+      "espacios_en_la_clave": 0,
+      "formato_igual": true,
+      "huerfanas_partida": {
+        "claves": 0,
+        "filas": 0,
+        "peso": [
+          {
+            "magnitud": "unidades",
+            "pct": 0.0
+          },
+          {
+            "magnitud": "dólares (en céntimos)",
+            "pct": 0.0
+          }
+        ]
+      },
+      "huerfanas_maestro": {
+        "claves": 394
+      },
+      "cardinalidad_observada": "N:1",
+      "filas_antes": 110250,
+      "resultado_indicator": {
+        "con_pareja": 110250,
+        "solo_partida": 0,
+        "solo_maestro": 0
+      },
+      "filas_despues": 110250,
+      "columnas_antes": 7,
+      "columnas_despues": 24,
+      "nulos_nuevos": [
+        {
+          "columna": "date",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        },
+        {
+          "columna": "year",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        },
+        {
+          "columna": "month",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        },
+        {
+          "columna": "weekday",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        },
+        {
+          "columna": "wday",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        },
+        {
+          "columna": "wm_yr_wk",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        },
+        {
+          "columna": "wm_yr_wk_anterior",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 490
+        },
+        {
+          "columna": "event_name_1",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 101290
+        },
+        {
+          "columna": "event_type_1",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 101290
+        },
+        {
+          "columna": "event_name_2",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 109970
+        },
+        {
+          "columna": "event_type_2",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 109970
+        },
+        {
+          "columna": "snap_ca",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        },
+        {
+          "columna": "snap_tx",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        },
+        {
+          "columna": "snap_wi",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        },
+        {
+          "columna": "periodo",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        },
+        {
+          "columna": "mes_parcial",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        },
+        {
+          "columna": "semana_parcial",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        }
+      ],
+      "huerfanas_cuadran": true,
+      "sumas_control": [
+        {
+          "magnitud": "unidades",
+          "antes": 9327191,
+          "despues": 9327191,
+          "coincide": true
+        },
+        {
+          "magnitud": "dólares (en céntimos)",
+          "antes": 2498272854,
+          "despues": 2498272854,
+          "coincide": true
+        }
+      ],
+      "motivo_parada": null,
+      "hecho": true
+    },
+    {
+      "orden": 6,
+      "partida": "precios",
+      "se_une": "dim_producto",
+      "clave": {
+        "partida": [
+          "item_id"
+        ],
+        "se_une": [
+          "item_id"
+        ]
+      },
+      "tipo_cruce": "left",
+      "cardinalidad_esperada": "N:1",
+      "repetidas_maestro": {
+        "claves": 0,
+        "filas": 0
+      },
+      "claves_nulas": {
+        "partida": 0,
+        "se_une": 0
+      },
+      "tipos": {
+        "partida": [
+          "texto"
+        ],
+        "se_une": [
+          "texto"
+        ]
+      },
+      "espacios_en_la_clave": 0,
+      "formato_igual": true,
+      "huerfanas_partida": {
+        "claves": 0,
+        "filas": 0,
+        "peso": [
+          {
+            "magnitud": "sell_price (en céntimos)",
+            "pct": 0.0
+          }
+        ]
+      },
+      "huerfanas_maestro": {
+        "claves": 0
+      },
+      "cardinalidad_observada": "N:1",
+      "filas_antes": 854573,
+      "resultado_indicator": {
+        "con_pareja": 854573,
+        "solo_partida": 0,
+        "solo_maestro": 0
+      },
+      "filas_despues": 854573,
+      "columnas_antes": 5,
+      "columnas_despues": 6,
+      "nulos_nuevos": [
+        {
+          "columna": "dept_id",
+          "de_huerfanas": 0,
+          "vacios_del_maestro": 0
+        }
+      ],
+      "huerfanas_cuadran": true,
+      "sumas_control": [
+        {
+          "magnitud": "sell_price (en céntimos)",
+          "antes": 375001181,
+          "despues": 375001181,
+          "coincide": true
+        }
+      ],
+      "motivo_parada": null,
+      "hecho": true
+    },
+    {
+      "orden": 7,
+      "partida": "hechos_series",
+      "se_une": "precio medio del departamento por semana",
+      "clave": {
+        "partida": [
+          "store_id",
+          "dept_id",
+          "wm_yr_wk_anterior"
+        ],
+        "se_une": [
+          "store_id",
+          "dept_id",
+          "wm_yr_wk"
+        ]
+      },
+      "tipo_cruce": "left",
+      "cardinalidad_esperada": "N:1",
+      "repetidas_maestro": {
+        "claves": 0,
+        "filas": 0
+      },
+      "claves_nulas": {
+        "partida": 490,
+        "se_une": 0
+      },
+      "tipos": {
+        "partida": [
+          "texto",
+          "texto",
+          "entero"
+        ],
+        "se_une": [
+          "texto",
+          "texto",
+          "entero"
+        ]
+      },
+      "espacios_en_la_clave": 0,
+      "formato_igual": true,
+      "huerfanas_partida": {
+        "claves": 70,
+        "filas": 490,
+        "peso": [
+          {
+            "magnitud": "unidades",
+            "pct": 0.34016672329321873
+          },
+          {
+            "magnitud": "dólares (en céntimos)",
+            "pct": 0.2973846506839561
+          }
+        ]
+      },
+      "huerfanas_maestro": {
+        "claves": 70
+      },
+      "cardinalidad_observada": "N:1",
+      "filas_antes": 110250,
+      "resultado_indicator": {
+        "con_pareja": 109760,
+        "solo_partida": 490,
+        "solo_maestro": 0
+      },
+      "filas_despues": 110250,
+      "columnas_antes": 25,
+      "columnas_despues": 26,
+      "nulos_nuevos": [
+        {
+          "columna": "precio_medio_semana_anterior",
+          "de_huerfanas": 490,
+          "vacios_del_maestro": 1960
+        }
+      ],
+      "huerfanas_cuadran": true,
+      "sumas_control": [
+        {
+          "magnitud": "unidades",
+          "antes": 9327191,
+          "despues": 9327191,
+          "coincide": true
+        },
+        {
+          "magnitud": "dólares (en céntimos)",
+          "antes": 2498272854,
+          "despues": 2498272854,
+          "coincide": true
+        }
+      ],
+      "motivo_parada": null,
+      "hecho": true
+    }
+  ],
+  "validaciones": [
+    {
+      "validacion": "columnas de la tabla de series",
+      "resultado": "pasa",
+      "detalle": "26 columnas; sobran []; faltan []."
+    },
+    {
+      "validacion": "clave (store_id, dept_id, d) sin repetir",
+      "resultado": "pasa",
+      "detalle": "0 filas repetidas."
+    },
+    {
+      "validacion": "filas igual a series por días",
+      "resultado": "pasa",
+      "detalle": "110.250 filas; 70 series por 1.575 días."
+    },
+    {
+      "validacion": "unidades iguales a las de la venta en filas",
+      "resultado": "pasa",
+      "detalle": "9.327.191 y 9.327.191."
+    },
+    {
+      "validacion": "dólares iguales a los de la venta en filas",
+      "resultado": "pasa",
+      "detalle": "24.982.728,54 y 24.982.728,54."
+    },
+    {
+      "validacion": "los dólares guardados son los céntimos exactos",
+      "resultado": "pasa",
+      "detalle": "0 filas cuyo importe con dos decimales no vuelve a sus céntimos."
+    },
+    {
+      "validacion": "cada serie con una sola categoría",
+      "resultado": "pasa",
+      "detalle": "0 series con más de una."
+    },
+    {
+      "validacion": "todos los días de la tabla tienen periodo",
+      "resultado": "pasa",
+      "detalle": "0 filas sin él."
+    },
+    {
+      "validacion": "date es fecha, sin zona horaria y sin huecos",
+      "resultado": "pasa",
+      "detalle": "tipo datetime64[us]; 0 días que faltan entre el primero y el último."
+    },
+    {
+      "validacion": "wm_yr_wk_anterior es la semana anterior por orden de fechas",
+      "resultado": "pasa",
+      "detalle": "0 días del Calendario con otra semana anterior."
+    },
+    {
+      "validacion": "snap es el del estado de la tienda",
+      "resultado": "pasa",
+      "detalle": "0 filas con otro SNAP."
+    },
+    {
+      "validacion": "clase_cero en todos los ceros y solo en ellos",
+      "resultado": "pasa",
+      "detalle": "0 ceros sin regla; 0 ceros sin clase; 0 días con venta con clase."
+    },
+    {
+      "validacion": "las series con ceros de demanda intermitente tienen media por debajo del umbral",
+      "resultado": "pasa",
+      "detalle": "media rehecha como suma entre días abiertos de cada serie en su periodo."
+    },
+    {
+      "validacion": "clase_cero igual a clases_de_ceros de correccion-datos.json",
+      "resultado": "pasa",
+      "detalle": "aquí {'construccion': {'cierre': 175, '25_diciembre': 35, 'demanda_intermitente': 2171, 'resto': 35}, 'validacion': {'cierre': 56, '25_diciembre': 12, 'demanda_intermitente': 201, 'resto': 2}}; en la corrección {'construccion': {'cierre': 175, '25_diciembre': 35, 'demanda_intermitente': 2171, 'resto': 35}, 'validacion': {'cierre': 56, '25_diciembre': 12, 'demanda_intermitente': 201, 'resto': 2}}."
+    },
+    {
+      "validacion": "fuera_del_error es el 25 de diciembre o el cierre",
+      "resultado": "pasa",
+      "detalle": "287 filas marcadas."
+    },
+    {
+      "validacion": "el precio medio está vacío en los días sin semana anterior",
+      "resultado": "pasa",
+      "detalle": "2450 filas vacías; 490 sin semana anterior."
+    },
+    {
+      "validacion": "el precio medio está vacío en los días cuya semana anterior no tiene ningún producto con cuatro semanas de precio",
+      "resultado": "pasa",
+      "detalle": "1960 filas con la semana anterior sin ningún producto que cuente."
+    },
+    {
+      "validacion": "dim_producto con la clave sin repetir",
+      "resultado": "pasa",
+      "detalle": "500 filas."
+    },
+    {
+      "validacion": "dim_tienda con la clave sin repetir",
+      "resultado": "pasa",
+      "detalle": "10 filas."
+    },
+    {
+      "validacion": "sumas de control de «un producto en una tienda, con un día por columna» a «un producto en una tienda y día»",
+      "resultado": "pasa",
+      "detalle": "antes y después."
+    },
+    {
+      "validacion": "sumas de control de «un producto en una tienda y día» a «un departamento en una tienda un día»",
+      "resultado": "pasa",
+      "detalle": "antes y después."
+    },
+    {
+      "validacion": "sumas de control de «un producto en una tienda y semana, con su precio» a «un departamento en una tienda y semana, con la media simple de sus precios con cuatro semanas de precio»",
+      "resultado": "pasa",
+      "detalle": "antes y después."
+    },
+    {
+      "validacion": "productos-tienda sin precio igual al cruce venta-precios de calidad-datos.json",
+      "resultado": "pasa",
+      "detalle": "aquí 53; en la calidad 53."
+    },
+    {
+      "validacion": "las tablas de entrada no cambian",
+      "resultado": "pasa",
+      "detalle": "cambiadas: []."
+    }
+  ],
+  "pendiente_modelo": [
+    {
+      "columna": "store_id",
+      "tipo": "categorica",
+      "valores": 10,
+      "orden_real": false,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "dept_id",
+      "tipo": "categorica",
+      "valores": 7,
+      "orden_real": false,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "cat_id",
+      "tipo": "categorica",
+      "valores": 3,
+      "orden_real": false,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "state_id",
+      "tipo": "categorica",
+      "valores": 3,
+      "orden_real": false,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "weekday",
+      "tipo": "categorica",
+      "valores": 7,
+      "orden_real": true,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "event_name_1",
+      "tipo": "categorica",
+      "valores": 30,
+      "orden_real": false,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "event_type_1",
+      "tipo": "categorica",
+      "valores": 4,
+      "orden_real": false,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "event_name_2",
+      "tipo": "categorica",
+      "valores": 4,
+      "orden_real": false,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "event_type_2",
+      "tipo": "categorica",
+      "valores": 2,
+      "orden_real": false,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "periodo",
+      "tipo": "categorica",
+      "valores": 2,
+      "orden_real": false,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "clase_cero",
+      "tipo": "categorica",
+      "valores": 4,
+      "orden_real": false,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "d",
+      "tipo": "codigo numerico, es categoria",
+      "valores": 1575,
+      "orden_real": true,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "year",
+      "tipo": "codigo numerico, es categoria",
+      "valores": 5,
+      "orden_real": true,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "month",
+      "tipo": "codigo numerico, es categoria",
+      "valores": 12,
+      "orden_real": true,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "wday",
+      "tipo": "codigo numerico, es categoria",
+      "valores": 7,
+      "orden_real": true,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "wm_yr_wk",
+      "tipo": "codigo numerico, es categoria",
+      "valores": 225,
+      "orden_real": true,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "wm_yr_wk_anterior",
+      "tipo": "codigo numerico, es categoria",
+      "valores": 224,
+      "orden_real": true,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "snap",
+      "tipo": "codigo numerico, es categoria",
+      "valores": 2,
+      "orden_real": false,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "mes_parcial",
+      "tipo": "marca verdadero o falso",
+      "valores": 2,
+      "orden_real": false,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "semana_parcial",
+      "tipo": "marca verdadero o falso",
+      "valores": 2,
+      "orden_real": false,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "cierre_tienda",
+      "tipo": "marca verdadero o falso",
+      "valores": 2,
+      "orden_real": false,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "fuera_del_error",
+      "tipo": "marca verdadero o falso",
+      "valores": 2,
+      "orden_real": false,
+      "unidad": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "columna": "unidades",
+      "tipo": "magnitud",
+      "valores": 797,
+      "orden_real": true,
+      "unidad": "unidades",
+      "minimo": 0.0,
+      "maximo": 1059.0
+    },
+    {
+      "columna": "dolares",
+      "tipo": "magnitud",
+      "valores": 47221,
+      "orden_real": true,
+      "unidad": "dólares",
+      "minimo": 0.0,
+      "maximo": 3014.14
+    },
+    {
+      "columna": "precio_medio_semana_anterior",
+      "tipo": "magnitud",
+      "valores": 6087,
+      "orden_real": true,
+      "unidad": "dólares por unidad",
+      "minimo": 1.47,
+      "maximo": 6.878857142857143
+    },
+    {
+      "columna": "date",
+      "tipo": "fecha",
+      "valores": 1575,
+      "orden_real": true,
+      "unidad": null,
+      "minimo": "2011-01-29",
+      "maximo": "2015-05-22"
+    }
+  ],
+  "particion": {
+    "columna_fecha": "date",
+    "desarrollo": {
+      "desde": "2011-01-29",
+      "hasta": "2014-05-22"
+    },
+    "validacion": {
+      "desde": "2014-05-23",
+      "hasta": "2015-05-22"
+    },
+    "fuente": "reglas-negocio §5, «Fechas»",
+    "filas_sin_tramo": 0,
+    "fechas_sin_tramo": [],
+    "filas_con_periodo_distinto_del_tramo": 0
+  },
+  "exclusiones": [
+    {
+      "clase": "25 de diciembre",
+      "columna": "fuera_del_error",
+      "que_sale": "los días de serie del 25 de diciembre",
+      "de_que_calculo": "el error, el sesgo y la ventaja",
+      "recuento": {
+        "construccion": {
+          "dias_serie": 210,
+          "unidades": 19,
+          "dolares": 36.17
+        },
+        "validacion": {
+          "dias_serie": 70,
+          "unidades": 3,
+          "dolares": 6.04
+        }
+      },
+      "se_puede_recuperar": "sí: siguen en la tabla de series con su venta"
+    },
+    {
+      "clase": "cierre fuera del 25 de diciembre",
+      "columna": "fuera_del_error",
+      "que_sale": "el cierre de una tienda entera fuera del 25 de diciembre",
+      "de_que_calculo": "el error, el sesgo y la ventaja, como un 25 de diciembre",
+      "recuento": {
+        "construccion": {
+          "dias_serie": 7,
+          "unidades": 0,
+          "dolares": 0.0
+        },
+        "validacion": {
+          "dias_serie": 0,
+          "unidades": 0,
+          "dolares": 0.0
+        }
+      },
+      "detalle": [
+        {
+          "tienda": "WI_1",
+          "fecha": "2011-02-02",
+          "d": "d_5",
+          "periodo": "construccion",
+          "dias_serie": 7
+        }
+      ],
+      "se_puede_recuperar": "sí: siguen en la tabla de series a cero"
+    },
+    {
+      "clase": "sin precio medio de la semana anterior",
+      "columna": "precio_medio_semana_anterior",
+      "que_sale": "los días sin semana anterior o cuya semana anterior no tiene ningún producto con precio cuatro semanas antes (reglas, apartado 5)",
+      "de_que_calculo": "lo que use el precio medio de la semana anterior",
+      "recuento": {
+        "construccion": {
+          "dias_serie": 2450,
+          "unidades": 157519,
+          "dolares": 394448.77
+        },
+        "validacion": {
+          "dias_serie": 0,
+          "unidades": 0,
+          "dolares": 0.0
+        }
+      },
+      "semanas": [
+        11101,
+        11102,
+        11103,
+        11104,
+        11105
+      ],
+      "dias": 35,
+      "se_puede_recuperar": "sí: siguen en la tabla de series con el precio vacío"
+    },
+    {
+      "clase": "productos-tienda sin ningún precio",
+      "columna": null,
+      "que_sale": "nada: no venden ningún día y suman cero a su departamento",
+      "de_que_calculo": "ninguno",
+      "recuento": {
+        "productos_tienda": 53,
+        "unidades": 0,
+        "dolares": 0.0
+      },
+      "se_puede_recuperar": "no hace falta: siguen en la venta corregida"
+    },
+    {
+      "clase": "días del calendario sin venta",
+      "columna": null,
+      "que_sale": "los días del Calendario posteriores a la fecha de referencia",
+      "de_que_calculo": "la tabla de series: no tienen venta en el caso",
+      "recuento": {
+        "dias": 394,
+        "desde": "2015-05-23",
+        "hasta": "2016-06-19"
+      },
+      "se_puede_recuperar": "sí: siguen en el Calendario para producción"
+    },
+    {
+      "clase": "primeros días sin historia",
+      "columna": null,
+      "que_sale": "los primeros días de cada serie sin la historia que piden las variables",
+      "de_que_calculo": "la previsión y la comparación con las reglas (reglas, apartado 7)",
+      "recuento": null,
+      "nota": "se cuentan en el paso 5, cuando se fijen las variables",
+      "se_puede_recuperar": "no: no hay datos antes del 29/01/2011"
+    }
+  ],
+  "paradas": [],
+  "parametros": [
+    {
+      "nombre": "umbral de la demanda intermitente",
+      "valor": 10,
+      "unidad": "unidades de media al día",
+      "fuente": "reglas-negocio §5, D8"
+    }
+  ],
+  "teoria_aplicada": [
+    {
+      "apartado": "12.3",
+      "por_que": "la venta llega en ancho, un día por columna; melt la pasa a una fila por producto, tienda y día para unirle la semana y el precio"
+    },
+    {
+      "apartado": "12.5 y 12.6",
+      "por_que": "al subir de producto a departamento las unidades y los dólares son flujos y se suman con su cuadre antes y después; el precio es un nivel y no se suma"
+    },
+    {
+      "apartado": "3.5",
+      "por_que": "el precio medio del departamento es la media simple de sus productos con precio desde cuatro semanas antes, fijada por el responsable del caso el 24/11/2026; la ponderada necesitaría unidades que en el horizonte no se conocen"
+    },
+    {
+      "apartado": "12.7",
+      "por_que": "no se suma un nivel: el precio medio nunca se suma entre filas ni entre series"
+    }
+  ],
+  "limites": [
+    "Los cruces comparan claves exactas: una clave que existe pero apunta a otra entidad no se detecta.",
+    "El mismo producto o la misma tienda con dos códigos no se vería como repetido.",
+    "El departamento de un producto y el estado de una tienda se toman como fijos: así están en los datos.",
+    "Las sumas de control cubren las unidades, los dólares y el precio en céntimos de cada cruce.",
+    "clase_cero usa la media de la serie en su periodo entero: sirve para describir y nunca entra como variable del modelo.",
+    "Los primeros días de cada serie sin la historia que piden las variables se cuentan en el paso 5."
+  ],
+  "datos_personales": [],
+  "datos_personales_nota": "No existe config/fuentes/proteccion-datos.json: los datos no pasaron por la protección. Las reglas de negocio §9 dicen que los datos son de productos, tiendas, precios y calendario y no traen nada de personas. Esta transformación no usa ni deja ninguna columna de datos personales.",
+  "cifras_de_control": {
+    "venta_filas": 7875000,
+    "venta_unidades": 9327191,
+    "venta_dolares": 24982728.54,
+    "dias_con_venta_y_sin_precio": 0,
+    "dias_sin_precio": 1892989,
+    "series_filas": 110250,
+    "series_columnas": 26,
+    "series_clave_filas_repetidas": 0,
+    "series_dias": 1575,
+    "filas_por_periodo": {
+      "construccion": 84700,
+      "validacion": 25550
+    },
+    "unidades_por_periodo": {
+      "construccion": 7003244,
+      "validacion": 2323947
+    },
+    "dolares_por_periodo": {
+      "construccion": 18167205.84,
+      "validacion": 6815522.7
+    },
+    "series_con_mas_de_una_categoria": 0,
+    "filas_snap": 36400,
+    "cierre_tienda": {
+      "construccion": 175,
+      "validacion": 56
+    },
+    "fuera_del_error": {
+      "construccion": 217,
+      "validacion": 70
+    },
+    "fuera_del_error_25_diciembre": {
+      "construccion": 210,
+      "validacion": 70
+    },
+    "cierres_fuera_del_25": [
+      {
+        "tienda": "WI_1",
+        "fecha": "2011-02-02",
+        "d": "d_5",
+        "dias_serie": 7
+      }
+    ],
+    "clase_cero": {
+      "construccion": {
+        "cierre": 175,
+        "25_diciembre": 35,
+        "demanda_intermitente": 2171,
+        "resto": 35
+      },
+      "validacion": {
+        "cierre": 56,
+        "25_diciembre": 12,
+        "demanda_intermitente": 201,
+        "resto": 2
+      }
+    },
+    "series_intermitentes": {
+      "construccion": {
+        "series": 10,
+        "departamentos": [
+          "HOBBIES_2"
+        ]
+      },
+      "validacion": {
+        "series": 10,
+        "departamentos": [
+          "HOBBIES_2"
+        ]
+      }
+    },
+    "precio_medio_grupos": 15750,
+    "precio_medio_grupos_sin_precio": 0,
+    "precio_medio_grupos_sin_productos_que_cuentan": 280,
+    "precio_medio_precios_que_no_cuentan": 19769,
+    "precio_medio_filas_vacias": 2450,
+    "precio_medio_semanas_vacias": [
+      11101,
+      11102,
+      11103,
+      11104,
+      11105
+    ],
+    "dim_producto_filas": 500,
+    "dim_producto_clave_filas_repetidas": 0,
+    "dim_producto_por_departamento": {
+      "FOODS_1": 43,
+      "FOODS_2": 61,
+      "FOODS_3": 129,
+      "HOBBIES_1": 73,
+      "HOBBIES_2": 27,
+      "HOUSEHOLD_1": 93,
+      "HOUSEHOLD_2": 74
+    },
+    "dim_tienda_filas": 10,
+    "dim_tienda_clave_filas_repetidas": 0,
+    "dim_tienda_por_estado": {
+      "CA": 4,
+      "TX": 3,
+      "WI": 3
+    }
+  },
+  "series_intermitentes": {
+    "construccion": {
+      "series": 10,
+      "departamentos": [
+        "HOBBIES_2"
+      ],
+      "lista": [
+        {
+          "serie": "CA_1 HOBBIES_2",
+          "media": 2.58
+        },
+        {
+          "serie": "CA_2 HOBBIES_2",
+          "media": 3.68
+        },
+        {
+          "serie": "CA_3 HOBBIES_2",
+          "media": 3.65
+        },
+        {
+          "serie": "CA_4 HOBBIES_2",
+          "media": 1.23
+        },
+        {
+          "serie": "TX_1 HOBBIES_2",
+          "media": 2.22
+        },
+        {
+          "serie": "TX_2 HOBBIES_2",
+          "media": 4.73
+        },
+        {
+          "serie": "TX_3 HOBBIES_2",
+          "media": 3.61
+        },
+        {
+          "serie": "WI_1 HOBBIES_2",
+          "media": 2.43
+        },
+        {
+          "serie": "WI_2 HOBBIES_2",
+          "media": 2.4
+        },
+        {
+          "serie": "WI_3 HOBBIES_2",
+          "media": 2.19
+        }
+      ]
+    },
+    "validacion": {
+      "series": 10,
+      "departamentos": [
+        "HOBBIES_2"
+      ],
+      "lista": [
+        {
+          "serie": "CA_1 HOBBIES_2",
+          "media": 7.54
+        },
+        {
+          "serie": "CA_2 HOBBIES_2",
+          "media": 5.28
+        },
+        {
+          "serie": "CA_3 HOBBIES_2",
+          "media": 8.68
+        },
+        {
+          "serie": "CA_4 HOBBIES_2",
+          "media": 2.34
+        },
+        {
+          "serie": "TX_1 HOBBIES_2",
+          "media": 3.97
+        },
+        {
+          "serie": "TX_2 HOBBIES_2",
+          "media": 7.91
+        },
+        {
+          "serie": "TX_3 HOBBIES_2",
+          "media": 7.6
+        },
+        {
+          "serie": "WI_1 HOBBIES_2",
+          "media": 5.33
+        },
+        {
+          "serie": "WI_2 HOBBIES_2",
+          "media": 3.94
+        },
+        {
+          "serie": "WI_3 HOBBIES_2",
+          "media": 3.68
+        }
+      ]
+    }
+  },
+  "huellas_despues": {
+    "data/processed/venta_corregido.parquet": "8d54b88b01a9f00c53461cc40dde91d48cb2c97bffaf2c9c569c1449e18304cd",
+    "data/processed/precios_corregido.parquet": "d9ac5467e59d7f099a0e3ae0358417ef17be8e3c76d6fb59726fa6c70f99c1fa",
+    "data/processed/calendario.parquet": "a8478ae161ca3e4c99e5f8fa7530ba2a4f73f7e954bf785decefa975c32fbeda"
+  },
+  "fichas_nuevas": [
+    "R-009"
+  ],
+  "duracion_por_parte": {
+    "al_empezar": 0.01,
+    "lectura": 0.2,
+    "dimensiones": 0.0,
+    "venta_en_filas": 0.3,
+    "cruces_1_a_3": 8.39,
+    "agregacion": 0.95,
+    "cruces_4_y_5": 0.22,
+    "marcas": 0.11,
+    "cruces_6_y_7": 0.52,
+    "validacion": 0.21,
+    "escritura": 0.12
+  },
+  "duracion_segundos": 11.19
+}
