@@ -1,0 +1,15 @@
+# Credenciales
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Los datos no se publican: la licencia del concurso M5 no deja redistribuirlos (ver el README)
+data/
+
+# Lo que dejan las pruebas al ejecutarse
+tests/tmp_*/

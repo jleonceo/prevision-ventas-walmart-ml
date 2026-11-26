@@ -1,0 +1,4 @@
+# Finales de línea LF en todos los sistemas: los informes guardan la huella SHA-256 de los ficheros que leyeron
+* text=auto eol=lf
+*.joblib binary
+*.png binary

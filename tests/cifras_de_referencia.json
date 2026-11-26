@@ -1,0 +1,529 @@
+{
+  "fuente": "petición 05, bloque CONTROLES: cifras medidas el 21/11/2026 con el Python del caso sobre data/raw/, antes del diccionario",
+  "fecha_datos": "2015-05-22",
+  "venta": {
+    "filas": 5000,
+    "columnas": 1581,
+    "id_distintos": 5000,
+    "productos": 500,
+    "tiendas": 10,
+    "columnas_de_dias": 1575,
+    "vacios_en_dias": 0,
+    "negativos_en_dias": 0,
+    "tipo_de_los_dias": "int64",
+    "filas_por_departamento": {
+      "FOODS_1": 430,
+      "FOODS_2": 610,
+      "FOODS_3": 1290,
+      "HOBBIES_1": 730,
+      "HOBBIES_2": 270,
+      "HOUSEHOLD_1": 930,
+      "HOUSEHOLD_2": 740
+    }
+  },
+  "precios": {
+    "filas": 854573,
+    "columnas": 4,
+    "vacios": 0,
+    "clave_unica": true,
+    "semana_minima": 11101,
+    "semana_maxima": 11516,
+    "filas_hasta_la_semana_11416": 603600,
+    "filas_despues_de_la_semana_11416": 250973,
+    "productos_tienda_con_algun_precio": 4947
+  },
+  "calendario": {
+    "filas": 1969,
+    "columnas": 14,
+    "fecha_minima": "2011-01-29",
+    "fecha_maxima": "2016-06-19",
+    "d_unico": true,
+    "vacios": {
+      "event_name_1": 1807,
+      "event_type_1": 1807,
+      "event_name_2": 1964,
+      "event_type_2": 1964
+    }
+  },
+  "calidad": {
+    "fuente": "petición 06, bloque CONTROLES: cifras de control de calidad medidas por la sesión principal con el Python del caso sobre data/raw/, antes de scripts/02_calidad_datos.py",
+    "cifras": {
+      "filas_venta": 5000,
+      "filas_precios": 854573,
+      "filas_calendario": 1969,
+      "precio_bajo_0_5": 9438,
+      "precio_bajo_0_5_hasta_11416": 6674,
+      "precio_bajo_0_5_despues": 2764,
+      "precio_minimo": 0.01,
+      "precio_por_encima_de_50": 0,
+      "cierres": 33,
+      "cierres_construccion": 25,
+      "cierres_construccion_navidad": 24,
+      "cierres_construccion_fuera_de_navidad": [
+        {
+          "tienda": "WI_1",
+          "fecha": "2011-02-02",
+          "evento": null
+        }
+      ],
+      "cierres_validacion": 8,
+      "cierres_validacion_navidad": 8,
+      "unidades_25_diciembre": {
+        "2011": 6,
+        "2012": 4,
+        "2013": 9,
+        "2014": 3
+      },
+      "semanas_con_venta_sin_precio": 0,
+      "productos_tienda_sin_venta_construccion": 306,
+      "productos_tienda_sin_venta_validacion": 87,
+      "productos_tienda_sin_venta_en_ninguno": 54,
+      "productos_tienda_sin_venta_en_ninguno_sin_precio": 53,
+      "nombres_de_evento": 30,
+      "nombres_de_evento_con_mas_de_un_tipo": 0,
+      "snap_dias_que_cambian": {
+        "CA": 0,
+        "TX": 0,
+        "WI": 0
+      },
+      "snap_dias_del_mes": {
+        "CA": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "TX": [
+          1,
+          3,
+          5,
+          6,
+          7,
+          9,
+          11,
+          12,
+          13,
+          15
+        ],
+        "WI": [
+          2,
+          3,
+          5,
+          6,
+          8,
+          9,
+          11,
+          12,
+          14,
+          15
+        ]
+      },
+      "precio_semanas_que_faltan": 0,
+      "productos_tienda_con_precio": 4947,
+      "productos_tienda_con_precio_hasta_la_ultima_semana": 4947,
+      "ultima_semana_de_precio": 11516,
+      "subidas_de_precio_mas_del_doble": 350,
+      "productos_tienda_con_subida": 215,
+      "saltos_construccion_series": 28,
+      "saltos_construccion_bajadas": 7,
+      "saltos_construccion_mayor": {
+        "nombre": "WI_1 FOODS_2",
+        "razon": 7.23,
+        "fecha": "2012-10-26"
+      },
+      "saltos_construccion_tiendas": [
+        {
+          "nombre": "WI_1",
+          "razon": 1.87,
+          "fecha": "2012-10-26"
+        },
+        {
+          "nombre": "WI_2",
+          "razon": 1.76,
+          "fecha": "2012-05-31"
+        }
+      ],
+      "saltos_construccion_wi_3": {
+        "razon": 0.73,
+        "fecha": "2013-04-12",
+        "salto": false
+      },
+      "saltos_validacion_series": 12,
+      "saltos_validacion_bajadas": 3,
+      "saltos_validacion_mayor": {
+        "nombre": "TX_3 HOBBIES_2",
+        "razon": 3.1,
+        "fecha": "2014-08-26"
+      },
+      "saltos_validacion_tiendas": []
+    }
+  },
+  "correccion": {
+    "fuente": "petición 07, bloque CONTROLES: cifras de control de la corrección medidas por la sesión principal con el Python del caso sobre data/raw/ el 23/11/2026, antes de scripts/03_correccion_datos.py",
+    "cifras": {
+      "filas_venta_antes": 5000,
+      "filas_venta_despues": 5000,
+      "columnas_venta_antes": 1581,
+      "columnas_venta_despues": 1581,
+      "filas_precios_antes": 854573,
+      "filas_precios_despues": 854573,
+      "columnas_precios_antes": 4,
+      "columnas_precios_despues": 4,
+      "filas_calendario_antes": 1969,
+      "filas_calendario_despues": 1969,
+      "columnas_calendario_antes": 14,
+      "columnas_calendario_despues": 14,
+      "unidades_total_antes": 9327191,
+      "unidades_total_despues": 9327191,
+      "unidades_construccion_antes": 7003244,
+      "unidades_construccion_despues": 7003244,
+      "unidades_validacion_antes": 2323947,
+      "unidades_validacion_despues": 2323947,
+      "suma_sell_price_antes": 3750011.81,
+      "suma_sell_price_despues": 3750011.81,
+      "dias_snap_antes": {
+        "CA": 650,
+        "TX": 650,
+        "WI": 650
+      },
+      "dias_snap_despues": {
+        "CA": 650,
+        "TX": 650,
+        "WI": 650
+      },
+      "nombres_cambiados": 3,
+      "colisiones": 0,
+      "fechas_leidas": 1969,
+      "fechas_vacias": 0,
+      "fecha_minima": "2011-01-29",
+      "fecha_maxima": "2016-06-19",
+      "clases_de_ceros": {
+        "construccion": {
+          "cierre": 175,
+          "25_diciembre": 35,
+          "demanda_intermitente": 2171,
+          "resto": 35
+        },
+        "validacion": {
+          "cierre": 56,
+          "25_diciembre": 12,
+          "demanda_intermitente": 201,
+          "resto": 2
+        }
+      },
+      "dias_de_tienda_cerrada": {
+        "construccion": 25,
+        "validacion": 8
+      },
+      "series_intermitentes": {
+        "construccion": [
+          "CA_1 HOBBIES_2",
+          "CA_2 HOBBIES_2",
+          "CA_3 HOBBIES_2",
+          "CA_4 HOBBIES_2",
+          "TX_1 HOBBIES_2",
+          "TX_2 HOBBIES_2",
+          "TX_3 HOBBIES_2",
+          "WI_1 HOBBIES_2",
+          "WI_2 HOBBIES_2",
+          "WI_3 HOBBIES_2"
+        ],
+        "validacion": [
+          "CA_1 HOBBIES_2",
+          "CA_2 HOBBIES_2",
+          "CA_3 HOBBIES_2",
+          "CA_4 HOBBIES_2",
+          "TX_1 HOBBIES_2",
+          "TX_2 HOBBIES_2",
+          "TX_3 HOBBIES_2",
+          "WI_1 HOBBIES_2",
+          "WI_2 HOBBIES_2",
+          "WI_3 HOBBIES_2"
+        ]
+      },
+      "resto_por_serie": {
+        "construccion": [
+          {
+            "serie": "WI_1 FOODS_2",
+            "dias": 14,
+            "desde": "2011-11-24",
+            "hasta": "2012-10-25"
+          },
+          {
+            "serie": "WI_1 HOUSEHOLD_2",
+            "dias": 18,
+            "desde": "2012-09-29",
+            "hasta": "2012-10-25"
+          },
+          {
+            "serie": "WI_2 FOODS_2",
+            "dias": 3,
+            "desde": "2012-04-30",
+            "hasta": "2012-05-02"
+          }
+        ],
+        "validacion": [
+          {
+            "serie": "CA_2 FOODS_2",
+            "dias": 2,
+            "desde": "2014-10-08",
+            "hasta": "2014-10-09"
+          }
+        ]
+      }
+    }
+  },
+  "modelado": {
+    "fuente": "petición 08, bloque CONTROLES: cifras de control del diseño medidas por la sesión principal en data/processed/ el 24/11/2026, antes de scripts/04_modelado_datos.py",
+    "cifras": {
+      "filas_venta": 5000,
+      "columnas_venta": 1581,
+      "filas_precios": 854573,
+      "filas_calendario": 1969,
+      "clave_venta_filas_repetidas": 0,
+      "id_unico": true,
+      "clave_precios_filas_repetidas": 0,
+      "clave_calendario_filas_repetidas": 0,
+      "date_unica": true,
+      "productos": 500,
+      "tiendas": 10,
+      "series": 70,
+      "productos_con_mas_de_un_departamento": 0,
+      "productos_con_mas_de_una_categoria": 0,
+      "tiendas_con_mas_de_un_estado": 0,
+      "productos_por_departamento_igual_en_todas_las_tiendas": true,
+      "productos_por_departamento": {
+        "FOODS_1": 43,
+        "FOODS_2": 61,
+        "FOODS_3": 129,
+        "HOBBIES_1": 73,
+        "HOBBIES_2": 27,
+        "HOUSEHOLD_1": 93,
+        "HOUSEHOLD_2": 74
+      },
+      "calendario_desde": "2011-01-29",
+      "calendario_hasta": "2016-06-19",
+      "calendario_dias_que_faltan": 0,
+      "primer_dia_venta": {
+        "d": "d_1",
+        "fecha": "2011-01-29",
+        "dia": "sábado"
+      },
+      "ultimo_dia_venta": {
+        "d": "d_1575",
+        "fecha": "2015-05-22",
+        "dia": "viernes"
+      },
+      "semanas_venta": 225,
+      "semana_minima": 11101,
+      "semana_maxima": 11516,
+      "semanas_venta_incompletas": 0,
+      "semanas_precios": 225,
+      "semanas_precios_iguales_a_venta": true,
+      "fin_construccion": {
+        "fecha": "2014-05-22",
+        "dia": "jueves",
+        "semana": 11416
+      },
+      "productos_tienda_sin_precio": 53,
+      "precios_sin_producto_tienda": 0,
+      "semanas_calendario_sin_precio": 57,
+      "dias_calendario_sin_venta": 394,
+      "unidades": 9327191,
+      "dias_con_venta_y_sin_precio": 0,
+      "dias_sin_precio": 1892989,
+      "dolares": 24982728.54
+    },
+    "huellas": {
+      "venta_corregido.parquet": "8d54b88b01a9f00c53461cc40dde91d48cb2c97bffaf2c9c569c1449e18304cd",
+      "precios_corregido.parquet": "d9ac5467e59d7f099a0e3ae0358417ef17be8e3c76d6fb59726fa6c70f99c1fa",
+      "calendario_corregido.parquet": "1754b2bb702dc7193b81f638906027dccbbbd16a647a2d65cfd3dcb296581d27"
+    }
+  },
+  "huellas": {
+    "calendar.csv": "d12b5914ef03e66649adf5dd9e996e6602251c22b7a6af8f1f7e3aa12f8860f5",
+    "sales_train_evaluation.csv": "fcbeed85b09a49d3b1b0625a721053388f26e19490bf42e480e97ad6e177b7b2",
+    "sell_prices.csv": "3a3124852028006f94b6eb2c6b0a313df689ca2c75a6b8aaac0e67447f593a7f"
+  },
+  "transformacion": {
+    "fuente": "petición 09, bloque CONTROLES: cifras de la transformación medidas por la sesión principal en data/processed/ el 24/11/2026, antes de scripts/05_transformacion_datos.py; el 24/11/2026, la regla de las cuatro semanas (reglas, apartado 5): vacíos, grupos sin productos que cuenten y precios que no cuentan, medidos por la sesión principal con pandas desde precios_corregido antes de cambiar el script",
+    "cifras": {
+      "venta_filas": 7875000,
+      "venta_unidades": 9327191,
+      "venta_dolares": 24982728.54,
+      "dias_con_venta_y_sin_precio": 0,
+      "dias_sin_precio": 1892989,
+      "series_filas": 110250,
+      "series_columnas": 26,
+      "series_clave_filas_repetidas": 0,
+      "filas_por_periodo": {
+        "construccion": 84700,
+        "validacion": 25550
+      },
+      "unidades_por_periodo": {
+        "construccion": 7003244,
+        "validacion": 2323947
+      },
+      "dolares_por_periodo": {
+        "construccion": 18167205.84,
+        "validacion": 6815522.7
+      },
+      "series_con_mas_de_una_categoria": 0,
+      "filas_snap": 36400,
+      "cierre_tienda": {
+        "construccion": 175,
+        "validacion": 56
+      },
+      "fuera_del_error": {
+        "construccion": 217,
+        "validacion": 70
+      },
+      "fuera_del_error_25_diciembre": {
+        "construccion": 210,
+        "validacion": 70
+      },
+      "cierres_fuera_del_25": [
+        {
+          "tienda": "WI_1",
+          "fecha": "2011-02-02",
+          "d": "d_5",
+          "dias_serie": 7
+        }
+      ],
+      "clase_cero": {
+        "construccion": {
+          "cierre": 175,
+          "25_diciembre": 35,
+          "demanda_intermitente": 2171,
+          "resto": 35
+        },
+        "validacion": {
+          "cierre": 56,
+          "25_diciembre": 12,
+          "demanda_intermitente": 201,
+          "resto": 2
+        }
+      },
+      "series_intermitentes": {
+        "construccion": {
+          "series": 10,
+          "departamentos": [
+            "HOBBIES_2"
+          ]
+        },
+        "validacion": {
+          "series": 10,
+          "departamentos": [
+            "HOBBIES_2"
+          ]
+        }
+      },
+      "precio_medio_grupos": 15750,
+      "precio_medio_grupos_sin_precio": 0,
+      "precio_medio_filas_vacias": 2450,
+      "precio_medio_semanas_vacias": [
+        11101,
+        11102,
+        11103,
+        11104,
+        11105
+      ],
+      "dim_producto_filas": 500,
+      "dim_producto_clave_filas_repetidas": 0,
+      "dim_producto_por_departamento": {
+        "FOODS_1": 43,
+        "FOODS_2": 61,
+        "FOODS_3": 129,
+        "HOBBIES_1": 73,
+        "HOBBIES_2": 27,
+        "HOUSEHOLD_1": 93,
+        "HOUSEHOLD_2": 74
+      },
+      "dim_tienda_filas": 10,
+      "dim_tienda_clave_filas_repetidas": 0,
+      "dim_tienda_por_estado": {
+        "CA": 4,
+        "TX": 3,
+        "WI": 3
+      },
+      "precio_medio_grupos_sin_productos_que_cuentan": 280,
+      "precio_medio_precios_que_no_cuentan": 19769
+    },
+    "huellas": {
+      "venta_corregido.parquet": "8d54b88b01a9f00c53461cc40dde91d48cb2c97bffaf2c9c569c1449e18304cd",
+      "precios_corregido.parquet": "d9ac5467e59d7f099a0e3ae0358417ef17be8e3c76d6fb59726fa6c70f99c1fa",
+      "calendario.parquet": "a8478ae161ca3e4c99e5f8fa7530ba2a4f73f7e954bf785decefa975c32fbeda"
+    }
+  },
+  "validacion": {
+    "fuente": "informes/validacion.json de scripts/16_validacion.py (25/11/2026), veredicto aprobado por el responsable del caso («Sí, apruebo el veredicto»); los seis errores, los orígenes y el intervalo, cruzados por la sesión principal con pandas sobre previsiones_validacion.parquet y hechos_series_validacion.parquet; redondeo a 4 decimales",
+    "cifras": {
+      "unidades": {
+        "filas_previstas": 9100,
+        "filas_medidas": 9100,
+        "dias_previstos_por_serie": 130,
+        "error_modelo": 15.6436,
+        "error_regla_que_menos_falla": 17.9283,
+        "origenes_que_gana": 12,
+        "de": 13,
+        "ventaja": 2.2847,
+        "intervalo_bajo": 1.2318,
+        "intervalo_alto": 3.4945,
+        "veredicto": "gana",
+        "errores": {
+          "modelo": 15.6436,
+          "repetir_semana_anterior": 22.1984,
+          "media_28_dias": 21.6389,
+          "media_mismo_dia_4_semanas": 17.9283,
+          "trivial": 72.5128,
+          "suavizado": 17.3976
+        },
+        "se_recomienda": {
+          "FOODS_1": "el modelo",
+          "FOODS_2": "el modelo",
+          "FOODS_3": "el modelo",
+          "HOBBIES_1": "el modelo",
+          "HOBBIES_2": "la media de los últimos 28 días",
+          "HOUSEHOLD_1": "el modelo",
+          "HOUSEHOLD_2": "el modelo"
+        }
+      },
+      "dolares": {
+        "filas_previstas": 25480,
+        "filas_medidas": 25410,
+        "dias_previstos_por_serie": 364,
+        "error_modelo": 17.3733,
+        "error_regla_que_menos_falla": 19.4362,
+        "origenes_que_gana": 12,
+        "de": 13,
+        "ventaja": 2.0629,
+        "intervalo_bajo": 1.0184,
+        "intervalo_alto": 3.3213,
+        "veredicto": "gana",
+        "errores": {
+          "modelo": 17.3733,
+          "repetir_semana_anterior": 23.9204,
+          "media_28_dias": 22.2781,
+          "media_mismo_dia_4_semanas": 19.4362,
+          "trivial": 69.4715,
+          "suavizado": 19.2872
+        },
+        "se_recomienda": {
+          "FOODS_1": "el modelo",
+          "FOODS_2": "el modelo",
+          "FOODS_3": "el modelo",
+          "HOBBIES_1": "el modelo",
+          "HOBBIES_2": "la media de los últimos 28 días",
+          "HOUSEHOLD_1": "el modelo",
+          "HOUSEHOLD_2": "la media del mismo día de las 4 semanas anteriores"
+        }
+      }
+    }
+  }
+}

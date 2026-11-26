@@ -1,0 +1,26 @@
+{
+  "que_es": "las cifras de arriba del cuadro de mando sin filtros, que comprueba tests/probar_21_cuadro_mando_pestanas.py",
+  "de_donde_salen": "las que repite del informe, de informes/prueba_final.json (variante reentrenado); la venta en dólares, de data/processed/prueba_final/hechos_prueba_final.parquet; los próximos días, de data/predicciones/desde_2016-05-22/previsiones_lote.parquet con la media de los últimos 28 días de HOBBIES_2 calculada con pandas sobre hechos_prueba_final; calculadas fuera del script 21 el 25/11/2026 (petición 32)",
+  "fecha_datos": "2016-05-22",
+  "cifras": {
+    "vision.venta": 7462789.460000001,
+    "vision.error_modelo": 16.205475112993142,
+    "vision.error_regla": 18.610592794346363,
+    "vision.pruebas_gana": 13,
+    "pedido.error_modelo": 14.499455602912935,
+    "pedido.error_regla": 16.92062745183864,
+    "pedido.pruebas_gana": 12,
+    "pedido.exceso": 0.2663442230988505,
+    "donde.tiendas_gana": 9,
+    "donde.departamentos_gana": 6,
+    "donde.sumado_dolares": 4.846299237810168,
+    "donde.sumado_unidades": 4.244218174655717,
+    "festivos.festivo_0": 18.769465132024372,
+    "festivos.festivo_1": 18.411734073945496,
+    "festivos.festivo_2": 14.023600415640614,
+    "proximos.unidades_10": 68566.0,
+    "proximos.dolares_10": 205965.06438103138,
+    "proximos.dolares_28": 649574.9180346236,
+    "proximos.con_regla": 10
+  }
+}
