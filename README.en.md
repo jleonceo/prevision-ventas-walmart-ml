@@ -21,7 +21,7 @@ Error: how much the forecast misses per 100 sold (WAPE). The benchmark is the on
 
 Each test forecasts from a starting day (rolling origin); there is one every 28 days throughout the year.
 
-These figures come from the model in use, retrained with data up to 22/05/2015 and chosen after seeing this year. The model measured first, fitted only with data up to 22/05/2014, misses 15.3 in units and 17.5 in dollars. It wins 9 of the 13 unit tests and 12 of the dollar tests.
+These figures come from the model in use, retrained with data up to 22/05/2015. The model measured first, fitted only with data up to 22/05/2014, misses 15.3 in units and 17.5 in dollars. It wins 9 of the 13 unit tests and 12 of the dollar tests. The rule set before the test required at least 10: in units it falls one short and in dollars it passes.
 
 ![First tab of the dashboard: weekly sales and the model's forecast, in dollars, over the last year held back](docs/graficos/vision_sin_filtros.png)
 
@@ -45,7 +45,7 @@ The error for the whole year is driven by the departments that sell most: FOODS_
 
 ## Scope and limitations
 - **Sample:** 500 of the competition's 3,049 products, chosen at random.
-- **Validation:** the last year was held back until the end. There is no other year of sales to confirm the choice of the model in use.
+- **Validation:** the last year was held back until the end. The model in use was chosen after seeing that year. There is no other year of sales to confirm the choice.
 - **Money:** savings cannot be calculated without cost, margin or stock data.
 
 ## Tools
@@ -81,7 +81,11 @@ mkdir -p data/raw && cp recorte/calendar.csv data/raw/
 python datos_origen/apartar_prueba_final.py recorte data/raw data/raw/reserva
 ```
 
-When the sample was made, its 5,000 series were checked row by row against the original. The hold-out split has been run again and gives the same files, byte for byte.
+When the sample was made, its 5,000 series were checked row by row against the original. The hold-out split has been run again and gives the same files, byte for byte. To check that your sample matches the case's without having its data, `datos_origen/SHA256SUMS` stores the fingerprint of each file:
+
+```bash
+sha256sum -c datos_origen/SHA256SUMS
+```
 
 With the data in place, the scripts in `scripts/` run in order, from `01` to `21`, as each script's header describes. The final test (`20`) first runs the batch in `produccion/lote_prueba_final.py` with the model in use. Two scripts need something that is not in the repository:
 - script `08` builds the executive report as a PDF with Microsoft Edge;
@@ -90,7 +94,7 @@ With the data in place, the scripts in `scripts/` run in order, from `01` to `21
 ## Repository layout
 
 - `scripts/`: the chain of 21 scripts, numbered in process order, from the raw data to the final report and the dashboard, plus the four forecasting modules shared by modeling and production.
-- `datos_origen/`: the sampling of the competition data and the hold-out split, with the split's test.
+- `datos_origen/`: the sampling of the competition data and the hold-out split, with the split's test and the fingerprints of the files they produce.
 - `tests/`: one test suite per script, each including cases that must fail.
 - `produccion/`: retraining, the daily forecast, the daily batch with its dry run, the final-test batch and the rollback to a previous model.
 - `modelos/reentrenos/2015-05-22/`: the model in use, one for units and one for dollars, each with its metadata.

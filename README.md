@@ -21,7 +21,7 @@ Error: lo que falla la previsión por cada 100 vendidos (WAPE). La regla de comp
 
 Cada prueba prevé desde un día de partida (rolling origin); hay uno cada 28 días a lo largo del año.
 
-Las cifras son del modelo en uso, reentrenado con los datos hasta el 22/05/2015 y elegido después de ver este año. El que se midió primero, ajustado solo con los datos hasta el 22/05/2014, falla 15,3 en unidades y 17,5 en dólares. Ese gana en 9 de las 13 pruebas de unidades y en 12 de las de dólares.
+Las cifras son del modelo en uso, reentrenado con los datos hasta el 22/05/2015. El que se midió primero, ajustado solo con los datos hasta el 22/05/2014, falla 15,3 en unidades y 17,5 en dólares. Ese gana en 9 de las 13 pruebas de unidades y en 12 de las de dólares. La regla fijada antes de la prueba pedía al menos 10: en unidades se queda a una del listón y en dólares pasa.
 
 ![Primera pestaña del cuadro de mando: la venta y la previsión del modelo por semana, en dólares, del último año guardado](docs/graficos/vision_sin_filtros.png)
 
@@ -45,7 +45,7 @@ El error de todo el año lo marcan los departamentos que más venden: FOODS_3 ha
 
 ## Alcance y límites
 - **Muestra:** 500 de los 3.049 productos del concurso, elegidos al azar.
-- **Validación:** el último año quedó apartado hasta el final. No hay otro año con venta para confirmar la elección del modelo en uso.
+- **Validación:** el último año quedó apartado hasta el final. El modelo en uso se eligió después de ver ese año. No hay otro año con venta para confirmar la elección.
 - **Dinero:** el ahorro no se puede calcular sin coste, margen ni existencias.
 
 ## Herramientas
@@ -81,7 +81,11 @@ mkdir -p data/raw && cp recorte/calendar.csv data/raw/
 python datos_origen/apartar_prueba_final.py recorte data/raw data/raw/reserva
 ```
 
-Al hacer el recorte se comprobó, fila a fila, que sus 5.000 series eran idénticas a las del original. El corte del año guardado se ha vuelto a ejecutar y da los mismos ficheros, byte a byte.
+Al hacer el recorte se comprobó, fila a fila, que sus 5.000 series eran idénticas a las del original. El corte del año guardado se ha vuelto a ejecutar y da los mismos ficheros, byte a byte. Para comprobar que tu recorte sale igual que el del caso, sin tener sus datos, `datos_origen/SHA256SUMS` guarda la huella de cada fichero:
+
+```bash
+sha256sum -c datos_origen/SHA256SUMS
+```
 
 Con los datos en su sitio, los scripts de `scripts/` se lanzan en su orden, del `01` al `21`, como dice la cabecera de cada uno. La prueba final (`20`) lanza antes el lote de `produccion/lote_prueba_final.py` con el modelo en uso. Dos scripts piden algo que no está en el repositorio:
 - el `08` hace el informe ejecutivo en PDF con Microsoft Edge;
@@ -90,7 +94,7 @@ Con los datos en su sitio, los scripts de `scripts/` se lanzan en su orden, del 
 ## Estructura del repositorio
 
 - `scripts/`: la cadena de 21 scripts numerados en el orden del proceso, de los datos en bruto al informe final y el cuadro de mando, más los cuatro módulos de la previsión que comparten el modelado y la producción.
-- `datos_origen/`: el recorte de los datos del concurso y el corte del año guardado, con la prueba del corte.
+- `datos_origen/`: el recorte de los datos del concurso y el corte del año guardado, con la prueba del corte y las huellas de los ficheros que salen.
 - `tests/`: un banco de pruebas por script, cada uno con casos que tienen que fallar.
 - `produccion/`: el reentreno, la previsión diaria, el lote de cada día con su ensayo, el lote de la prueba final y la vuelta a un modelo anterior.
 - `modelos/reentrenos/2015-05-22/`: el modelo en uso, uno para unidades y otro para dólares, cada uno con su ficha.

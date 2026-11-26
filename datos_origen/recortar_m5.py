@@ -21,6 +21,9 @@ import pandas as pd
 SEMILLA = 69
 N_PRODUCTOS = 500
 TIENDAS_ESPERADAS = 10
+# El final de línea de Windows, el del original de Kaggle y el del recorte del caso: fijo para que las huellas de
+# SHA256SUMS salgan iguales en cualquier sistema (pandas escribe por defecto el del sistema).
+FIN_DE_LINEA = "\r\n"
 
 
 def main(origen: Path, destino: Path) -> None:
@@ -37,8 +40,8 @@ def main(origen: Path, destino: Path) -> None:
     precios = precios[precios["item_id"].isin(elegidos)]
 
     destino.mkdir(parents=True, exist_ok=True)
-    recorte.to_csv(destino / "sales_train_evaluation.csv", index=False)
-    precios.to_csv(destino / "sell_prices.csv", index=False)
+    recorte.to_csv(destino / "sales_train_evaluation.csv", index=False, lineterminator=FIN_DE_LINEA)
+    precios.to_csv(destino / "sell_prices.csv", index=False, lineterminator=FIN_DE_LINEA)
     (destino / "calendar.csv").write_bytes((origen / "calendar.csv").read_bytes())
 
     print(f"original: {len(ventas)} series, {len(productos)} productos")
